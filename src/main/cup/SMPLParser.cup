@@ -42,14 +42,21 @@ scan with {:
 /* Terminals (tokens returned by the scanner). */
 
 // special symbols
-terminal DEF, LET, IN;
+terminal DEF, LET, IN,IF, PROC, LAZY;
 terminal LPAREN, RPAREN, COMMA, LBRACE, RBRACE, SEMI;
 
 // arithmetic operators
 terminal PLUS, MINUS, MUL, DIV, MOD, ASSIGN;
 
+//unary operators
+
 // terminals with values
 terminal Integer INTEGER;
+terminal Double FLOAT;
+terminal char CHAR;
+terminal Boolean TRUE;
+terminal Boolean FALSE;
+terminal String CMP;
 terminal String VARIABLE;
 
 /* Non terminals */
@@ -66,9 +73,26 @@ non terminal ArrayList<String> idList;
 non terminal Exp expression;
 non terminal Exp term;
 non terminal Exp factor;
-non terminal empty;
+non terminal PairExp pair;
+non terminal VectorExp vector;
+non terminal IfStmt if;
 
+/*Arithmetic Expressions */
+non terminal ASTExp<AIRExp> arithExp;
+non terminal ASTExp<AIRExp> arithTerm;
+non terminal ASTExp<AIRExp> arithConstFactor;
+non terminal ASTExp<AIRExp> arithFactor;
+non terminal ArrayList<ASTExp<AIRExp>> aExpList;   /* non-empty arith exp list */
+non terminal ArrayList<ASTExp<AIRExp>> aExpListE;  /* potentially empty arith exp list */
+
+/* Parameters */
+non terminal ArrayList<String> paramList;
+non terminal ArrayList<String> paramListE;
+
+non terminal empty;
 /* Grammar rules */
+
+start with program;
 
 program ::= stmtList:s {: RESULT = new ArithProgram(s); :};
 
