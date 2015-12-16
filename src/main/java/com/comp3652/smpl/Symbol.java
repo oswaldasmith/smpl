@@ -9,32 +9,39 @@ package com.comp3652.smpl.lang;
 public interface Symbol {
   /* terminals */
   public static final int LAZY = 7;
-  public static final int MOD = 18;
-  public static final int PLUS = 14;
-  public static final int RBRACE = 12;
-  public static final int RPAREN = 9;
-  public static final int CHAR = 22;
-  public static final int SEMI = 13;
+  public static final int MOD = 24;
+  public static final int AND = 8;
+  public static final int PLUS = 20;
+  public static final int RBRACE = 17;
+  public static final int OR = 9;
+  public static final int RPAREN = 14;
+  public static final int CHAR = 28;
+  public static final int SEMI = 18;
+  public static final int CALL = 12;
   public static final int IN = 4;
-  public static final int VARIABLE = 26;
-  public static final int TRUE = 23;
+  public static final int NOT = 10;
+  public static final int VARIABLE = 32;
+  public static final int TRUE = 29;
   public static final int IF = 5;
-  public static final int LPAREN = 8;
-  public static final int LBRACE = 11;
-  public static final int COMMA = 10;
-  public static final int FLOAT = 21;
-  public static final int CMP = 25;
+  public static final int COLON = 19;
+  public static final int LPAREN = 13;
+  public static final int LBRACE = 16;
+  public static final int STRING = 33;
+  public static final int COMMA = 15;
+  public static final int FLOAT = 27;
+  public static final int CMP = 31;
   public static final int EOF = 0;
   public static final int DEF = 2;
-  public static final int DIV = 17;
-  public static final int FALSE = 24;
-  public static final int MINUS = 15;
+  public static final int DIV = 23;
+  public static final int FALSE = 30;
+  public static final int MINUS = 21;
   public static final int error = 1;
   public static final int LET = 3;
   public static final int PROC = 6;
-  public static final int ASSIGN = 19;
-  public static final int INTEGER = 20;
-  public static final int MUL = 16;
+  public static final int ASSIGN = 25;
+  public static final int INTEGER = 26;
+  public static final int MUL = 22;
+  public static final int PAIR = 11;
   public static final String[] terminalNames = new String[] {
   "EOF",
   "error",
@@ -44,12 +51,18 @@ public interface Symbol {
   "IF",
   "PROC",
   "LAZY",
+  "AND",
+  "OR",
+  "NOT",
+  "PAIR",
+  "CALL",
   "LPAREN",
   "RPAREN",
   "COMMA",
   "LBRACE",
   "RBRACE",
   "SEMI",
+  "COLON",
   "PLUS",
   "MINUS",
   "MUL",
@@ -62,7 +75,8 @@ public interface Symbol {
   "TRUE",
   "FALSE",
   "CMP",
-  "VARIABLE"
+  "VARIABLE",
+  "STRING"
   };
 }
 

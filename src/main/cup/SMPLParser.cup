@@ -42,8 +42,8 @@ scan with {:
 /* Terminals (tokens returned by the scanner). */
 
 // special symbols
-terminal DEF, LET, IN,IF, PROC, LAZY;
-terminal LPAREN, RPAREN, COMMA, LBRACE, RBRACE, SEMI;
+terminal DEF,LET, IN,IF, PROC, LAZY, AND, OR, NOT,PAIR,CALL;
+terminal LPAREN, RPAREN, COMMA, LBRACE, RBRACE, SEMI,COLON;
 
 // arithmetic operators
 terminal PLUS, MINUS, MUL, DIV, MOD, ASSIGN;
@@ -58,43 +58,34 @@ terminal Boolean TRUE;
 terminal Boolean FALSE;
 terminal String CMP;
 terminal String VARIABLE;
+terminal String STRING;
 
 /* Non terminals */
-non terminal ArithProgram program;
+non terminal Program program;
 non terminal StmtSequence stmtList;
 non terminal Statement stmt;
 non terminal StmtDefinition definition;
 non terminal StmtFnDefinition funDefn;
 non terminal ExpFnCall funCall;
 non terminal ArrayList<Exp> expList;
+non terminal ExpProcedure proc;
 non terminal Exp letExpn;
 non terminal ArrayList<StmtDefinition> defnList;
 non terminal ArrayList<String> idList;
+non terminal ArrayList<String> idListE;
 non terminal Exp expression;
 non terminal Exp term;
 non terminal Exp factor;
-non terminal PairExp pair;
+non terminal PairExp exPair;
 non terminal VectorExp vector;
 non terminal IfStmt if;
-
-/*Arithmetic Expressions */
-non terminal ASTExp<AIRExp> arithExp;
-non terminal ASTExp<AIRExp> arithTerm;
-non terminal ASTExp<AIRExp> arithConstFactor;
-non terminal ASTExp<AIRExp> arithFactor;
-non terminal ArrayList<ASTExp<AIRExp>> aExpList;   /* non-empty arith exp list */
-non terminal ArrayList<ASTExp<AIRExp>> aExpListE;  /* potentially empty arith exp list */
-
-/* Parameters */
-non terminal ArrayList<String> paramList;
-non terminal ArrayList<String> paramListE;
 
 non terminal empty;
 /* Grammar rules */
 
 start with program;
 
-program ::= stmtList:s {: RESULT = new ArithProgram(s); :};
+program ::= stmtList:s {: RESULT = new Program(s); :};
 
 stmtList ::= stmtList:lst stmt:s {:
 		lst.add(s); 
@@ -105,29 +96,32 @@ stmtList ::= stmtList:lst stmt:s {:
 		:};
 
 stmt ::= definition:d SEMI {: RESULT = d; :} |
-     	 funDefn:d {: RESULT = d; :} | 
-	 expression:e SEMI {: RESULT = new Statement(e); :};
+	    expression:e SEMI {: RESULT = new Statement(e); :};
 
 definition ::= VARIABLE:v ASSIGN expression:e {:
 		   RESULT = new StmtDefinition(v, e);
-		:};
+		:} |
+		 funDefn:d {: RESULT = d; :};
 
-funDefn ::= DEF VARIABLE:name LPAREN idList:lst RPAREN 
-	    	LBRACE stmtList:body RBRACE {:
-	    	RESULT = new StmtFnDefinition(name, lst, body);
-	    :} |
-	    DEF VARIABLE:name LPAREN RPAREN
-	    	LBRACE stmtList:body RBRACE {:
-	        ArrayList<String> lst = new ArrayList<String>();
-	    	RESULT = new StmtFnDefinition(name, lst, body);
-	    :};
+exPair ::= PAIR LBRACE expression:e1 COMMA expression:e2 RBRACE {:
+            RESULT = new exPair(e1,e2);
+        :};
+
+proc ::= PROC LPAREN expList:lst RPAREN stmtList:body {: RESULT = new ExpProcedure(lst,body); :} |
+         PROC LPAREN expList:lst COMMA expList:l RPAREN stmtList:body {: RESULT = new ExpProcedure(lst,body,l); :} |
+         PROC LPAREN expression:e RPAREN stmtList:body {: ArrayList<Exp> lst = new ArrayList<>(); lst.add(e); RESULT = new ExpProcedure(lst,body) :};
+
+vector ::= LPAREN COLON expList:l COLON RPAREN {: RESULT = lst; :};
+
+funDefn ::= DEF VARIABLE:name PROC LPAREN idList:p RPAREN LBRACE stmtList:body RBRACE{:
+	    	RESULT = new StmtFnDefinition(name,body,p); :};
 
 funCall ::= VARIABLE:fn LPAREN expList:args RPAREN {:
 	    	RESULT = new ExpFnCall(fn, args);
 	    :} |
 	    VARIABLE:fn LPAREN RPAREN {:
 	    	RESULT = new ExpFnCall(fn, new ArrayList<Exp>());
-	    :};
+	    :} | proc: p {: RESULT = p; :};
 
 idList ::= idList:l COMMA VARIABLE:v {:
 		    l.add(v);
@@ -168,7 +162,8 @@ expression ::= 	expression:e PLUS term:t {:
 		expression:e MINUS term:t {:
 			RESULT = new ExpSub(e, t); :} |
 		letExpn:lexp {: RESULT = lexp; :} |
-		term:t {: RESULT = t; :};
+		term:t {: RESULT = t; :} |
+		exPair:p {: RESULT = p; :};
 
 term ::= term:t MUL factor:f {:
 		RESULT = new ExpMul(t, f); :} |
