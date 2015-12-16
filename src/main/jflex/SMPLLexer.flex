@@ -57,12 +57,20 @@ alphanum = {alpha}|[0-9]
 
 hex = [0-9A-Fa-f+]
 
-
-float = [0-9]+ ("." [0-9]+)?|"."[0-9]+ ("." [0-9]+)?
+num = [0-9]
 
 %%
 
 <YYINITIAL>	{ws}	{/* ignore whitespace */}
+<YYINITIAL>	"."	{ //. on a line by itself is EOF
+			  return new Symbol(sym.EOF);}
+
+<YYINITIAL>    {nl} {
+                        //skip newline, but reset char counter
+                        yychar = 0;
+                      }
+<YYINITIAL>    \#.*  { // ignore line comments
+                    }
 
 <YYINITIAL>	"+"	{return new Symbol(sym.PLUS);}
 <YYINITIAL>	"-"	{return new Symbol(sym.MINUS);}
@@ -90,6 +98,11 @@ float = [0-9]+ ("." [0-9]+)?|"."[0-9]+ ("." [0-9]+)?
 <YYINITIAL> "not" {return new Symbol(sym.NOT);}
 <YYINITIAL> "pair" {return new Symbol(sym.PAIR);}
 <YYINITIAL> "pair?" {return new Symbol(sym.IFPAIR);}
+<YYINITIAL> "case" {return new Symbol(sym.CASE);}
+<YYINITIAL> "print" {return new Symbol(sym.PRINT);}
+<YYINITIAL> "println" {return new Symbol(sym.PRINTLN);}
+<YYINITIAL> "read" {return new Symbol(sym.READ);}
+<YYINITIAL> "readint" {return new Symbol(sym.READINT);}
 <YYINITIAL> "car" {return new Symbol(sym.CAR);}
 <YYINITIAL> "cdr" {return new Symbol(sym.CDR);}
 <YYINITIAL> "list" {return new Symbol(sym.LIST);}
@@ -97,6 +110,10 @@ float = [0-9]+ ("." [0-9]+)?|"."[0-9]+ ("." [0-9]+)?
 <YYINITIAL> "size" {return new Symbol(sym.SIZE);}
 <YYINITIAL> "eqv?" {return new Symbol(sym.IFEQUIVALENT);}
 <YYINITIAL> "equal?" {return new Symbol(sym.IFEQUAL);}
+<YYINITIAL> "then" {return new Symbol(sym.THEN);}
+<YYINITIAL> "else" {return new Symbol(sym.ELSE);}
+<YYINITIAL> "list" {return new Symbol(sym.LIST);}
+
 
 <YYINITIAL> "#t" {return new Symbol(sym.TRUE, yytext());}
 <YYINITIAL> "#f" {return new Symbol(sym.FALSE, yytext());}
@@ -117,8 +134,14 @@ float = [0-9]+ ("." [0-9]+)?|"."[0-9]+ ("." [0-9]+)?
 	       return new Symbol(sym.VARIABLE, yytext());
 	       }
 
-<YYINITIAL> {float}+ {
-    //float
-    return new Symbol(sym.FLOAT,
-    new Float(yytext()));
-    }
+<YYINITIAL>     0?"."{num}+ {
+			// FRACTION
+			return new Symbol(sym.FRACTION, new Double(yytext()));
+		}
+
+<YYINITIAL>	{num}+"."{num}+ {
+			// REAL no. used for defining frames
+			return new Symbol(sym.FLOAT, new Double(yytext()));
+		}
+
+
