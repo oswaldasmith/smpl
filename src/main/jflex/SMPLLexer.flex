@@ -82,6 +82,8 @@ num = [0-9]
 
 <YYINITIAL>	"("	{return new Symbol(sym.LPAREN);}
 <YYINITIAL>	")"	{return new Symbol(sym.RPAREN);}
+<YYINITIAL>	"["	{return new Symbol(sym.LBRACKET);}
+<YYINITIAL>	"]"	{return new Symbol(sym.RBRACKET);}
 <YYINITIAL>	"{"	{return new Symbol(sym.LBRACE);}
 <YYINITIAL>	"}"	{return new Symbol(sym.RBRACE);}
 <YYINITIAL>	","	{return new Symbol(sym.COMMA);}

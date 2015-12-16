@@ -42,8 +42,8 @@ scan with {:
 /* Terminals (tokens returned by the scanner). */
 
 // special symbols
-terminal DEF,LET, IN,IF, PROC, LAZY, AND, OR, NOT,PAIR,CALL,PRINT,PRINTLN,READ,READINT,CASE,SIZE,IFEQUIVALENT,IFEQUAL,LIST;
-terminal LPAREN, RPAREN, COMMA, LBRACE, RBRACE, SEMI,COLON,THEN,ELSE;
+terminal DEF,LET, IN,IF,CAR,CDR, PROC, LAZY, AND, OR, NOT,IFPAIR,PAIR,CALL,PRINT,PRINTLN,READ,READINT,CASE,SIZE,IFEQUIVALENT,IFEQUAL,LIST,SUBSTRING;
+terminal LBRACKET,RBRACKET, LPAREN, RPAREN, COMMA, LBRACE, RBRACE, SEMI,COLON,THEN,ELSE;
 
 // arithmetic operators
 terminal PLUS, MINUS, MUL, DIV, MOD, ASSIGN;
@@ -64,8 +64,17 @@ terminal String STRING;
 non terminal Program program;
 non terminal StmtSequence stmtList;
 non terminal Statement stmt;
+non terminal CarStmt car;
+non terminal CdrStmt cdr;
+non terminal IsPairStmt isPair;
 non terminal PrintStmt print;
 non terminal PrintStmt printLn;
+non terminal RetVctStmt retVec;
+non terminal SizeStmt size;
+non terminal IsEqualStmt isEqual;
+non terminal IsEqvStmt isEqv;
+non terminal SubStrStmt substr;
+non terminal LazyStmt lazy;
 non terminal ReadStmt read;
 non terminal ReadStmt readInt;
 non terminal StmtDefinition definition;
@@ -112,10 +121,25 @@ exPair ::= PAIR LPAREN expression:e1 COMMA expression:e2 RPAREN {:
             RESULT = new exPair(e1,e2);
         :};
 
+car ::= CAR LPAREN exPair:p RPAREN {: RESULT = new CarStmt(p); :};
+
+cdr ::= CDR LPAREN exPair:p RPAREN {: RESULT = new CdrStmt(p); :};
+
+isPair ::= IFPAIR LPAREN exPair:p RPAREN {: RESULT = new IsPairStmt(p); :};
+
+vector ::= LBRACKET COLON expList:l COLON RBRACKET {: RESULT = new VectorExp(lst); :};
+
+retVec ::= vector:v LBRACKET INTEGER:i RBRACKET {: RESULT = new retVectStmt(v,i); :};
+
+size ::= SIZE LPAREN vector:v RPAREN {: RESULT = new SizeStmt(v); :};
+
+isEqual ::= IFEQUAL LPAREN expression:e COMMA expression:e2 RPAREN {: RESULT = new IsEqualStmt(e,e2); :};
+
+isEqv ::= IFEQUIVALENT LPAREN expression:e COMMA expression:e2 RPAREN {: RESULT = new IsEqvStmt(e1,e2); :};
+
+substr ::= SUBSTRING LPAREN STRING:s COMMA INTEGER:start COMMA INTEGER:end RPAREN {: RESULT = new SubStrStmt(s,start,end); :};
+
 proc ::= PROC LPAREN idList:lst RPAREN stmtList:body {: RESULT = new ExpProcedure(lst,body); :};
-
-
-vector ::= LPAREN COLON expList:l COLON RPAREN {: RESULT = lst; :};
 
 funDefn ::= DEF VARIABLE:name PROC LPAREN idListE:p RPAREN LBRACE stmtList:body RBRACE{:
 	    	RESULT = new StmtFnDefinition(name,body,p); :};
@@ -130,6 +154,7 @@ funCall ::= VARIABLE:fn LPAREN expList:args RPAREN {:
 	        RESULT = new ExpFnCall(fn, args);
         :};
 
+lazy ::= LAZY LPAREN expression:e RPAREN {: RESULT = new LazyStmt(e); :};
 
 idList ::= idList:l COMMA VARIABLE:v {:
 		    l.add(v);
@@ -167,7 +192,10 @@ expList ::= expList:lst COMMA expression:e {:
 		lst.add(e);
 	    	RESULT = lst;
 	    :} |
-	    LIST LPAREN expList:lst RPAREN {: RESULT = lst; :};
+	    LIST LPAREN expList:lst RPAREN {:
+	        RESULT = lst;
+        :} |
+        LBRACKET expList:lst RBRACKET {: RESULT = lst; :};
 
 expression ::= 	expression:e PLUS term:t {:
 			RESULT = new ExpAdd(e, t); :} |
