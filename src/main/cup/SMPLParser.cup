@@ -68,7 +68,6 @@ non terminal CarStmt car;
 non terminal CdrStmt cdr;
 non terminal IsPairStmt isPair;
 non terminal PrintStmt print;
-non terminal PrintStmt printLn;
 non terminal RetVctStmt retVec;
 non terminal SizeStmt size;
 non terminal IsEqualStmt isEqual;
@@ -76,7 +75,6 @@ non terminal IsEqvStmt isEqv;
 non terminal SubStrStmt substr;
 non terminal LazyStmt lazy;
 non terminal ReadStmt read;
-non terminal ReadStmt readInt;
 non terminal StmtDefinition definition;
 non terminal StmtFnDefinition funDefn;
 non terminal ExpFnCall funCall;
@@ -141,6 +139,18 @@ substr ::= SUBSTRING LPAREN STRING:s COMMA INTEGER:start COMMA INTEGER:end RPARE
 
 proc ::= PROC LPAREN idList:lst RPAREN stmtList:body {: RESULT = new ExpProcedure(lst,body); :};
 
+print ::= PRINT LPAREN expression:e RPAREN {:
+            RESULT = new PrintStmt(e);
+          :} |
+          PRINTLN LPAREN expression:e RPAREN {: RESULT = new PrintStmt(e); :};
+
+read ::= READ LPAREN RPAREN {:
+                RESULT = new ReadStmt();
+         :} |
+         READINT LPAREN RPAREN {:
+                RESULT = new ReadStmt();
+         :};
+
 funDefn ::= DEF VARIABLE:name PROC LPAREN idListE:p RPAREN LBRACE stmtList:body RBRACE{:
 	    	RESULT = new StmtFnDefinition(name,body,p); :};
 
@@ -152,6 +162,36 @@ funCall ::= VARIABLE:fn LPAREN expList:args RPAREN {:
 	    :} |
 	    CALL LPAREN VARIABLE:fn  COMMA expList:args RPAREN {:
 	        RESULT = new ExpFnCall(fn, args);
+        :} |
+        car:c {:
+            RESULT = c;
+        :} |
+        cdr:c {:
+            RESULT = c;
+        :} |
+        isPair:p {:
+            RESULT = p;
+        :} |
+        retVec:r {:
+            RESULT = r;
+        :} |
+        size:s {:
+            RESULT = s;
+        :} |
+        isEqual:e {:
+            RESULT = e;
+        :} |
+        isEqv:e {:
+            RESULT = e;
+        :} |
+        substr:s {:
+            RESULT = s;
+        :} |
+        print:p {:
+            RESULT = p;
+        :} |
+        read:r {:
+            RESULT = r;
         :};
 
 lazy ::= LAZY LPAREN expression:e RPAREN {: RESULT = new LazyStmt(e); :};
@@ -203,7 +243,8 @@ expression ::= 	expression:e PLUS term:t {:
 			RESULT = new ExpSub(e, t); :} |
 		letExpn:lexp {: RESULT = lexp; :} |
 		term:t {: RESULT = t; :} |
-		exPair:ep {: RESULT = ep; :};
+		exPair:ep {: RESULT = ep; :} |
+		vector:v {: RESULT = v; :};
 
 term ::= term:t MUL factor:f {:
 		RESULT = new ExpMul(t, f); :} |
