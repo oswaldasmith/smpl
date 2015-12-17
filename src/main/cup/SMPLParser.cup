@@ -42,7 +42,7 @@ scan with {:
 /* Terminals (tokens returned by the scanner). */
 
 // special symbols
-terminal DEF,LET, IN,IF,CAR,CDR, PROC, LAZY, AND, OR, NOT,IFPAIR,PAIR,CALL,PRINT,PRINTLN,READ,READINT,CASE,SIZE,IFEQUIVALENT,IFEQUAL,LIST,SUBSTRING;
+terminal DEF,LET,IF,CAR,CDR, PROC, LAZY, AND, OR, NOT,IFPAIR,PAIR,CALL,PRINT,PRINTLN,READ,READINT,CASE,SIZE,IFEQUIVALENT,IFEQUAL,LIST,SUBSTRING;
 terminal LBRACKET,RBRACKET, LPAREN, RPAREN, COMMA, LBRACE, RBRACE, SEMI,COLON,THEN,ELSE;
 
 // arithmetic operators
@@ -80,8 +80,6 @@ non terminal StmtFnDefinition funDefn;
 non terminal ExpFnCall funCall;
 non terminal ArrayList<Exp> expList;
 non terminal ExpProcedure proc;
-non terminal Exp letExpn;
-non terminal ArrayList<StmtDefinition> defnList;
 non terminal ArrayList<String> idList;
 non terminal ArrayList<String> idListE;
 non terminal Exp expression;
@@ -90,6 +88,8 @@ non terminal Exp factor;
 non terminal PairExp exPair;
 non terminal VectorExp vector;
 non terminal IfStmt if;
+non terminal LetStmt let;
+non terminal CaseStmt case;
 
 non terminal empty;
 /* Grammar rules */
@@ -113,7 +113,11 @@ definition ::= VARIABLE:v ASSIGN expression:e {:
 		   RESULT = new StmtDefinition(v, e);
 		:} |
 		 funDefn:d {: RESULT = d; :} |
-		 proc:p {: RESULT = p; :};
+		 proc:p {: RESULT = p; :} |
+		 if:i {: RESULT = i; :} |
+		 let:l {: RESULT = l; :} |
+		 lazy:l {: RESULT = l; :} |
+		 case:c {: RESULT = c; :};
 
 exPair ::= PAIR LPAREN expression:e1 COMMA expression:e2 RPAREN {:
             RESULT = new exPair(e1,e2);
@@ -150,6 +154,18 @@ read ::= READ LPAREN RPAREN {:
          READINT LPAREN RPAREN {:
                 RESULT = new ReadStmt();
          :};
+
+if ::=  IF expression:e THEN stmtList:body {:
+            RESULT = new IfStmt(e,body);
+        :} |
+        IF expression:e THEN stmtList:body ELSE stmtList:other {:
+            body.add(other);
+            RESULT = new IfStmt(e,body);
+        :};
+
+case ::= CASE LBRACE expList:lst RBRACE expression:e1 COLON expression:e2 {: RESULT = new CaseStmt(lst,e1,e2); :};
+
+let ::= LET RPAREN idList:ids LPAREN stmtList:body {: RESULT = new LetStmt(ids,e); :};
 
 funDefn ::= DEF VARIABLE:name PROC LPAREN idListE:p RPAREN LBRACE stmtList:body RBRACE{:
 	    	RESULT = new StmtFnDefinition(name,body,p); :};
@@ -209,20 +225,6 @@ idList ::= idList:l COMMA VARIABLE:v {:
 idListE ::= idList:l {: RESULT = lst; :} |
             empty {: RESULT = new ArrayList<>();:};
 
-letExpn ::= LET defnList:dlst LBRACE stmtList:body RBRACE {:
-	        RESULT = new ExpLet(dlst, body);
-	    :};
-
-defnList ::= definition:d COMMA defnList:lst {:
-	     	lst.add(d);
-		RESULT = lst;	         
-	     :} |
-	     definition:d {:
-	        ArrayList<StmtDefinition> lst = new ArrayList<StmtDefinition>();
-		lst.add(d);
-		RESULT = lst;
-	     :};
-
 expList ::= expList:lst COMMA expression:e {:
 	        lst.add(e);
 	    	RESULT = lst;
@@ -237,13 +239,30 @@ expList ::= expList:lst COMMA expression:e {:
         :} |
         LBRACKET expList:lst RBRACKET {: RESULT = lst; :};
 
-expression ::= 	expression:e PLUS term:t {:
-			RESULT = new ExpAdd(e, t); :} |
+expression ::= LBRACE  expList:l RBRACE {:
+                RESULT = new CompoundExp(l);
+                :} |
+        expression:e PLUS term:t {:
+            RESULT = new ExpAdd(e, t);
+            :} |
 		expression:e MINUS term:t {:
-			RESULT = new ExpSub(e, t); :} |
-		letExpn:lexp {: RESULT = lexp; :} |
-		term:t {: RESULT = t; :} |
-		exPair:ep {: RESULT = ep; :} |
+			RESULT = new ExpSub(e, t);
+			:} |
+		expression:e AND term:t {:
+		    RESULT = new CondExp(e,t);
+		 :} |
+		expression:e OR term:t {:
+		    RESULT = new CondExp(e,t);
+		:} |
+		NOT term:t {:
+		    RESULT = new NotExp(e);
+		:} |
+		term:t {:
+		    RESULT = t;
+		    :} |
+		exPair:ep {:
+		    RESULT = ep;
+		    :} |
 		vector:v {: RESULT = v; :};
 
 term ::= term:t MUL factor:f {:
@@ -257,6 +276,7 @@ term ::= term:t MUL factor:f {:
 factor ::= INTEGER:ilit {: RESULT = new ExpLit(ilit); :} |
 	   VARIABLE:var {: RESULT = new ExpVar(var); :} |
 	   funCall:call {: RESULT = call; :} |
-	   LPAREN expression:e RPAREN {: RESULT = e; :}	;
+	   LPAREN expression:e RPAREN {: RESULT = e; :}	|
+	   FLOAT:ilit {: RESULT = new ExpLit(ilit); :};
 
 empty ::= ;
