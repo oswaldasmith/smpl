@@ -128,7 +128,7 @@ num = [0-9]
 				 new Integer(yytext()));
 	       }
 
-<YYINITIAL> {hex} {return "hex";}
+<YYINITIAL> {hex} { return "hex"; }
 
 
 <YYINITIAL>    {alpha}{alphanum}* {
