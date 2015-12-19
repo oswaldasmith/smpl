@@ -101,10 +101,10 @@ program ::= stmtList:s {: RESULT = new SMPLProgram(s); :};
 stmtList ::= stmtList:lst stmt:s {:
 		lst.add(s); 
 		RESULT = lst;
-		:} |
-	     stmt:s {:
+	:} |
+	    stmt:s {:
 		RESULT = new StmtSequence(s);
-		:};
+	:};
 
 stmt ::= definition:d SEMI {: RESULT = d; :} |
 	    expression:e SEMI {: RESULT = new Statement(e); :};

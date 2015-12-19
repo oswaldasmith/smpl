@@ -3,9 +3,9 @@ package com.comp3652.lang;
 
 public class SMPLProgram extends SMPLStatement {
 
-	protected SMPLProgram statements;
+	protected SMPLSequence statements;
 
-	public SMPLProgram (SMPLSequence stmts) {
+	public SMPLSe (SMPLSequence stmts) {
 		statements = stmts;
 	}
 
@@ -14,5 +14,7 @@ public class SMPLProgram extends SMPLStatement {
 	}
 
 	@Override
-	public <S, T> T visit()
+	public <S, T> T visit(SMPLVisitor<S, T> v, S state) throws SMPLException {
+		return v.visitSMPLProgram(this, state);
+	}
 }
