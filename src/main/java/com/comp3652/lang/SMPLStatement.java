@@ -1,0 +1,8 @@
+package com.comp3652.lang;
+
+import comp.comp3652.sys.SMPLException;
+
+public abstract class SMPLStatment extends ASTNode {	
+
+	public abstract <S, T> T visit(SMPLVisitor<S, T> v, S state) throws SMPLException;
+}

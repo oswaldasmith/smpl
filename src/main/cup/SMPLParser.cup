@@ -61,9 +61,9 @@ terminal String VARIABLE;
 terminal String STRING;
 
 /* Non terminals */
-non terminal Program program;
-non terminal StmtSequence stmtList;
-non terminal Statement stmt;
+non terminal SMPLProgram program;
+non terminal SMPLSequence stmtList;
+non terminal SMPLStatement stmt;
 non terminal CarStmt car;
 non terminal CdrStmt cdr;
 non terminal IsPairStmt isPair;
@@ -96,7 +96,7 @@ non terminal empty;
 
 start with program;
 
-program ::= stmtList:s {: RESULT = new Program(s); :};
+program ::= stmtList:s {: RESULT = new SMPLProgram(s); :};
 
 stmtList ::= stmtList:lst stmt:s {:
 		lst.add(s); 
