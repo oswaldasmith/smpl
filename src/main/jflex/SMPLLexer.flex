@@ -1,4 +1,4 @@
-/* Specification for ArithExp tokens */
+/* Specification for SMPL tokens */
 
 // user customisations
 package com.comp3652.smpl;
@@ -12,7 +12,7 @@ import java.io.IOException;
 %cup
 %public
 
-%class SMPLLLexer
+%class SMPLLexer
 
 %type java_cup.runtime.Symbol
 

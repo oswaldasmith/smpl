@@ -22,10 +22,11 @@
                 </executions>
                 <configuration>
                     <className>SMPLParser</className>
-                    <symbolsName>Symbol</symbolsName>
+                    <symbolsName>sym</symbolsName>
                     <cupDefinition>src/main/cup/SMPLParser.cup</cupDefinition>
                     <outputDirectory>src/main/java</outputDirectory>
                     <packageName>com.comp3652.smpl</packageName>
+                    <progress>true</progress>
                 </configuration>
             </plugin>
             <plugin>
@@ -53,7 +54,7 @@
         <repository>
             <id>smpl-libs</id>
             <name>SMPL Third-Party Libraries</name>
-            <url>file://${basedir}/libs</url>
+            <url>file://${basedir}/lib</url>
         </repository></repositories>
     <dependencies>
         <dependency>
