@@ -8,13 +8,15 @@ import com.comp3652.values.SMPLValue;
 import java.io.*;
 
 public class SMPLRepl {
+
     static SMPLEvaluator interp;
     static SMPLContext globalEnv;
 
-
     public static void main(String args[]){
+        setup();
 
 
+        
     }
 
     public static void reader(String name, SMPLContext genv) throws FileNotFoundException {

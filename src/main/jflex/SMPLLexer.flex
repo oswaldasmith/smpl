@@ -72,6 +72,7 @@ num = [0-9]
 <YYINITIAL>    \#.*  { // ignore line comments
                     }
 
+<<<<<<< HEAD
 <YYINITIAL>	"+"	{return new Symbol(sym.PLUS);}
 <YYINITIAL>	"-"	{return new Symbol(sym.MINUS);}
 <YYINITIAL>	"*"	{return new Symbol(sym.TIMES);}
@@ -120,7 +121,7 @@ num = [0-9]
 <YYINITIAL> "#t" {return new Symbol(sym.TRUE, yytext());}
 <YYINITIAL> "#f" {return new Symbol(sym.FALSE, yytext());}
 
-
+<YYINITIAL>		"@" { return new Symbol(sys.CONCAT); }
 
 <YYINITIAL>    [0-9]+ {
 	       // INTEGER
