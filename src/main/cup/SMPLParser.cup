@@ -42,7 +42,7 @@ scan with {:
 /* Terminals (tokens returned by the scanner). */
 
 // special symbols
-terminal DEF,LET,IF,PROC,LAZY,IFPAIR,PAIR,CALL;
+terminal DEF,LET,IF,PROC,LAZY,IFPAIR,PAIR,CALL,BE;
 terminal LBRACKET,RBRACKET,LPAREN, RPAREN,COMMA, LBRACE, RBRACE, SEMI,COLON,THEN,ELSE;
 
 // arithmetic operators
@@ -71,6 +71,8 @@ terminal String STRING;
 /* Non terminals */
 non terminal SMPLProgram program;
 non terminal SMPLStmtSequence stmtList;
+non terminal SMPLStmtDefinition binding;
+non terminal ArrayList<SMPLStmtDefinition> bindList;
 non terminal SMPLStatement stmt;
 non terminal SMPLCarStmt car;
 non terminal SMPLCdrStmt cdr;
@@ -86,13 +88,12 @@ non terminal SMPLIfStmt if;
 non terminal SMPLLetStmt let;
 non terminal SMPLCaseStmt case;
 non terminal SMPLReadStmt read; 
-non terminal SMPLStmtFnDefinition funDefn;
 non terminal SMPLExpFnCall funCall;
 
 non terminal ASTExp<SMPLExp> smplExp;
 non terminal ASTExp<SMPLExp> primitiveExp;
 non terminal ASTExp<LIRExp> predExp;
-non terminal ArrayList<ASTExp<AIRExp>> expList;
+non terminal ArrayList<ASTExp<AIRExp>> arithExpList;
 non terminal SMPLPairExp exPair;
 non terminal SMPLVectorExp vector;
 non terminal SMPLExpProcedure proc;
@@ -119,21 +120,39 @@ stmtList ::= stmtList:seq stmt:s {:
              empty {:
               RESULT = new SMPLStmtSequence(); :};
 
-stmt ::= DEF VAR:v arithExp:e {:
-		   RESULT = new SMPLStmtDefinition(v, e);
-		:} |
-		DEF VAR:v smplExp:e {:
-		    RESULT = new SMPLStmtDefinition(v,e);
-        :} |
-		print:p {:
-		    RESULT = p;
-        :} |
-		read:r {:
-            RESULT = r;
-        :} |
-        funCall:f {:
-            RESULT = f;
-        :};
+stmt ::= binding:b {:
+                RESULT = b;
+            :} |
+            print:p {:
+                RESULT = p;
+            :} |
+            read:r {:
+                RESULT = r;
+            :} |
+            funCall:f {:
+                RESULT = f;
+            :} |
+            if:i {:
+             RESULT = i;
+            :};
+
+binding ::= DEF VAR:v arithExp:e {:
+            		   RESULT = new SMPLStmtDefinition(v, e);
+            		:} |
+            		DEF VAR:v smplExp:e {:
+            		    RESULT = new SMPLStmtDefinition(v,e);
+                    :} |
+                    VAR:v BE smplExp:e {:
+                        RESULT = new SMPLStmtDefinition(v,e);
+                    :} |
+                    VAR:v BE arithExp:e {:
+                        RESULT = new SMPLStmtDefinition(v,e);
+                    :};
+
+bindList ::= bindList:l COMMA binding:b {:
+                l.add(b);
+                RESULT = l;
+             :};
 
 predExp ::= arithExp:e1 CMP arithExp:e2 {:
                 RESULT = new ASTExp<LIRExp>(e1,e2);
@@ -159,7 +178,7 @@ cdr ::= CDR LPAREN exPair:p RPAREN {: RESULT = new SMPLCdrStmt(p); :};
 
 isPair ::= IFPAIR LPAREN exPair:p RPAREN {: RESULT = new SMPLisPairStmt(p); :};
 
-vector ::= LBRACKET COLON expList:l COLON RBRACKET {: RESULT = new SMPLVectorExp(lst); :};
+vector ::= LBRACKET COLON arithExpList:l COLON RBRACKET {: RESULT = new SMPLVectorExp(lst); :};
 
 retVec ::= vector:v LBRACKET INTEGER:i RBRACKET {: RESULT = new retVectStmt(v,i); :};
 
@@ -192,18 +211,23 @@ if ::=  IF predExp:p THEN stmtList:cons {:
             RESULT = new SMPLIfStmt(p,cons,alt);
         :};
 
-case ::= CASE LBRACE expList:lst RBRACE arithExp:e1 COLON arithExp:e2 {: RESULT = new SMPLCaseStmt(lst,e1,e2); :};
+case ::= CASE LBRACE arithExpList:lst RBRACE arithExp:e1 COLON arithExp:e2 {: RESULT = new SMPLCaseStmt(lst,e1,e2); :};
 
-let ::= LET RPAREN expList:ids LPAREN stmtList:body {: RESULT = new SMPLLetStmt(ids,e); :};
+let ::= LET LPAREN bindList:ids RPAREN stmtList:body {:
+            RESULT = new SMPLLetStmt(ids,body);
+        :} |
+        LET LPAREN binding:id RPAREN stmtList:body {:
+                    RESULT = new SMPLLetStmt(ids,body);
+        :};
 
 
-funCall ::= VAR:fn LPAREN expList:args RPAREN {:
+funCall ::= VAR:fn LPAREN arithExpList:args RPAREN {:
 	    	RESULT = new SMPLExpFnCall(fn, args);
 	    :} |
 	    VAR:fn LPAREN RPAREN {:
 	    	RESULT = new SMPLExpFnCall(fn, new ArrayList<Exp>());
 	    :} |
-	    CALL LPAREN VAR:fn  COMMA expList:args RPAREN {:
+	    CALL LPAREN VAR:fn  COMMA arithExpList:args RPAREN {:
 	        RESULT = new SMPLExpFnCall(fn, args);
         :} |
         car:c {:
@@ -232,7 +256,11 @@ funCall ::= VAR:fn LPAREN expList:args RPAREN {:
         :} |
         proc:p {:
             RESULT = p;
+        :} |
+        lazy:l {:
+            RESULT = l;
         :};
+
 
 lazy ::= LAZY LPAREN arithExp:e RPAREN {: RESULT = new SMPLLazyStmt(e); :};
 
@@ -247,7 +275,7 @@ idList ::= idList:lst COMMA VAR:id {:
 idListE ::= idList:l {: RESULT = lst; :} |
             empty {: RESULT = new ArrayList<>();:};
 
-expList ::= expList:lst COMMA arithExp:e {:
+arithExpList ::= arithExpList:lst COMMA arithExp:e {:
 	        lst.add(e);
 	    	RESULT = lst;
 	    :}|
@@ -256,10 +284,10 @@ expList ::= expList:lst COMMA arithExp:e {:
 		lst.add(e);
 	    	RESULT = lst;
 	    :} |
-	    LIST LPAREN expList:lst RPAREN {:
+	    LIST LPAREN arithExpList:lst RPAREN {:
 	        RESULT = lst;
         :} |
-        LBRACKET expList:lst RBRACKET {:
+        LBRACKET arithExpList:lst RBRACKET {:
             RESULT = lst;
             :} |
 		exPair:ep {:

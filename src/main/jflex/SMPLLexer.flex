@@ -127,6 +127,7 @@ CommentContent       = ( [^*] | \*+ [^/*] )*
 <YYINITIAL> "then" {return new Symbol(sym.THEN);}
 <YYINITIAL> "else" {return new Symbol(sym.ELSE);}
 <YYINITIAL> "list" {return new Symbol(sym.LIST);}
+<YYINITIAL> "be" {return new Symbol(sym.BE);}
 
 
 <YYINITIAL> "#t" {return new Symbol(sym.TRUE, yytext());}
@@ -145,7 +146,7 @@ CommentContent       = ( [^*] | \*+ [^/*] )*
 
 <YYINITIAL>    {alpha}+{alphanum}* | {alphanum}+{alpha}* {
 	       // VARIABLE
-	       return new Symbol(sym.VARIABLE, yytext());
+	       return new Symbol(sym.VAR, yytext());
 	       }
 
 <YYINITIAL>     0?"."{num}+ {
