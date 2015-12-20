@@ -1,7 +1,7 @@
 /* Specification for SMPL tokens */
 
 // user customisations
-package com.comp3652.smpl;
+package com.comp3652.lang;
 
 import java_cup.runtime.*;
 import java.io.IOException;
