@@ -51,7 +51,7 @@ cc = ([\b\f]|{nl})
 
 ws = {cc}|[\t ]
 
-alpha = [a-zA-Z_"$""#""?""@""~"]
+alpha = [a-zA-Z_"$""#""?""~"]
 
 alphanum = {alpha}|[0-9]
 
@@ -74,7 +74,7 @@ num = [0-9]
 
 <YYINITIAL>	"+"	{return new Symbol(sym.PLUS);}
 <YYINITIAL>	"-"	{return new Symbol(sym.MINUS);}
-<YYINITIAL>	"*"	{return new Symbol(sym.MUL);}
+<YYINITIAL>	"*"	{return new Symbol(sym.TIMES);}
 <YYINITIAL>	"/"	{return new Symbol(sym.DIV);}
 <YYINITIAL>	"%"	{return new Symbol(sym.MOD);}
 <YYINITIAL>	"="	{return new Symbol(sym.ASSIGN);}
