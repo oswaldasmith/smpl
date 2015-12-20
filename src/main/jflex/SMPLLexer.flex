@@ -13,6 +13,7 @@ import java.io.IOException;
 %public
 
 %class SMPLLexer
+%unicode
 
 %type java_cup.runtime.Symbol
 
@@ -44,7 +45,6 @@ import java.io.IOException;
     }
 %}
 
-
 nl = [\n\r]
 
 cc = ([\b\f]|{nl})
@@ -55,9 +55,20 @@ alpha = [a-zA-Z_"$""#""?""~"]
 
 alphanum = {alpha}|[0-9]
 
+num =[0-9]
+
 //hex = [0-9A-Fa-f+]#TODO
 
-num = [0-9]
+LineTerminator = \r|\n|\r\n
+InputCharacter = [^\r\n]
+
+Comment = {TraditionalComment} | {EndOfLineComment} | {DocumentationComment}
+
+TraditionalComment   = "/*" [^*] ~"*/" | "/*" "*"+ "/"
+// Comment can be the last line of the file, without line terminator.
+EndOfLineComment     = "//" {InputCharacter}* {LineTerminator}?
+DocumentationComment = "/**" {CommentContent} "*"+ "/"
+CommentContent       = ( [^*] | \*+ [^/*] )*
 
 %%
 
@@ -72,13 +83,14 @@ num = [0-9]
 <YYINITIAL>    \#.*  { // ignore line comments
                     }
 
+<YYINITIAL> {Comment} { /* ignore */ }
+
 <YYINITIAL>	"+"	{return new Symbol(sym.PLUS);}
 <YYINITIAL>	"-"	{return new Symbol(sym.MINUS);}
 <YYINITIAL>	"*"	{return new Symbol(sym.TIMES);}
 <YYINITIAL>	"/"	{return new Symbol(sym.DIV);}
 <YYINITIAL>	"%"	{return new Symbol(sym.MOD);}
-<YYINITIAL>	"="	{return new Symbol(sym.ASSIGN);}
-<YYINITIAL> "<"|">"|"<="|">="|"=="|"!=" { return new Symbol(sym.CMP, yytext()); }
+<YYINITIAL> "<"|">"|"<="|">="|"="|"!=" { return new Symbol(sym.CMP, yytext()); }
 
 <YYINITIAL>	"("	{return new Symbol(sym.LPAREN);}
 <YYINITIAL>	")"	{return new Symbol(sym.RPAREN);}
@@ -131,7 +143,7 @@ num = [0-9]
 //<YYINITIAL> {hex} { return "hex"; }#TODO
 
 
-<YYINITIAL>    {alpha}{alphanum}* {
+<YYINITIAL>    {alpha}+{alphanum}* | {alphanum}+{alpha}* {
 	       // VARIABLE
 	       return new Symbol(sym.VARIABLE, yytext());
 	       }
