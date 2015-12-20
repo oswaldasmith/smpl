@@ -62,9 +62,9 @@ terminal String VARIABLE;
 terminal String STRING;
 
 /* Non terminals */
-non terminal Program program;
+non terminal SMPLProgram program;
 non terminal StmtSequence stmtList;
-non terminal Statement stmt;
+non terminal SMPLStatement stmt;
 non terminal CarStmt car;
 non terminal CdrStmt cdr;
 non terminal IsPairStmt isPair;
@@ -100,29 +100,29 @@ non terminal empty;
 
 start with program;
 
-program ::= stmtList:s {: RESULT = new Program(s); :};
+program ::= stmtList:s {: RESULT = new SMPLProgram(s); :};
 
 stmtList ::= stmtList:lst stmt:s {:
-		lst.add(s);
-		RESULT = lst;
+			lst.add(s);
+			RESULT = lst;
 		:} |
-	     stmt:s {:
-		RESULT = new StmtSequence(s);
+		stmt:s {:
+			RESULT = new Sequence(s);
 		:};
 
 stmt ::= definition:d SEMI {: RESULT = d; :} |
-	    arithExp:e SEMI {: RESULT = new Statement(e); :};
+	    arithExp:e SEMI {: RESULT = new SMPLStatement(e); :};
 
 definition ::= VARIABLE:v ASSIGN arithExp:e {:
 		   RESULT = new StmtDefinition(v, e);
 		:} |
-		 funDefn:d {: RESULT = d; :} |
-		 proc:p {: RESULT = p; :} |
-		 if:i {: RESULT = i; :} |
-		 let:l {: RESULT = l; :} |
-		 lazy:l {: RESULT = l; :} |
-		 case:c {: RESULT = c; :} |
-		 funCall:f {: RESULT = f; :};
+		funDefn:d {: RESULT = d; :} |
+		proc:p {: RESULT = p; :} |
+		if:i {: RESULT = i; :} |
+		let:l {: RESULT = l; :} |
+		lazy:l {: RESULT = l; :} |
+		case:c {: RESULT = c; :} |
+		funCall:f {: RESULT = f; :};
 
 exPair ::= PAIR LPAREN arithExp:e1 COMMA arithExp:e2 RPAREN {:
             RESULT = new exPair(e1,e2);

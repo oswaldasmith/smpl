@@ -8,7 +8,7 @@ public class SMPLEvaluator extends SMPLVisitor<SMPLContext, SMPLValue<T>> {
 	
 	private final ArithEvaluator arithEval;
 	private final CIREvaluator condEval;
-	
+	Map<String, SMPLFunction> baseFuncMap;
 
 	// change this
 	Double lastResult;
@@ -16,6 +16,9 @@ public class SMPLEvaluator extends SMPLVisitor<SMPLContext, SMPLValue<T>> {
 	public SMPLEvaluator() {
 		arithEval = new ArithEvaluator();
 		condEval = new CIREvaluator();
+
+		
+
 		lastResult = 0;
 	}
 

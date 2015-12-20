@@ -3,7 +3,7 @@ package com.comp3652.lang;
 import java.util.*;
 import com.comp3652.sys.*;
 
-public class SMPLSequence extends SMPLExp {
+public class StmtSequence extends SMPLExp {
 
 	protected ArrayList<SMPLStatement> sequence;
 
