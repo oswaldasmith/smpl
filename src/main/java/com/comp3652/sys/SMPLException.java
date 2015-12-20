@@ -15,7 +15,7 @@ public class SMPLException extends Exception {
 	}
 
 	public SMPLException(String s, SMPLException smple) {
-		super(e);
+		super(smple);
 		cause = smple;
 	}
 

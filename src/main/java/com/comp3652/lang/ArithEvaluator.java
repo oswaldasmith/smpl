@@ -28,25 +28,35 @@ public class ArithEvaluator implements AIRVisitor<SMPLEnvironment<Double>, Doubl
     
     /* Methods specific to Arithmetic expressions */
     @Override
-    public Double visitAIRExpInt(AIRExpInt exp, SMPLEnvironment<Double> env) throws HPLException {
+    public Double visitAIRExpInt(AIRExpInt exp, SMPLEnvironment<Double> env) throws SMPLException {
 	return new Double(exp.getVal());
     }
 
     @Override
     public Double visitAIRExpFrac(AIRExpFrac exp,
-				  SMPLEnvironment<Double> arg) throws HPLException {
+				  SMPLEnvironment<Double> arg) throws SMPLException {
 	return new Double(exp.getVal());
+    }
+
+    @Override
+    public Double visitAIRExpVar(AIRExpVar exp, SMPLEnvironment<Double> state) throws SMPLException {
+        return null;
+    }
+
+    @Override
+    public Double visitAIRBinaryExp(AIRBinaryExp exp, SMPLEnvironment<Double> state) throws SMPLException {
+        return null;
     }
     
     /* Methods from the generic ASTVisitor interface */
 
     @Override
-    public Double visitVar(ASTVar<AIRExp> var, SMPLEnvironment<Double> state) throws HPLException {
+    public Double visitVar(ASTVar<AIRExp> var, SMPLEnvironment<Double> state) throws SMPLException {
         return state.get(var.getId());        
     }
 
     @Override
-    public Double visitUnaryExp(ASTUnaryExp<AIRExp> exp, SMPLEnvironment<Double> env) throws HPLException {
+    public Double visitUnaryExp(ASTUnaryExp<AIRExp> exp, SMPLEnvironment<Double> env) throws SMPLException {
         String opName = exp.getOperator();
         UnOpArith op = unOpsMap.get(opName);
         ASTExp<AIRExp> argExp = exp.getExp();
@@ -55,7 +65,7 @@ public class ArithEvaluator implements AIRVisitor<SMPLEnvironment<Double>, Doubl
     }
 
     @Override
-    public Double visitBinaryExp(ASTBinaryExp<AIRExp> exp, SMPLEnvironment<Double> env) throws HPLException {
+    public Double visitBinaryExp(ASTBinaryExp<AIRExp> exp, SMPLEnvironment<Double> env) throws SMPLException {
         String opName = exp.getOperator();
         BinOpArith op = binOpsMap.get(opName);
         ASTExp<AIRExp> leftExp = exp.getExp1();

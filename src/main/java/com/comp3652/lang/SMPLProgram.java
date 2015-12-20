@@ -1,7 +1,7 @@
 package com.comp3652.lang;
+import com.comp3652.sys.SMPLException;
 
-
-public class SMPLProgram extends SMPLStatement {
+public class SMPLProgram extends SMPLStatment {
 
 	protected SMPLSequence statements;
 
@@ -14,7 +14,7 @@ public class SMPLProgram extends SMPLStatement {
 	}
 
 	@Override
-	public <S, T> T visit(SMPLVisitor<S, T> v, S state) throws SMPLException {
+	public <S, T> T visit(SMPLVisitor<S,T> v, S state) throws SMPLException {
 		return v.visitSMPLProgram(this, state);
 	}
 }

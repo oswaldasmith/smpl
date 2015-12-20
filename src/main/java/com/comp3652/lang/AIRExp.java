@@ -17,10 +17,10 @@ public abstract class AIRExp extends ASTExp<AIRExp> {
 		super();
 	}
 
-	public abstract <S, T> T visit(AIRVisitor<S, T> v, S arg) throws HPLException;
+	public abstract <S, T> T visit(AIRVisitor<S, T> v, S arg) throws SMPLException;
 
 	@Override
-	public <S, T> T visit(ASTVisitor<AIRExp, S, T> v, S state) throws HPLException {
+	public <S, T> T visit(ASTVisitor<AIRExp, S, T> v, S state) throws SMPLException {
 		// We have to delegate to the more specific visit method from here.
 		return visit((AIRVisitor<S, T>) v, state);
 	}

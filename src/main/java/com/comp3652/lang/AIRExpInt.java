@@ -20,7 +20,7 @@ public class AIRExpInt extends AIRExp {
     }
 
     @Override
-    public <S, T> T visit(AIRVisitor<S, T> v, S arg) throws HPLException {
+    public <S, T> T visit(AIRVisitor<S, T> v, S arg) throws SMPLException {
         return v.visitAIRExpInt(this, arg);
     }
 }
