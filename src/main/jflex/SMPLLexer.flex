@@ -55,7 +55,7 @@ alpha = [a-zA-Z_"$""#""?""~"]
 
 alphanum = {alpha}|[0-9]
 
-hex = [0-9A-Fa-f+]
+//hex = [0-9A-Fa-f+]#TODO
 
 num = [0-9]
 
@@ -128,7 +128,7 @@ num = [0-9]
 				 new Integer(yytext()));
 	       }
 
-<YYINITIAL> {hex} { return "hex"; }
+//<YYINITIAL> {hex} { return "hex"; }#TODO
 
 
 <YYINITIAL>    {alpha}{alphanum}* {
