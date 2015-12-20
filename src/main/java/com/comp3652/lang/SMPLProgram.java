@@ -6,7 +6,7 @@ public class SMPLProgram extends SMPLsStatment {
 
 	protected StmtSequence statements;
 
-	public SMPLProgram (StmtSequence stmts) {
+	public SMPLProgram (SMPLSequence stmts) {
 		statements = stmts;
 	}
 

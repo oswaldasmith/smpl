@@ -4,7 +4,7 @@ import com.comp3652.sys.*;
 import com.comp3652.values.*;
 import java.util.*;
 
-public class SMPLEvaluator extends SMPLVisitor<SMPLContext, SMPLValue<>> {
+public class SMPLEvaluator extends SMPLVisitor<SMPLContext, SMPLValue<T>> {
 	
 	private final ArithEvaluator arithEval;
 	private final CIREvaluator condEval;
