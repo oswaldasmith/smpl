@@ -42,8 +42,8 @@ scan with {:
 /* Terminals (tokens returned by the scanner). */
 
 // special symbols
-terminal DEF,LET,IF,PROC,LAZY,IFPAIR,PAIR,CALL,BE;
-terminal LBRACKET,RBRACKET,LPAREN, RPAREN,COMMA, LBRACE, RBRACE, SEMI,COLON,THEN,ELSE;
+terminal DEF,PROC,LAZY,IFPAIR,PAIR,CALL,BE;
+terminal LBRACKET,RBRACKET,LPAREN, RPAREN,COMMA, LBRACE, RBRACE, SEMI,COLON;
 
 // arithmetic operators
 terminal PLUS, MINUS, DIV, MOD,TIMES;
@@ -56,7 +56,7 @@ terminal PRINT,PRINTLN,READ,READINT,CASE;
 
 //unary operators and Logic Extensions
 terminal AND, OR, NOT;
-terminal String CMP;
+terminal String CMP,IF,THEN,ELSE,LET;
 
 // terminals with values
 terminal Integer INTEGER;
@@ -120,17 +120,20 @@ stmtList ::= stmtList:seq stmt:s {:
              empty {:
               RESULT = new SMPLStmtSequence(); :};
 
-stmt ::= binding:b {:
+stmt ::= binding:b SEMI{:
                 RESULT = b;
             :} |
-            print:p {:
+            print:p SEMI{:
                 RESULT = p;
             :} |
-            read:r {:
+            read:r SEMI {:
                 RESULT = r;
             :} |
-            funCall:f {:
+            funCall:f SEMI {:
                 RESULT = f;
+            :} |
+            if:i SEMI {:
+                RESULT = i;
             :};
 
 binding ::= DEF VAR:v arithExp:e {:
@@ -139,10 +142,10 @@ binding ::= DEF VAR:v arithExp:e {:
             		DEF VAR:v smplExp:e {:
             		    RESULT = new SMPLStmtDefinition(v,e);
                     :} |
-                    VAR:v BE smplExp:e {:
+                    VAR:v BE smplExp:e  {:
                         RESULT = new SMPLStmtDefinition(v,e);
                     :} |
-                    VAR:v BE arithExp:e {:
+                    VAR:v BE arithExp:e  {:
                         RESULT = new SMPLStmtDefinition(v,e);
                     :};
 
