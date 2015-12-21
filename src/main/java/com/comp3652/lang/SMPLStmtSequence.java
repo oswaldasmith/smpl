@@ -4,15 +4,15 @@ import com.comp3652.sys.*;
 import java.util.*;
 
 
-public class SMPLStmtSequence extends PIRExp {
+public class SMPLSequence extends PIRExp {
 
 	protected List<SMPLStatement> sequence;
 
-	public SMPLStmtSequence() {
+	public SMPLSequence() {
         sequence = new ArrayList<>();
     }
 
-    public SMPLStmtSequence(ArrayList<PIRStatement> seq) {
+    public SMPLSequence(ArrayList<PIRStatement> seq) {
         sequence = seq;
     }
 
@@ -26,6 +26,6 @@ public class SMPLStmtSequence extends PIRExp {
 
     @Override
     public <S, T> T visit(HPLVisitor<S, T> v, S state) throws HPLException {
-        return v.visitSMPLStmtSequence(this, state);
+        return v.visitSMPLSequence(this, state);
     }
 }

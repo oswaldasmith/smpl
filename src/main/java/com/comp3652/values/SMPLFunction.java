@@ -7,7 +7,7 @@ public class SMPLFunction {
 
 	String name;
 	ArrayList<String> params;
-	SMPLStmtSequence body;
+	SMPLSequence body;
 	SMPLContext closingEnv;
 
 	public HPLFunction(String id, ArrayList<String> params,

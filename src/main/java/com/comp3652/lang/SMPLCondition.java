@@ -5,9 +5,9 @@ import com.comp3652.sys.SMPLException;
 public class SMPLCondition extends SMPLStatement {
 
 	ASTExp<CIRExp> conditionalExpression;
-	SMPLStmtSequence statements;
+	SMPLSequence statements;
 
-	public PIRConditional(ASTExp<CIRExp> cExp, SMPLStmtSequence seq) {
+	public PIRConditional(ASTExp<CIRExp> cExp, SMPLSequence seq) {
 		conditionalExpression = cExp;
 		statements = seq;
 	}
@@ -16,7 +16,7 @@ public class SMPLCondition extends SMPLStatement {
 		return conditionalExpression;
 	}
 
-	public SMPLStmtSequence getStatements() {
+	public SMPLSequence getStatements() {
 		return statements;
 	}
 

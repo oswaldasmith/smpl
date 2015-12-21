@@ -78,10 +78,16 @@ terminal String STRING;
 
 /* Non terminals */
 non terminal SMPLProgram program;
-non terminal SMPLStmtSequence stmtList;
-non terminal SMPLStmtDefinition binding;
-non terminal ArrayList<SMPLStmtDefinition> bindList;
+non terminal SMPLSequence stmtList;
 non terminal SMPLStatement stmt;
+
+non terminal SMPLFun
+
+
+// not sure about this
+non terminal SMPLDefinition binding; 
+non terminal ArrayList<SMPLDefinition> bindList;
+
 non terminal SMPLCarStmt car;
 non terminal SMPLCdrStmt cdr;
 non terminal SMPLisPairStmt isPair;
@@ -126,7 +132,7 @@ stmtList ::= stmtList:seq stmt:s {:
                 seq.addStatement(s);
                 RESULT = seq; :} |
              empty {:
-              RESULT = new SMPLStmtSequence(); :};
+              RESULT = new SMPLSequence(); :};
 
 stmt ::= binding:b SEMI{:
                 RESULT = b;
@@ -145,16 +151,16 @@ stmt ::= binding:b SEMI{:
             :};
 
 binding ::= DEF VAR:v arithExp:e {:
-            		   RESULT = new SMPLStmtDefinition(v, e);
+            		   RESULT = new SMPLDefinition(v, e);
             		:} |
             		DEF VAR:v smplExp:e {:
-            		    RESULT = new SMPLStmtDefinition(v,e);
+            		    RESULT = new SMPLDefinition(v,e);
                     :} |
                     VAR:v BE smplExp:e  {:
-                        RESULT = new SMPLStmtDefinition(v,e);
+                        RESULT = new SMPLDefinition(v,e);
                     :} |
                     VAR:v BE arithExp:e  {:
-                        RESULT = new SMPLStmtDefinition(v,e);
+                        RESULT = new SMPLDefinition(v,e);
                     :};
 
 bindList ::= bindList:l COMMA binding:b {:

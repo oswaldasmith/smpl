@@ -1,0 +1,152 @@
+package com.comp3652.lang;
+
+import java_cup.runtime.*;
+import java.io.*;
+import java.util.*;
+
+parser code {: 
+	SMPLLexer lexer;
+
+	public SMPLParser(SMPLLexer l) {
+		super(l);
+		lexer = l;
+	}
+
+	public void report_error(String message, Object info) {
+		    System.err.println(message);
+	}
+
+	public void syntax_error(Symbol cur_token) {
+	    System.err.print("Line " + lexer.getLine() +
+			     " near char " + lexer.getChar() + ": ");
+	    report_error("Syntax error", cur_token);
+	    System.err.println ("Last token read is " +
+				 lexer.getText());
+	}
+:};
+
+init with {: :};
+
+scan with {:
+	try {
+		return lexer.next_token();
+	} catch (java.io.IOException ioe) {
+		System.out.println ("Unrecognised token");
+		System.out.println(ioe.getMessage());
+		throw ioe;
+	}
+:};
+
+/* Terminals */
+
+// special symbols
+terminal LBRACKET,RBRACKET,LPAREN, RPAREN,COMMA, LBRACE, RBRACE, SEMI, COLON;
+
+// functions
+terminal DEF, PROC, LAZY;
+
+// aithmetic
+terminal PLUS, MINUS, DIV, MOD, TIMES;
+
+//Builtin Statements
+terminal PRINT, PRINTLN, READ, READINT, CASE;
+
+//unary operators and Logic Extensions
+terminal AND, OR, NOT;
+terminal CMP, IF, THEN, ELSE, LET;
+
+// terminals with values
+terminal Integer INTEGER;
+terminal Double FLOAT;
+terminal Double FRACTION;
+terminal Char CHAR;
+terminal Boolean TRUE;
+terminal Boolean FALSE;
+terminal String VAR;
+terminal String STRING;
+
+/* Non terminals */
+
+non terminal SMPLProgram program;
+non terminal SMPLSequence stmtList;
+non terminal SMPLLStatement stmt;
+
+non terminal SMPLStatement defStmt;
+non terminal SMPLStatement condStmt;
+non terminal SMPLStatement predExp;
+
+non terminal SMPLFunCall funCall;
+
+non terminal ASTExp<AIRExp> arithExp;
+non terminal ASTExp<AIRExp> arithTerm;
+non terminal ASTExp<AIRExp> arithConstFactor;
+non terminal ASTExp<AIRExp> arithFactor;
+
+non terminal ArrayList<ASTExp<AIRExp>> aExpList;   /* non-empty arith exp list */
+non terminal ArrayList<ASTExp<AIRExp>> aExpListE;  /* potentially empty arith exp list */
+
+non terminal ArrayList<String> paramList;
+non terminal ArrayList<String> paramListE;
+
+
+
+non terminal empty;
+
+program ::= stmtList:s {: RESULT = new SMPLProgram(s); :};
+
+stmtList ::= stmtList:seq stmt:s {:
+				seq.addStatement(s);
+				RESULT = seq;
+			:} |
+			empty {:
+				RESULT = new SMPLSequence();
+			:}
+
+stmt ::= condStmt:s {: RESULT = s; :} |
+		defStmt:s {: RESULT = s; :} |
+		assignStmt:s {: RESULT = s; :} |
+		arithExp:s {: RESULT = s; :} ;
+
+condStmt ::= IF predExp:cex THEN stmtList:cons {:
+				RESULT = new SMPLCondStmt(cex, cons);
+			:} |
+			IF predExp:cex THEN stmtList:cons ELSE stmtList:alt {:
+				RESULT = new SMPLCond(cex, cons, alt);
+			:};
+
+
+// not sure about this
+// need to make it generic
+predExp ::= 
+
+
+
+
+
+funCall ::= VAR:id LPAREN expListE RPAREN {:
+				
+			:};
+
+
+
+
+
+arithExp ::= arithExp:e PLUS arithTerm:t {: RESULT = new ASTBinaryExp<AIRExp>("+", e, t); :} |
+	     arithExp:e MINUS arithTerm:t {: RESULT = new ASTBinaryExp<AIRExp>("-", e, t); :} |
+	     arithTerm:t {: RESULT = t; :};
+
+arithTerm ::= arithTerm:t TIMES arithFactor:f {: RESULT = new ASTBinaryExp<AIRExp>("*", t, f); :}|
+	      arithTerm:t DIV arithFactor:f {: RESULT = new ASTBinaryExp<AIRExp>("/", t, f); :}|
+	      arithTerm:t MOD arithFactor:f {: RESULT = new ASTBinaryExp<AIRExp>("%", t, f); :}|
+	      arithFactor:f {: RESULT = f; :};
+
+
+arithConstFactor ::= INTEGER:ilit {: RESULT = new AIRExpInt(ilit); :} |
+		     FRACTION:frac {: RESULT = new AIRExpFrac(frac); :} |
+		     LPAREN arithExp:e RPAREN {: RESULT = e; :};
+
+arithFactor ::= arithConstFactor:cf {: RESULT = cf; :} |
+				VAR:var {: RESULT = new ASTVar(var); :} |
+                MINUS arithFactor:f {: RESULT = new ASTUnaryExp<AIRExp>("-", f); :};
+
+empty ::= ;

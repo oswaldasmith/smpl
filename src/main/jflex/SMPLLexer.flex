@@ -90,29 +90,39 @@ CommentContent       = ( [^*] | \*+ [^/*] )*
 <YYINITIAL>	"*"	{return new Symbol(sym.TIMES);}
 <YYINITIAL>	"/"	{return new Symbol(sym.DIV);}
 <YYINITIAL>	"%"	{return new Symbol(sym.MOD);}
+
 <YYINITIAL> "<"|">"|"<="|">="|"="|"!=" { return new Symbol(sym.CMP, yytext()); }
 
 <YYINITIAL>	"("	{return new Symbol(sym.LPAREN);}
 <YYINITIAL>	")"	{return new Symbol(sym.RPAREN);}
+
 <YYINITIAL>	"["	{return new Symbol(sym.LBRACKET);}
 <YYINITIAL>	"]"	{return new Symbol(sym.RBRACKET);}
+
 <YYINITIAL>	"{"	{return new Symbol(sym.LBRACE);}
 <YYINITIAL>	"}"	{return new Symbol(sym.RBRACE);}
+
 <YYINITIAL>	","	{return new Symbol(sym.COMMA);}
 <YYINITIAL>	":"	{return new Symbol(sym.COLON);}
 <YYINITIAL>	";"	{return new Symbol(sym.SEMI);}
+
 <YYINITIAL>	"let" {return new Symbol(sym.LET);}
 <YYINITIAL> "def" {return new Symbol(sym.DEF);}
+
+<YYINITIAL> "if" {return new Symbol(sym.IF);}
+<YYINITIAL> "case" {return new Symbol(sym.CASE);}
+
 <YYINITIAL>	"call" {return new Symbol(sym.CALL);}
 <YYINITIAL> "proc" {return new Symbol(sym.PROC);}
 <YYINITIAL> "lazy" {return new Symbol(sym.LAZY);}
-<YYINITIAL> "if" {return new Symbol(sym.IF);}
+
 <YYINITIAL> "and" {return new Symbol(sym.AND);}
 <YYINITIAL> "or" {return new Symbol(sym.OR);}
 <YYINITIAL> "not" {return new Symbol(sym.NOT);}
+
 <YYINITIAL> "pair" {return new Symbol(sym.PAIR);}
 <YYINITIAL> "pair?" {return new Symbol(sym.IFPAIR);}
-<YYINITIAL> "case" {return new Symbol(sym.CASE);}
+
 <YYINITIAL> "print" {return new Symbol(sym.PRINT);}
 <YYINITIAL> "println" {return new Symbol(sym.PRINTLN);}
 <YYINITIAL> "read" {return new Symbol(sym.READ);}

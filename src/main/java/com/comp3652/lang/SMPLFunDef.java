@@ -6,7 +6,7 @@ public class SMPLFunDef extends SMPLStatement {
 
 	protected String name;
 	protected ArrayList<String> params;
-	protected SMPLStmtSequence statements;
+	protected SMPLSequence statements;
 
 	public SMPLFunDef() {
 
@@ -20,7 +20,7 @@ public class SMPLFunDef extends SMPLStatement {
 		return params;
 	}
 
-	public SMPLStmtSequence getStatements() {
+	public SMPLSequence getStatements() {
 		return statements;
 	}
 
