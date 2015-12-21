@@ -90,6 +90,7 @@ CommentContent       = ( [^*] | \*+ [^/*] )*
 <YYINITIAL>	"*"	{return new Symbol(sym.TIMES);}
 <YYINITIAL>	"/"	{return new Symbol(sym.DIV);}
 <YYINITIAL>	"%"	{return new Symbol(sym.MOD);}
+<YYINTIAL> ":=" {return new Symbol(sym.ASSIGN);}
 <YYINITIAL> "<"|">"|"<="|">="|"="|"!=" { return new Symbol(sym.CMP, yytext()); }
 
 <YYINITIAL>	"("	{return new Symbol(sym.LPAREN);}
