@@ -13,8 +13,11 @@ public class SMPLRepl {
 
 
     public static void main(String args[]){
+        setup();
+    }
 
-
+    public static void setup() {
+        
     }
 
     public static void reader(String name, SMPLContext genv) throws FileNotFoundException {

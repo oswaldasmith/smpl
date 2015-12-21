@@ -7,6 +7,17 @@ public abstract class SMPLValue <T> {
 
     public static final SMPLValue DEFAULT =  new PrimitiveSMPLValue();
 
-    public void render(){};
+    private T value;
 
+    public SMPLValue(T value) {
+    	this.value = value;
+    }
+
+    public T getType() {
+    	return T;
+    }
+
+    public T getValue() {
+    	return value;
+    }
 }
