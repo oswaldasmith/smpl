@@ -5,7 +5,7 @@ public class SMPLProgram extends SMPLStatement {
 
 	protected SMPLSequence statements;
 
-	public SMPLSe (SMPLSequence stmts) {
+	public SMPLProgram(SMPLSequence stmts) {
 		statements = stmts;
 	}
 
@@ -17,4 +17,6 @@ public class SMPLProgram extends SMPLStatement {
 	public <S, T> T visit(SMPLVisitor<S,T> v, S state) throws SMPLException {
 		return v.visitSMPLProgram(this, state);
 	}
+
+	
 }

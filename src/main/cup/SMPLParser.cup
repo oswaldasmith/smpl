@@ -8,11 +8,19 @@ import java.util.*;
 parser code {:
 		SMPLLexer lexer;
 
-		public ArithParser(SMPLLexer l) {
+		public SMPLParser(SMPLLexer l) {
 		    // As of CUP v0.11, need to pass Lexer to superclass
 		    super(l);
 		    lexer = l;
 		}
+
+        public SMPLParser(String file) throws FileNotFoundException {
+            this(new SMPLLexer(new FileReader(file)));
+        }
+
+        public SMPLParser(InputStream is) {
+            this(new SMPLLexer(is));
+        }
 
 		public void report_error(String message, Object info) {
 		    System.err.println(message);
@@ -56,7 +64,7 @@ terminal PRINT,PRINTLN,READ,READINT,CASE;
 
 //unary operators and Logic Extensions
 terminal AND, OR, NOT;
-terminal String CMP,IF,THEN,ELSE,LET;
+terminal CMP,IF,THEN,ELSE,LET;
 
 // terminals with values
 terminal Integer INTEGER;

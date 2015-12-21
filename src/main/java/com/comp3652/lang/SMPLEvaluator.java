@@ -17,6 +17,8 @@ public class SMPLEvaluator extends SMPLVisitor<SMPLContext, Double> {
 		arithEval = new ArithEvaluator();
 		condEval = new CIREvaluator();
 		lastResult = 0;
+
+		init();
 	}
 
 	@Override
