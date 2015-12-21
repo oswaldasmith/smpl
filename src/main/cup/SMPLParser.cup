@@ -59,6 +59,7 @@ terminal String CMP,IF,THEN,ELSE,LET;
 
 // terminals with values
 terminal Integer INTEGER;
+terminal Integer HEX;
 terminal Double FLOAT;
 terminal Double FRACTION;
 terminal char CHAR;

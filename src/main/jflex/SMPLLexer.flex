@@ -57,7 +57,7 @@ alphanum = {alpha}|[0-9]
 
 num =[0-9]
 
-//hex = [0-9A-Fa-f+]#TODO
+hex = [0-9A-Fa-f+]
 
 LineTerminator = \r|\n|\r\n
 InputCharacter = [^\r\n]
@@ -142,7 +142,7 @@ CommentContent       = ( [^*] | \*+ [^/*] )*
 				 new Integer(yytext()));
 	       }
 
-//<YYINITIAL> {hex} { return "hex"; }#TODO
+<YYINITIAL> {hex} { return new Symbol(sym.Hex, new String(yytext())); }
 
 
 <YYINITIAL>    {alpha}+{alphanum}* | {alphanum}+{alpha}* {
