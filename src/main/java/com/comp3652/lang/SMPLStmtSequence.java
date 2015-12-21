@@ -16,7 +16,7 @@ public class SMPLStmtSequence extends PIRExp {
         sequence = seq;
     }
 
-    public void addStatement(PIRStatement stmt) {
+    public void addStatement(SMPLStatement stmt) {
         sequence.add(stmt);
     }
 

@@ -8,7 +8,7 @@ import java.util.*;
 parser code {:
 		SMPLLexer lexer;
 
-		public ArithParser(SMPLLexer l) {
+		public SMPLParser(SMPLLexer l) {
 		    // As of CUP v0.11, need to pass Lexer to superclass
 		    super(l);
 		    lexer = l;
@@ -90,7 +90,6 @@ non terminal SMPLReadStmt read;
 non terminal SMPLExpFnCall funCall;
 
 non terminal ASTExp<SMPLExp> smplExp;
-non terminal ASTExp<SMPLExp> primitiveExp;
 non terminal ASTExp<LIRExp> predExp;
 non terminal ArrayList<ASTExp<AIRExp>> arithExpList;
 non terminal SMPLPairExp exPair;
@@ -133,6 +132,12 @@ stmt ::= binding:b SEMI{:
             :} |
             if:i SEMI {:
                 RESULT = i;
+            :} |
+            let:l SEMI {:
+                RESULT = l;
+            :} |
+            case:c SEMI {:
+                RESULT = c;
             :};
 
 binding ::= DEF VAR:v arithExp:e {:
@@ -167,7 +172,7 @@ smplExp ::= exPair:p {:
                 RESULT = v;
             :};
 
-exPair ::= PAIR LPAREN arithExp:e1 COMMA arithExp:e2 RPAREN {:
+exPair ::= PAIR LPAREN smplExp:e1 COMMA smplExp:e2 RPAREN {:
                 RESULT = new exPair(e1,e2);
             :};
 
@@ -177,15 +182,15 @@ cdr ::= CDR LPAREN exPair:p RPAREN {: RESULT = new SMPLCdrStmt(p); :};
 
 isPair ::= IFPAIR LPAREN exPair:p RPAREN {: RESULT = new SMPLisPairStmt(p); :};
 
-vector ::= LBRACKET COLON arithExpList:l COLON RBRACKET {: RESULT = new SMPLVectorExp(lst); :};
+vector ::= LBRACKET COLON arithExpList:l COLON RBRACKET {: RESULT = new SMPLVectorExp(l); :};
 
 retVec ::= vector:v LBRACKET INTEGER:i RBRACKET {: RESULT = new retVectStmt(v,i); :};
 
 size ::= SIZE LPAREN vector:v RPAREN {: RESULT = new SMPLSizeStmt(v); :};
 
-isEqual ::= IFEQUAL LPAREN smplExp:e COMMA arithExp:e2 RPAREN {: RESULT = new SMPLIsEqualStmt(e,e2); :};
+isEqual ::= IFEQUAL LPAREN smplExp:e COMMA smplExp:e2 RPAREN {: RESULT = new SMPLIsEqualStmt(e,e2); :};
 
-isEqv ::= IFEQUIVALENT LPAREN smplExp:e COMMA arithExp:e2 RPAREN {: RESULT = new SMPLIsEqvStmt(e1,e2); :};
+isEqv ::= IFEQUIVALENT LPAREN smplExp:e COMMA smplExp:e2 RPAREN {: RESULT = new SMPLIsEqvStmt(e,e2); :};
 
 substr ::= SUBSTRING LPAREN STRING:s COMMA INTEGER:start COMMA INTEGER:end RPAREN {: RESULT = new SMPLSubStrStmt(s,start,end); :};
 
@@ -216,7 +221,7 @@ let ::= LET LPAREN bindList:ids RPAREN stmtList:body {:
             RESULT = new SMPLLetStmt(ids,body);
         :} |
         LET LPAREN binding:id RPAREN stmtList:body {:
-                    RESULT = new SMPLLetStmt(ids,body);
+            RESULT = new SMPLLetStmt(ids,body);
         :};
 
 
@@ -224,7 +229,7 @@ funCall ::= VAR:fn LPAREN arithExpList:args RPAREN {:
 	    	RESULT = new SMPLExpFnCall(fn, args);
 	    :} |
 	    VAR:fn LPAREN RPAREN {:
-	    	RESULT = new SMPLExpFnCall(fn, new ArrayList<Exp>());
+	    	RESULT = new SMPLExpFnCall(fn, new ArrayList<SMPLExp>());
 	    :} |
 	    CALL LPAREN VAR:fn  COMMA arithExpList:args RPAREN {:
 	        RESULT = new SMPLExpFnCall(fn, args);
@@ -271,7 +276,7 @@ idList ::= idList:lst COMMA VAR:id {:
 				RESULT.add(id);
 			:};
 
-idListE ::= idList:l {: RESULT = lst; :} |
+idListE ::= idList:lst {: RESULT = lst; :} |
             empty {: RESULT = new ArrayList<>();:};
 
 arithExpList ::= arithExpList:lst COMMA arithExp:e {:
@@ -279,7 +284,7 @@ arithExpList ::= arithExpList:lst COMMA arithExp:e {:
 	    	RESULT = lst;
 	    :}|
 	    arithExp:e {:
-	        ArrayList<Exp> lst = new ArrayList<Exp>();
+	        ArrayList<ASTExp<AIRExp>> lst = new ArrayList<ASTExp<AIRExp>>();
 		lst.add(e);
 	    	RESULT = lst;
 	    :} |
@@ -288,13 +293,7 @@ arithExpList ::= arithExpList:lst COMMA arithExp:e {:
         :} |
         LBRACKET arithExpList:lst RBRACKET {:
             RESULT = lst;
-            :} |
-		exPair:ep {:
-		    RESULT = ep;
-		    :} |
-		vector:v {:
-		    RESULT = v;
-		    :};
+            :};
 
 arithExp ::= arithExp:e PLUS arithTerm:t {: RESULT = new ASTBinaryExp<AIRExp>("+", e, t); :} |
 	     arithExp:e MINUS arithTerm:t {: RESULT = new ASTBinaryExp<AIRExp>("-", e, t); :} |

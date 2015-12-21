@@ -6,5 +6,7 @@ public interface SMPLVisitor<S, T> extends ASTVisitor<SMPLExp,S,T> {
 
 	public T visitSMPLProgram(SMPLProgram program, S state);
 
-	public T visitSMPLStmtSequence(SMPLStmtSequence )
+	public T visitSMPLStmtSequence(SMPLStmtSequence s);
+
+	public T visitSMPLAssignment(SMPLAssignment smplAssignment, S state);
 }
