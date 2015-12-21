@@ -46,7 +46,7 @@ terminal DEF,LET,IF,PROC,LAZY,IFPAIR,PAIR,CALL,BE;
 terminal LBRACKET,RBRACKET,LPAREN, RPAREN,COMMA, LBRACE, RBRACE, SEMI,COLON,THEN,ELSE;
 
 // arithmetic operators
-terminal PLUS, MINUS, MUL, DIV, MOD,TIMES;
+terminal PLUS, MINUS, DIV, MOD,TIMES;
 
 //Builtin Functions
 terminal SIZE,IFEQUIVALENT,IFEQUAL,LIST,SUBSTRING,CAR,CDR;
@@ -131,9 +131,6 @@ stmt ::= binding:b {:
             :} |
             funCall:f {:
                 RESULT = f;
-            :} |
-            if:i {:
-             RESULT = i;
             :};
 
 binding ::= DEF VAR:v arithExp:e {:
