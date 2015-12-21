@@ -220,7 +220,7 @@ case ::= CASE LBRACE arithExpList:lst RBRACE arithExp:e1 COLON arithExp:e2 {: RE
 let ::= LET LPAREN bindList:ids RPAREN stmtList:body {:
             RESULT = new SMPLLetStmt(ids,body);
         :} |
-        LET LPAREN binding:id RPAREN stmtList:body {:
+        LET LPAREN binding:ids RPAREN stmtList:body {:
             RESULT = new SMPLLetStmt(ids,body);
         :};
 
