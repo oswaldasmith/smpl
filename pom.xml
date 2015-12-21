@@ -25,7 +25,7 @@
                     <symbolsName>sym</symbolsName>
                     <cupDefinition>src/main/cup/SMPLParser.cup</cupDefinition>
                     <outputDirectory>src/main/java</outputDirectory>
-                    <packageName>com.comp3652.smpl</packageName>
+                    <packageName>com.comp3652.lang</packageName>
                     <progress>true</progress>
                 </configuration>
             </plugin>
@@ -39,13 +39,21 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>src/main/java</outputDirectory>
+                            <outputDirectory>src/main/java/</outputDirectory>
                             <lexDefinitions>
                                 <lexDefinition>src/main/jflex/SMPLLexer.flex</lexDefinition>>
                             </lexDefinitions>
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.7</source>
+                    <target>1.7</target>
+                </configuration>
             </plugin>
 
         </plugins>

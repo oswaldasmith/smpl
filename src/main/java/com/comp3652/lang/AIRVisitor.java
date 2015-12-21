@@ -10,6 +10,5 @@ public interface AIRVisitor<S, T> extends ASTVisitor<AIRExp, S, T> {
     
     public T visitAIRExpVar(AIRExpVar exp, S state) throws SMPLException;
    
-    public T visitAIRBinaryExp(AIRBinaryExp exp, S state) throws SMPLException;
-    
+
 }

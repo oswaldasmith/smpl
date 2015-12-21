@@ -42,13 +42,7 @@ public class ArithEvaluator implements AIRVisitor<SMPLEnvironment<Double>, Doubl
     public Double visitAIRExpVar(AIRExpVar exp, SMPLEnvironment<Double> state) throws SMPLException {
         return null;
     }
-
-    @Override
-    public Double visitAIRBinaryExp(AIRBinaryExp exp, SMPLEnvironment<Double> state) throws SMPLException {
-        return null;
-    }
     
-    /* Methods from the generic ASTVisitor interface */
 
     @Override
     public Double visitVar(ASTVar<AIRExp> var, SMPLEnvironment<Double> state) throws SMPLException {

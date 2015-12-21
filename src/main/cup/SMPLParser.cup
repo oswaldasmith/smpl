@@ -1,4 +1,4 @@
-package com.comp3652.smpl.lang;
+package com.comp3652.lang;
 
 import java_cup.runtime.*;
 import java.io.*;
@@ -6,9 +6,9 @@ import java.util.*;
 
 /* Preliminaries to set up and use the scanner.  */
 parser code {:
-		Lexer lexer;
+		SMPLLexer lexer;
 
-		public ArithParser(Lexer l) {
+		public ArithParser(SMPLLexer l) {
 		    // As of CUP v0.11, need to pass Lexer to superclass
 		    super(l);
 		    lexer = l;
@@ -42,13 +42,21 @@ scan with {:
 /* Terminals (tokens returned by the scanner). */
 
 // special symbols
-terminal VAR,DEF,LET,IF,CAR,CDR, PROC, LAZY, AND, OR, NOT,IFPAIR,PAIR,CALL,PRINT,PRINTLN,READ,READINT,CASE,SIZE,IFEQUIVALENT,IFEQUAL,LIST,SUBSTRING;
-terminal LBRACKET,RBRACKET, LPAREN, RPAREN, COMMA, LBRACE, RBRACE, SEMI,COLON,THEN,ELSE;
+terminal DEF,PROC,LAZY,IFPAIR,PAIR,CALL,BE;
+terminal LBRACKET,RBRACKET,LPAREN, RPAREN,COMMA, LBRACE, RBRACE, SEMI,COLON;
 
 // arithmetic operators
-terminal PLUS, MINUS, MUL, DIV, MOD, ASSIGN,TIMES;
+terminal PLUS, MINUS, DIV, MOD,TIMES;
 
-//unary operators
+//Builtin Functions
+terminal SIZE,IFEQUIVALENT,IFEQUAL,LIST,SUBSTRING,CAR,CDR;
+
+//Builtin Statements
+terminal PRINT,PRINTLN,READ,READINT,CASE;
+
+//unary operators and Logic Extensions
+terminal AND, OR, NOT;
+terminal String CMP,IF,THEN,ELSE,LET;
 
 // terminals with values
 terminal Integer INTEGER;
@@ -57,38 +65,42 @@ terminal Double FRACTION;
 terminal char CHAR;
 terminal Boolean TRUE;
 terminal Boolean FALSE;
-terminal String CMP;
-terminal String VARIABLE;
+terminal String VAR;
 terminal String STRING;
 
 /* Non terminals */
 non terminal SMPLProgram program;
-non terminal StmtSequence stmtList;
+non terminal SMPLStmtSequence stmtList;
+non terminal SMPLStmtDefinition binding;
+non terminal ArrayList<SMPLStmtDefinition> bindList;
 non terminal SMPLStatement stmt;
-non terminal CarStmt car;
-non terminal CdrStmt cdr;
-non terminal IsPairStmt isPair;
-non terminal PrintStmt print;
-non terminal RetVctStmt retVec;
-non terminal SizeStmt size;
-non terminal IsEqualStmt isEqual;
-non terminal IsEqvStmt isEqv;
-non terminal SubStrStmt substr;
-non terminal LazyStmt lazy;
-non terminal ReadStmt read;
-non terminal StmtDefinition definition;
-non terminal StmtFnDefinition funDefn;
-non terminal ExpFnCall funCall;
-non terminal ArrayList<Exp> expList;
-non terminal ExpProcedure proc;
+non terminal SMPLCarStmt car;
+non terminal SMPLCdrStmt cdr;
+non terminal SMPLisPairStmt isPair;
+non terminal SMPLPrintStmt print;
+non terminal SMPLRetVctStmt retVec;
+non terminal SMPLSizeStmt size;
+non terminal SMPLIsEqualStmt isEqual;
+non terminal SMPLIsEqvStmt isEqv;
+non terminal SMPLSubStrStmt substr;
+non terminal SMPLLazyStmt lazy;
+non terminal SMPLIfStmt if;
+non terminal SMPLLetStmt let;
+non terminal SMPLCaseStmt case;
+non terminal SMPLReadStmt read; 
+non terminal SMPLExpFnCall funCall;
+
+non terminal ASTExp<SMPLExp> smplExp;
+non terminal ASTExp<SMPLExp> primitiveExp;
+non terminal ASTExp<LIRExp> predExp;
+non terminal ArrayList<ASTExp<AIRExp>> arithExpList;
+non terminal SMPLPairExp exPair;
+non terminal SMPLVectorExp vector;
+non terminal SMPLExpProcedure proc;
 non terminal ArrayList<String> idList;
 non terminal ArrayList<String> idListE;
-non terminal PairExp exPair;
-non terminal VectorExp vector;
-non terminal IfStmt if;
-non terminal LetStmt let;
-non terminal CaseStmt case;
 
+/*Arithmetic Expressions */
 non terminal ASTExp<AIRExp> arithExp;
 non terminal ASTExp<AIRExp> arithTerm;
 non terminal ASTExp<AIRExp> arithConstFactor;
@@ -102,87 +114,121 @@ start with program;
 
 program ::= stmtList:s {: RESULT = new SMPLProgram(s); :};
 
-stmtList ::= stmtList:lst stmt:s {:
-			lst.add(s);
-			RESULT = lst;
-		:} |
-		stmt:s {:
-			RESULT = new Sequence(s);
-		:};
+stmtList ::= stmtList:seq stmt:s {:
+                seq.addStatement(s);
+                RESULT = seq; :} |
+             empty {:
+              RESULT = new SMPLStmtSequence(); :};
 
-stmt ::= definition:d SEMI {: RESULT = d; :} |
-	    arithExp:e SEMI {: RESULT = new SMPLStatement(e); :};
+stmt ::= binding:b SEMI{:
+                RESULT = b;
+            :} |
+            print:p SEMI{:
+                RESULT = p;
+            :} |
+            read:r SEMI {:
+                RESULT = r;
+            :} |
+            funCall:f SEMI {:
+                RESULT = f;
+            :} |
+            if:i SEMI {:
+                RESULT = i;
+            :};
 
-definition ::= VARIABLE:v ASSIGN arithExp:e {:
-		   RESULT = new StmtDefinition(v, e);
-		:} |
-		funDefn:d {: RESULT = d; :} |
-		proc:p {: RESULT = p; :} |
-		if:i {: RESULT = i; :} |
-		let:l {: RESULT = l; :} |
-		lazy:l {: RESULT = l; :} |
-		case:c {: RESULT = c; :} |
-		funCall:f {: RESULT = f; :};
+binding ::= DEF VAR:v arithExp:e {:
+            		   RESULT = new SMPLStmtDefinition(v, e);
+            		:} |
+            		DEF VAR:v smplExp:e {:
+            		    RESULT = new SMPLStmtDefinition(v,e);
+                    :} |
+                    VAR:v BE smplExp:e  {:
+                        RESULT = new SMPLStmtDefinition(v,e);
+                    :} |
+                    VAR:v BE arithExp:e  {:
+                        RESULT = new SMPLStmtDefinition(v,e);
+                    :};
+
+bindList ::= bindList:l COMMA binding:b {:
+                l.add(b);
+                RESULT = l;
+             :};
+
+predExp ::= arithExp:e1 CMP arithExp:e2 {:
+                RESULT = new ASTExp<LIRExp>(e1,e2);
+            :} |
+            smplExp:e1 CMP smplExp:e2 {:
+                RESULT = new ASTExp<LIRExp>(e1,e2);
+            :};
+
+smplExp ::= exPair:p {:
+                RESULT = p;
+            :} |
+            vector:v {:
+                RESULT = v;
+            :};
 
 exPair ::= PAIR LPAREN arithExp:e1 COMMA arithExp:e2 RPAREN {:
-            RESULT = new exPair(e1,e2);
-        :};
+                RESULT = new exPair(e1,e2);
+            :};
 
-car ::= CAR LPAREN exPair:p RPAREN {: RESULT = new CarStmt(p); :};
+car ::= CAR LPAREN exPair:p RPAREN {: RESULT = new SMPLCarStmt(p); :};
 
-cdr ::= CDR LPAREN exPair:p RPAREN {: RESULT = new CdrStmt(p); :};
+cdr ::= CDR LPAREN exPair:p RPAREN {: RESULT = new SMPLCdrStmt(p); :};
 
-isPair ::= IFPAIR LPAREN exPair:p RPAREN {: RESULT = new IsPairStmt(p); :};
+isPair ::= IFPAIR LPAREN exPair:p RPAREN {: RESULT = new SMPLisPairStmt(p); :};
 
-vector ::= LBRACKET COLON expList:l COLON RBRACKET {: RESULT = new VectorExp(lst); :};
+vector ::= LBRACKET COLON arithExpList:l COLON RBRACKET {: RESULT = new SMPLVectorExp(lst); :};
 
 retVec ::= vector:v LBRACKET INTEGER:i RBRACKET {: RESULT = new retVectStmt(v,i); :};
 
-size ::= SIZE LPAREN vector:v RPAREN {: RESULT = new SizeStmt(v); :};
+size ::= SIZE LPAREN vector:v RPAREN {: RESULT = new SMPLSizeStmt(v); :};
 
-isEqual ::= IFEQUAL LPAREN arithExp:e COMMA arithExp:e2 RPAREN {: RESULT = new IsEqualStmt(e,e2); :};
+isEqual ::= IFEQUAL LPAREN smplExp:e COMMA arithExp:e2 RPAREN {: RESULT = new SMPLIsEqualStmt(e,e2); :};
 
-isEqv ::= IFEQUIVALENT LPAREN arithExp:e COMMA arithExp:e2 RPAREN {: RESULT = new IsEqvStmt(e1,e2); :};
+isEqv ::= IFEQUIVALENT LPAREN smplExp:e COMMA arithExp:e2 RPAREN {: RESULT = new SMPLIsEqvStmt(e1,e2); :};
 
-substr ::= SUBSTRING LPAREN STRING:s COMMA INTEGER:start COMMA INTEGER:end RPAREN {: RESULT = new SubStrStmt(s,start,end); :};
+substr ::= SUBSTRING LPAREN STRING:s COMMA INTEGER:start COMMA INTEGER:end RPAREN {: RESULT = new SMPLSubStrStmt(s,start,end); :};
 
-proc ::= PROC LPAREN idList:lst RPAREN stmtList:body {: RESULT = new ExpProcedure(lst,body); :};
+proc ::= PROC LPAREN idListE:lst RPAREN LBRACE stmtList:body RBRACE {: RESULT = new SMPLExpProcedure(lst,body); :};
 
 print ::= PRINT LPAREN arithExp:e RPAREN {:
-            RESULT = new PrintStmt(e);
+            RESULT = new SMPLPrintStmt(e);
           :} |
-          PRINTLN LPAREN arithExp:e RPAREN {: RESULT = new PrintStmt(e); :};
+          PRINTLN LPAREN arithExp:e RPAREN {: RESULT = new SMPLPrintStmt(e); :};
 
 read ::= READ LPAREN RPAREN {:
-                RESULT = new ReadStmt();
+                RESULT = new SMPLReadStmt();
          :} |
          READINT LPAREN RPAREN {:
-                RESULT = new ReadStmt();
+                RESULT = new SMPLReadStmt();
          :};
 
-if ::=  IF arithExp:e THEN stmtList:body {:
-            RESULT = new IfStmt(e,body);
+if ::=  IF predExp:p THEN stmtList:cons {:
+            RESULT = new SMPLIfStmt(p,cons);
         :} |
-        IF arithExp:e THEN stmtList:body ELSE stmtList:other {:
-            body.add(other);
-            RESULT = new IfStmt(e,body);
+        IF predExp:p THEN stmtList:cons ELSE stmtList:alt {:
+            RESULT = new SMPLIfStmt(p,cons,alt);
         :};
 
-case ::= CASE LBRACE expList:lst RBRACE arithExp:e1 COLON arithExp:e2 {: RESULT = new CaseStmt(lst,e1,e2); :};
+case ::= CASE LBRACE arithExpList:lst RBRACE arithExp:e1 COLON arithExp:e2 {: RESULT = new SMPLCaseStmt(lst,e1,e2); :};
 
-let ::= LET RPAREN idList:ids LPAREN stmtList:body {: RESULT = new LetStmt(ids,e); :};
+let ::= LET LPAREN bindList:ids RPAREN stmtList:body {:
+            RESULT = new SMPLLetStmt(ids,body);
+        :} |
+        LET LPAREN binding:id RPAREN stmtList:body {:
+                    RESULT = new SMPLLetStmt(ids,body);
+        :};
 
-funDefn ::= DEF VARIABLE:name PROC LPAREN idListE:p RPAREN LBRACE stmtList:body RBRACE{:
-	    	RESULT = new StmtFnDefinition(name,body,p); :};
 
-funCall ::= VARIABLE:fn LPAREN expList:args RPAREN {:
-	    	RESULT = new ExpFnCall(fn, args);
+funCall ::= VAR:fn LPAREN arithExpList:args RPAREN {:
+	    	RESULT = new SMPLExpFnCall(fn, args);
 	    :} |
-	    VARIABLE:fn LPAREN RPAREN {:
-	    	RESULT = new ExpFnCall(fn, new ArrayList<Exp>());
+	    VAR:fn LPAREN RPAREN {:
+	    	RESULT = new SMPLExpFnCall(fn, new ArrayList<Exp>());
 	    :} |
-	    CALL LPAREN VARIABLE:fn  COMMA expList:args RPAREN {:
-	        RESULT = new ExpFnCall(fn, args);
+	    CALL LPAREN VAR:fn  COMMA arithExpList:args RPAREN {:
+	        RESULT = new SMPLExpFnCall(fn, args);
         :} |
         car:c {:
             RESULT = c;
@@ -208,29 +254,28 @@ funCall ::= VARIABLE:fn LPAREN expList:args RPAREN {:
         substr:s {:
             RESULT = s;
         :} |
-        print:p {:
+        proc:p {:
             RESULT = p;
         :} |
-        read:r {:
-            RESULT = r;
+        lazy:l {:
+            RESULT = l;
         :};
 
-lazy ::= LAZY LPAREN arithExp:e RPAREN {: RESULT = new LazyStmt(e); :};
 
-idList ::= idList:l COMMA VARIABLE:v {:
-		    l.add(v);
-		    RESULT = l;
-       	   :} |
-           VARIABLE:v {:
-       	   	    ArrayList<String> lst = new ArrayList<String>();
-		    lst.add(v);
-		    RESULT = lst;
-	   :};
+lazy ::= LAZY LPAREN arithExp:e RPAREN {: RESULT = new SMPLLazyStmt(e); :};
+
+idList ::= idList:lst COMMA VAR:id {:
+		lst.add(id);
+		RESULT = lst; :} |
+	      VAR:id {:
+				RESULT = new ArrayList<>();
+				RESULT.add(id);
+			:};
 
 idListE ::= idList:l {: RESULT = lst; :} |
             empty {: RESULT = new ArrayList<>();:};
 
-expList ::= expList:lst COMMA arithExp:e {:
+arithExpList ::= arithExpList:lst COMMA arithExp:e {:
 	        lst.add(e);
 	    	RESULT = lst;
 	    :}|
@@ -239,10 +284,10 @@ expList ::= expList:lst COMMA arithExp:e {:
 		lst.add(e);
 	    	RESULT = lst;
 	    :} |
-	    LIST LPAREN expList:lst RPAREN {:
+	    LIST LPAREN arithExpList:lst RPAREN {:
 	        RESULT = lst;
         :} |
-        LBRACKET expList:lst RBRACKET {:
+        LBRACKET arithExpList:lst RBRACKET {:
             RESULT = lst;
             :} |
 		exPair:ep {:

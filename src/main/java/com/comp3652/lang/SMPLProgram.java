@@ -1,17 +1,12 @@
 package com.comp3652.lang;
-
 import com.comp3652.sys.SMPLException;
 
-public class SMPLProgram extends SMPLsStatment {
+public class SMPLProgram extends SMPLStatement {
 
-	protected StmtSequence statements;
+	protected SMPLSequence statements;
 
-	public SMPLProgram (SMPLSequence stmts) {
+	public SMPLSe (SMPLSequence stmts) {
 		statements = stmts;
-	}
-
-	public SMPLProgram () {
-		statements = null;
 	}
 
 	public SMPLSequence getSequence() {
