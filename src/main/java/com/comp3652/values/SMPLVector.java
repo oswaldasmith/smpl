@@ -4,4 +4,7 @@ import java.util.*;
 
 public class SMPLVector {
 	
+	public SMPLVector() {
+		
+	}
 }
