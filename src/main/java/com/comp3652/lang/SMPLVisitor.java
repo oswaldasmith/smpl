@@ -4,5 +4,7 @@ import com.comp3652.sys.SMPLException;
 
 public interface SMPLVisitor<S, T> extends ASTVisitor<SMPLExp,S,T> {
 
-	public T visitSMPLProgram(SMPLProgram smplProgram, S state);
+	public T visitSMPLProgram(SMPLProgram program, S state);
+
+	public T visitSMPLStmtSequence(SMPLStmtSequence )
 }
