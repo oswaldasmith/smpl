@@ -1,7 +1,7 @@
 /* Specification for SMPL tokens */
 
 // user customisations
-package com.comp3652.smpl;
+package com.comp3652.lang;
 
 import java_cup.runtime.*;
 import java.io.IOException;
@@ -77,8 +77,8 @@ num = [0-9]
 <YYINITIAL>	"*"	{return new Symbol(sym.TIMES);}
 <YYINITIAL>	"/"	{return new Symbol(sym.DIV);}
 <YYINITIAL>	"%"	{return new Symbol(sym.MOD);}
-<YYINITIAL>	"="	{return new Symbol(sym.ASSIGN);}
-<YYINITIAL> "<"|">"|"<="|">="|"=="|"!=" { return new Symbol(sym.CMP, yytext()); }
+<YYINITIAL>	":="	{return new Symbol(sym.ASSIGN);}
+<YYINITIAL> "<"|">"|"<="|">="|"=="|"!="|"and"|"or"|"not" { return new Symbol(sym.CMP, yytext()); }
 
 <YYINITIAL>	"("	{return new Symbol(sym.LPAREN);}
 <YYINITIAL>	")"	{return new Symbol(sym.RPAREN);}
@@ -95,9 +95,6 @@ num = [0-9]
 <YYINITIAL> "proc" {return new Symbol(sym.PROC);}
 <YYINITIAL> "lazy" {return new Symbol(sym.LAZY);}
 <YYINITIAL> "if" {return new Symbol(sym.IF);}
-<YYINITIAL> "and" {return new Symbol(sym.AND);}
-<YYINITIAL> "or" {return new Symbol(sym.OR);}
-<YYINITIAL> "not" {return new Symbol(sym.NOT);}
 <YYINITIAL> "pair" {return new Symbol(sym.PAIR);}
 <YYINITIAL> "pair?" {return new Symbol(sym.IFPAIR);}
 <YYINITIAL> "case" {return new Symbol(sym.CASE);}
@@ -128,12 +125,12 @@ num = [0-9]
 				 new Integer(yytext()));
 	       }
 
-<YYINITIAL> {hex} { return "hex"; }
+//<YYINITIAL> {hex} { return; }#todo
 
 
 <YYINITIAL>    {alpha}{alphanum}* {
 	       // VARIABLE
-	       return new Symbol(sym.VARIABLE, yytext());
+	       return new Symbol(sym.VAR, yytext());
 	       }
 
 <YYINITIAL>     0?"."{num}+ {

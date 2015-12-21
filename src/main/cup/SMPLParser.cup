@@ -42,7 +42,7 @@ scan with {:
 /* Terminals (tokens returned by the scanner). */
 
 // special symbols
-terminal DEF,PROC,LAZY,IFPAIR,PAIR,CALL,BE;
+terminal DEF,PROC,LAZY,IFPAIR,PAIR,CALL,BE,ASSIGN;
 terminal LBRACKET,RBRACKET,LPAREN, RPAREN,COMMA, LBRACE, RBRACE, SEMI,COLON;
 
 // arithmetic operators
@@ -55,7 +55,6 @@ terminal SIZE,IFEQUIVALENT,IFEQUAL,LIST,SUBSTRING,CAR,CDR;
 terminal PRINT,PRINTLN,READ,READINT,CASE;
 
 //unary operators and Logic Extensions
-terminal AND, OR, NOT;
 terminal String CMP,IF,THEN,ELSE,LET;
 
 // terminals with values
