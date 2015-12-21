@@ -55,7 +55,6 @@ terminal SIZE,IFEQUIVALENT,IFEQUAL,LIST,SUBSTRING,CAR,CDR;
 terminal PRINT,PRINTLN,READ,READINT,CASE;
 
 //unary operators and Logic Extensions
-terminal AND, OR, NOT;
 terminal String CMP,IF,THEN,ELSE,LET;
 
 // terminals with values
@@ -86,13 +85,13 @@ non terminal SMPLSubStrStmt substr;
 non terminal SMPLLazyStmt lazy;
 non terminal SMPLIfStmt if;
 non terminal SMPLLetStmt let;
-non terminal SMPLCaseStmt case;
+non terminal SMPLCaseExp case;
 non terminal SMPLReadStmt read; 
 non terminal SMPLExpFnCall funCall;
 
 non terminal ASTExp<SMPLExp> smplExp;
-non terminal ASTExp<SMPLExp> primitiveExp;
 non terminal ASTExp<LIRExp> predExp;
+non terminal ArrayList<SMPLCaseStmt> caseList;
 non terminal ArrayList<ASTExp<AIRExp>> arithExpList;
 non terminal SMPLPairExp exPair;
 non terminal SMPLVectorExp vector;
@@ -134,6 +133,12 @@ stmt ::= binding:b SEMI{:
             :} |
             if:i SEMI {:
                 RESULT = i;
+            :} |
+            let:l SEMI {:
+                RESULT = l;
+            :} |
+            case:c SEMI {:
+                RESULT =c;
             :};
 
 binding ::= DEF VAR:v arithExp:e {:
@@ -211,7 +216,13 @@ if ::=  IF predExp:p THEN stmtList:cons {:
             RESULT = new SMPLIfStmt(p,cons,alt);
         :};
 
-case ::= CASE LBRACE arithExpList:lst RBRACE arithExp:e1 COLON arithExp:e2 {: RESULT = new SMPLCaseStmt(lst,e1,e2); :};
+caseList ::= caseList:l COMMA predExp:p COLON stmt:s {:
+                l.add(p,s);
+                RESULT = l;
+            :};
+
+
+case ::= CASE LBRACE caseList:l  ELSE predExp:lastExp COLON stmt:s RBRACE  {: RESULT = new SMPLCaseExp(l,lastExp,s); :};
 
 let ::= LET LPAREN bindList:ids RPAREN stmtList:body {:
             RESULT = new SMPLLetStmt(ids,body);
