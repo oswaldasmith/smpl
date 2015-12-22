@@ -7,8 +7,8 @@ import com.comp3652.sys.SMPLException;
  * Created by carlos on 12/20/15.
  */
 public class SMPLPairExp extends ASTExp<SMPLExp> {
+    //#TODO
     public SMPLPairExp(ASTExp<SMPLExp> e1, ASTExp<SMPLExp> e2) {
-        super(e1, e2);
     }
 
     @Override

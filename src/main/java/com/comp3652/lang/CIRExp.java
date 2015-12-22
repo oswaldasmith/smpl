@@ -6,14 +6,14 @@ public class CIRExp extends ASTExp<CIRExp> {
 
 	protected String id;
 	protected String comparator;
-	protected ASTExp<AIRExp> arithExp;
-	protected ASTExp<SMPLExp> smplExp;
+	protected ASTExp exp;
 
 
-	public CIRExp(String var, String cmp, ASTExp<AIRExp> exp) {
-		id = var;
-		comparator = cmp;
-		arithExp = exp;
+
+	public CIRExp(String var, String cmp, ASTExp exp) {
+		this.id = var;
+		this.comparator = cmp;
+		this.exp = exp;
 	}
 
 
@@ -25,8 +25,8 @@ public class CIRExp extends ASTExp<CIRExp> {
 		return comparator;
 	}
 
-	public ASTExp<AIRExp> getArithExp() {
-		return arithExp;
+	public ASTExp getExp() {
+		return exp;
 	}
 
 	@Override

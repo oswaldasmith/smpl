@@ -25,8 +25,4 @@ public class SMPLAssignment extends SMPLStatement {
 		return v.visitSMPLAssignment(this, state);
 	}
 
-	@Override
-	public <S, T> T visit(SMPLEvaluator v, Object state) throws SMPLException {
-		return null;
-	}
 }

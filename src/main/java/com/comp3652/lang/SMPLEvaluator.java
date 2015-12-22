@@ -57,12 +57,17 @@ public class SMPLEvaluator implements SMPLVisitor<SMPLContext, SMPLValue<SMPLExp
 	}
 
 	@Override
-	public SMPLValue<SMPLExp> visitSMPLExpFnCall(SMPLExpFnCall smplExpFnCall, SMPLContext state) {
+	public SMPLValue<SMPLExp> visitSMPLCaseStmt(SMPLCaseStmt smplCaseStmt, SMPLContext state) {
 		return null;
 	}
 
 	@Override
-	public SMPLValue<SMPLExp> visitSMPLCaseStmt(SMPLCaseStmt smplCaseStmt, SMPLContext state) {
+	public SMPLValue<SMPLExp> visitRetVctStmt(SMPLRetVctStmt smplRetVctStmt, SMPLContext state) {
+		return null;
+	}
+
+	@Override
+	public SMPLValue<SMPLExp> visitSMPLFunDef(SMPLFunDef smplFunDef, SMPLContext state) {
 		return null;
 	}
 
@@ -79,5 +84,13 @@ public class SMPLEvaluator implements SMPLVisitor<SMPLContext, SMPLValue<SMPLExp
 	@Override
 	public SMPLValue<SMPLExp> visitBinaryExp(ASTBinaryExp<SMPLExp> exp, SMPLContext state) throws SMPLException, SMPLException {
 		return null;
+	}
+
+	public SMPLContext mkInitialContext() {
+		return new SMPLContextImpl(new SMPLEnvironment<Double>(),new SMPLEnvironment<>());
+	}
+
+	public SMPLValue getResult() {
+		return lastResult;
 	}
 }
