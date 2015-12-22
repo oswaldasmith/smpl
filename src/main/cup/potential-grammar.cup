@@ -71,7 +71,7 @@ non terminal SMPLProgram program;
 non terminal SMPLSequence stmtList;
 non terminal SMPLLStatement stmt;
 
-non terminal SMPLStatement defStmt;
+non terminal SMPLStatement funDef;
 non terminal SMPLStatement condStmt;
 non terminal SMPLStatement predExp;
 
@@ -85,6 +85,8 @@ non terminal ASTExp<AIRExp> arithFactor;
 non terminal ArrayList<ASTExp<AIRExp>> aExpList;   /* non-empty arith exp list */
 non terminal ArrayList<ASTExp<AIRExp>> aExpListE;  /* potentially empty arith exp list */
 
+// change this
+// a function can be a parameter to another function
 non terminal ArrayList<String> paramList;
 non terminal ArrayList<String> paramListE;
 
@@ -103,9 +105,10 @@ stmtList ::= stmtList:seq stmt:s {:
 			:}
 
 stmt ::= condStmt:s {: RESULT = s; :} |
-		defStmt:s {: RESULT = s; :} |
+		funDef:s {: RESULT = s; :} |
 		assignStmt:s {: RESULT = s; :} |
-		arithExp:s {: RESULT = s; :} ;
+		arithExp:s {: RESULT = s; :} |
+		predExp:s {: RESULT = s; :} ;
 
 condStmt ::= IF predExp:cex THEN stmtList:cons {:
 				RESULT = new SMPLCondStmt(cex, cons);
@@ -117,19 +120,27 @@ condStmt ::= IF predExp:cex THEN stmtList:cons {:
 
 // not sure about this
 // need to make it generic
-predExp ::= 
+predExp ::= predExp:pex CMP:cmp arithExp:exp
 
 
+funDef ::= DEF VAR:v PROC LPAREN paramListE:lst RPAREN
 
 
-
-funCall ::= VAR:id LPAREN expListE RPAREN {:
+funCall ::= VAR:id LPAREN paramListE RPAREN {:
 				
 			:};
 
+paramListE ::= paramList:lst {: RESULT = lst :} |
+			empty {: RESULT = new ArrayList<>(); :};
 
-
-
+paramList ::= paramList:lst COMMA VAR:id {:
+				lst.add(id);
+				RESULT = list;
+			:} |
+			VAR:id {:
+				RESULT = new ArrayList<>();
+				RESULT.add(id);
+			:};
 
 arithExp ::= arithExp:e PLUS arithTerm:t {: RESULT = new ASTBinaryExp<AIRExp>("+", e, t); :} |
 	     arithExp:e MINUS arithTerm:t {: RESULT = new ASTBinaryExp<AIRExp>("-", e, t); :} |
