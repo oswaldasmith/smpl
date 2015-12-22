@@ -67,6 +67,8 @@ terminal BITAND, BITOR, BITNOT;
 terminal AND, OR, NOT;
 terminal CMP, IF, THEN, ELSE, LET;
 
+terminal HEX, BIN;
+
 // terminals with values
 terminal Integer INTEGER;
 terminal Double FLOAT;
@@ -121,13 +123,18 @@ stmtList ::= stmtList:seq stmt:s {:
 			:}
 
 stmt ::= expression:e {: RESULT = e; :} |
-		selection:s {: RESULT = s; :} |
 		assign:a {: RESULT = a; :} |
-		multipleAssign:m {: RESULT = m; :} |
-		definition:d {: RESULT = d; :} ;
+		multipleAssign:m {: RESULT = m; :};
 
-selection ::= case:c {: RESULT = c; :} |
-			if:i {: RESULT = i; :};
+// single assign
+
+assign ::= DEF VAR:v expression:e {: RESULT = new SMPLAssign(v, e); } |
+		VAR:v ASSIGN expression:e {: RESULT = new SMPLAssign(v, e); };
+
+// multiple assign
+
+mulAssign := varList:lst ASSIGN expression:e {: RESULT = new SMPLMulAssign(lst, e); };
+
 
 expression ::= expression:e OR:o conditionAnd:c {: RESULT = new SMPLCondition(e, c, o); :} |
 			body:b {: RESULT = b; :} |
@@ -155,34 +162,6 @@ bitExp ::= bitExp:b BITOR:op EXPRESSION
 body := LBRACE stmtList:seq RBRACE {: RESULT = seq; :} |
 		stmt:s {: RESULT = s; :};
 
-// case statements
-
-case := CASE LBRACE caseStmts:seq RBRACE {: RESULT = new SMPLCaseStmt(seq); :};
-
-caseStmts := caseStmts:seq COMMA caseExp:ce {: 
-				seq.add(ce);
-				RESULT = seq;
-			:} |
-			caseExp:ce {:
-				ArrayList<SMPLStatement> lst = new ArrayList<>();
-				lst.add(ce);
-				RESULT = lst;
-			:} |
-			empty; // not sure if this breaks it, how do u return nothing?
-
-caseExp := expression:exp1 COLON expression:exp2 {: RESULT = new SMPLCaseExp(exp1, exp2); :} |
-		ELSE COLON expression:e {: RESULT = new SMPLCaseExp(e); :};
-
-
-// single assign
-
-assign ::= DEF VAR:v expression:e {: RESULT = new SMPLAssign(v, e); } |
-			DEF VAR:v ASSIGN expression:e {: RESULT = new SMPLAssign(v, e); };
-
-// multiple assign
-
-mulAssign := varList:lst ASSIGN expression:e {: RESULT = new SMPLMulAssign(lst, e); };
-
 varList ::= varList:lst COMMA VAR:v {: 
 			lst.add(v);
 			RESULT = lst;
@@ -192,14 +171,6 @@ varList ::= varList:lst COMMA VAR:v {:
 			lst.add(v);
 			RESULT = v;
 		:};
-		
-condStmt ::= IF predExp:cex THEN stmtList:cons {:
-				RESULT = new SMPLCondStmt(cex, cons);
-			:} |
-			IF predExp:cex THEN stmtList:cons ELSE stmtList:alt {:
-				RESULT = new SMPLCond(cex, cons, alt);
-			:};
-
 
 // not sure about this
 // need to make it generic
@@ -225,6 +196,8 @@ paramList ::= paramList:lst COMMA VAR:id {:
 				RESULT.add(id);
 			:};
 
+// not sure about above
+
 arithExp ::= arithExp:e PLUS arithTerm:t {: RESULT = new ASTBinaryExp<AIRExp>("+", e, t); :} |
 	     arithExp:e MINUS arithTerm:t {: RESULT = new ASTBinaryExp<AIRExp>("-", e, t); :} |
 	     arithTerm:t {: RESULT = t; :};
@@ -232,15 +205,82 @@ arithExp ::= arithExp:e PLUS arithTerm:t {: RESULT = new ASTBinaryExp<AIRExp>("+
 arithTerm ::= arithTerm:t TIMES arithFactor:f {: RESULT = new ASTBinaryExp<AIRExp>("*", t, f); :}|
 	      arithTerm:t DIV arithFactor:f {: RESULT = new ASTBinaryExp<AIRExp>("/", t, f); :}|
 	      arithTerm:t MOD arithFactor:f {: RESULT = new ASTBinaryExp<AIRExp>("%", t, f); :}|
-	      arithFactor:f {: RESULT = f; :};
+	      negationFactor:n {: RESULT = n; :};
 
+negationFactor ::= BITNOT:b factor:f {: RESULT = new BITExp(b, f); :} |
+				factor:f {: RESULT = f; :};
 
 arithConstFactor ::= INTEGER:ilit {: RESULT = new AIRExpInt(ilit); :} |
-		     FRACTION:frac {: RESULT = new AIRExpFrac(frac); :} |
-		     LPAREN arithExp:e RPAREN {: RESULT = e; :};
+		     FRACTION:frac {: RESULT = new AIRExpFrac(frac); :};
 
-arithFactor ::= arithConstFactor:cf {: RESULT = cf; :} |
-				VAR:var {: RESULT = new ASTVar(var); :} |
-                MINUS arithFactor:f {: RESULT = new ASTUnaryExp<AIRExp>("-", f); :};
+// changed arithFactor to be more general, everything here returns something
+
+factor ::=  VAR:var {: RESULT = new ASTVar(var); :} |
+            MINUS arithFactor:f {: RESULT = new ASTUnaryExp<AIRExp>("-", f); :} |
+            arithConstFactor:cf {: RESULT = cf; :} |
+
+            LPAREN expression:e RPAREN {: RESULT = e; :} |
+
+            HEX:h {: RESULT = new SMPLHexExp(h); :} |
+            BIN:b {: RESULT = new SMPLBinExp(b); :} |
+
+            STRING:s {: RESULT = new SMPLStringExp(s); :} |
+            CHAR:c {: RESULT = new SMPLString(c); :} |
+
+            TRUE {: RESULT = new SMPLBooleanExp(true); :} |
+            FALSE {: RESULT = new SMPLBooleanExp(false); :} |
+
+            condition:c {: RESULT = c; :} |
+            case:c {: RESULT = c; :} |
+            let:l {: RESULT = l; :} |
+
+
+// let expressions
+
+let ::= LET LPAREN bindList:lst RPAREN body:b {: 
+			RESULT = new SMPLetDef(lst, b);
+		:} |
+		LET LPAREN bindList:lst RPAREN expression:e {:
+			RESULT = new SMPLetDef(lst, e);
+		:};
+
+bindList ::= bindList:lst COMMA binding:b {: 
+			lst.add(b);
+			RESULT = lst;
+		:} |
+		binding:b {: 
+			// change this
+			ArrayList<SMPLStatement> lst = new ArrayList<>();
+			lst.add(b);
+			RESULT = lst;
+		:};
+
+binding ::= VAR:v BE expression:e {: RESULT = new SMPLAssignment(v, e); :};
+
+// case statements
+
+case ::= CASE LBRACE caseStmts:seq RBRACE {: RESULT = new SMPLCaseStmt(seq); :};
+
+caseStmts ::= caseStmts:seq COMMA caseExp:ce {: 
+				seq.add(ce);
+				RESULT = seq;
+			:} |
+			caseExp:ce {:
+				ArrayList<SMPLStatement> lst = new ArrayList<>();
+				lst.add(ce);
+				RESULT = lst;
+			:} |
+			empty; // not sure if this breaks it, how do u return nothing?
+
+caseExp ::= expression:exp1 COLON expression:exp2 {: RESULT = new SMPLCaseExp(exp1, exp2); :} |
+		ELSE COLON expression:e {: RESULT = new SMPLCaseExp(e); :};
+
+
+condition ::= IF expression:e THEN stmtList:cons {:
+				RESULT = new SMPLCondStmt(e, cons);
+			:} |
+			IF expression:e THEN stmtList:cons ELSE stmtList:alt {:
+				RESULT = new SMPLCond(e, cons, alt);
+			:};
 
 empty ::= ;
