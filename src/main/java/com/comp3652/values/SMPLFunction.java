@@ -1,6 +1,8 @@
 package com.comp3652.values;
 
 import com.comp3652.lang.*;
+import com.comp3652.sys.SMPLContext;
+
 import java.util.*;
 
 public class SMPLFunction {
@@ -10,8 +12,8 @@ public class SMPLFunction {
 	SMPLStmtSequence body;
 	SMPLContext closingEnv;
 
-	public HPLFunction(String id, ArrayList<String> params,
-						SMPLSequence body, SMPLContext env) {
+	public SMPLFunction(String id, ArrayList<String> params,
+						SMPLStmtSequence body, SMPLContext env) {
         this.name = id;
         this.params = params;
         this.body = b;
@@ -26,7 +28,7 @@ public class SMPLFunction {
     	return params;
     }
 
-    public SMPLSequence getBody() {
+    public SMPLStmtSequence getBody() {
     	return body;
     }
 
