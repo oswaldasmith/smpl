@@ -143,7 +143,16 @@ body := LBRACE stmtList:seq RBRACE {: RESULT = seq; :} |
 
 case := CASE LBRACE caseStmts:seq RBRACE {: RESULT = new SMPLCaseStmt(seq); :};
 
-caseStmts := caseStmts:cs COMMA caseExp:ce
+caseStmts := caseStmts:seq COMMA caseExp:ce {: 
+				seq.add(ce);
+				RESULT = seq;
+			:} |
+			caseExp:ce {:
+				ArrayList<SMPLStatement> lst = new ArrayList<>();
+				lst.add(ce);
+				RESULT = lst;
+			:} |
+			empty; // not sure if this breaks it, how do u return nothing?
 
 assign ::= DEF VAR:v expression:e {: RESULT = new SMPLAssign(v, e); } |
 			DEF VAR:v ASSIGN expression:e {: RESULT = new SMPLAssign(v, e); };
