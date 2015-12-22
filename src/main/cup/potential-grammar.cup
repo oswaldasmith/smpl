@@ -120,21 +120,14 @@ stmtList ::= stmtList:seq stmt:s {:
 				RESULT = new SMPLSequence();
 			:}
 
-//stmt ::= expStmt:s {: RESULT = s; :} |
-//		condStmt:s {: RESULT = s; :} |
-//		caseStmt:s {: RESULT = s; :} |
-//		defStmt:s {: RESULT = s; :} |
-//		assign:s {: RESULT = s; :} |
-//		mulAssign:s {: RESULT = s; :} |
-//		arithExp:s {: RESULT = s; :} |
-//		predExp:s {: RESULT = s; :} ;
-
 stmt ::= expression:e {: RESULT = e; :} |
-		case:c {: RESULT = c; :} |
-		case:c SEMI {: RESULT = c; :} | // he had alt thing on the pdf online like this
+		selection:s {: RESULT = s; :} |
 		assign:a {: RESULT = a; :} |
 		multipleAssign:m {: RESULT = m; :} |
 		definition:d {: RESULT = d; :} ;
+
+selection ::= case:c {: RESULT = c; :} |
+			if:i {: RESULT = i; :};
 
 expression ::= expression:e OR:o conditionAnd:c {: RESULT = new SMPLCondition(e, c, o); :} |
 			body:b {: RESULT = b; :} |
@@ -181,23 +174,25 @@ caseExp := expression:exp1 COLON expression:exp2 {: RESULT = new SMPLCaseExp(exp
 		ELSE COLON expression:e {: RESULT = new SMPLCaseExp(e); :};
 
 
-
+// single assign
 
 assign ::= DEF VAR:v expression:e {: RESULT = new SMPLAssign(v, e); } |
 			DEF VAR:v ASSIGN expression:e {: RESULT = new SMPLAssign(v, e); };
 
+// multiple assign
+
 mulAssign := varList:lst ASSIGN expression:e {: RESULT = new SMPLMulAssign(lst, e); };
 
-varList ::= VAR:v COMMA varList:lst {: 
-			lst.add(0, v);
-			RESULT = lst;
-		:}
-
-remainingVarList ::= remainingVarList:lst COMMA VAR:v {: 
+varList ::= varList:lst COMMA VAR:v {: 
 			lst.add(v);
 			RESULT = lst;
+		:} |
+		VAR:v {:
+			ArrayList<String> lst = new ArrayList<>();
+			lst.add(v);
+			RESULT = v;
 		:};
-
+		
 condStmt ::= IF predExp:cex THEN stmtList:cons {:
 				RESULT = new SMPLCondStmt(cex, cons);
 			:} |
