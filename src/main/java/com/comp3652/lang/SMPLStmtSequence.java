@@ -11,8 +11,8 @@ public class SMPLStmtSequence extends SMPLExp {
 		sequence = new ArrayList<>();
 	}
 
-	public SMPLStmtSequence(ArrayList<SMPLStmtSequence> seq) {
-		sequence.add(seq);
+	public SMPLStmtSequence(ArrayList<SMPLStatement> seq) {
+		sequence = seq;
 	}
 
 	public void addStatement(SMPLStatement stmt) {

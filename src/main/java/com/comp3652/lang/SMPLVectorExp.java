@@ -14,6 +14,11 @@ public class SMPLVectorExp extends ASTExp<SMPLExp> {
         this.list = l;
     }
 
+    public ArrayList<ASTExp<SMPLExp>> getList() {
+        return list;
+    }
+
+
     @Override
     public <S, T> T visit(ASTVisitor<SMPLExp, S, T> v, S state) throws SMPLException {
         return null;
