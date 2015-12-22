@@ -16,9 +16,6 @@ public class CIRExp extends ASTExp<CIRExp> {
 		arithExp = exp;
 	}
 
-	public CIRExp(String id, String cmp, ASTExp<SMPLExp> e) {
-
-	}
 
 	public String getId() {
 		return id;

@@ -59,8 +59,7 @@ terminal String CMP,IF,THEN,ELSE,LET;
 
 // terminals with values
 terminal Integer INTEGER;
-terminal Double HEX;
-terminal Integer BIN;
+terminal Double FLOAT;
 terminal Double FRACTION;
 terminal char CHAR;
 terminal Boolean TRUE;
@@ -142,13 +141,16 @@ stmt ::= binding:b SEMI{:
                 RESULT = c;
             :};
 
-binding ::= DEF VAR:v smplExp:e {:
+binding ::= DEF VAR:v arithExp:e {:
+            		   RESULT = new SMPLStmtDefinition(v, e);
+            		:} |
+            		DEF VAR:v smplExp:e {:
             		    RESULT = new SMPLStmtDefinition(v,e);
                     :} |
                     VAR:v BE smplExp:e  {:
                         RESULT = new SMPLStmtDefinition(v,e);
                     :} |
-                    VAR:v ASSIGN smplExp:e {:
+                    VAR:v BE arithExp:e  {:
                         RESULT = new SMPLStmtDefinition(v,e);
                     :};
 
@@ -157,30 +159,26 @@ bindList ::= bindList:l COMMA binding:b {:
                 RESULT = l;
              :};
 
-predExp ::= VAR:id CMP:cmp smplExp:e {:
+predExp ::= VAR:id CMP:cmp arithExp:e {:
+                RESULT = new CIRExp(id,cmp,e);
+            :} |
+            VAR:id CMP:cmp smplExp:e {:
                 RESULT = new CIRExp(id,cmp,e);
             :};
 
-smplExp ::= arithExp:e {:
-                RESULT = new ASTExp<SMPLExp>(e);
+smplExp ::= exPair:p {:
+                RESULT = p;
             :} |
-            CHAR:c {:
-                RESULT = new ASTExp<SMPLExp>(c);
-            :} |
-            TRUE:t {:
-                RESULT = new ASTExp<SMPLExp>(t);
-            :} |
-            FALSE:f {:
-                RESULT = new ASTExp<SMPLExp>(f);
-            :} |
-            STRING:s {:
-                RESULT = new ASTExp<SMPLExp>(s);
+            vector:v {:
+                RESULT = v;
             :};
 
 smplExpList ::= smplExpList:l COMMA smplExp:e {:
+                    l.add(e);
                     RESULT = l;
+                :};
 
-exPair ::= PAIR:p LPAREN smplExp:e1 COMMA smplExp:e2 RPAREN {:
+exPair ::= PAIR LPAREN smplExp:e1 COMMA smplExp:e2 RPAREN {:
                 RESULT = new exPair(e1,e2);
             :};
 
@@ -272,12 +270,6 @@ funCall ::= VAR:fn LPAREN arithExpList:args RPAREN {:
         :} |
         lazy:l {:
             RESULT = l;
-        :} |
-        exPair:p {:
-            RESULT = p;
-        :} |
-        vector:v {:
-            RESULT = v;
         :};
 
 

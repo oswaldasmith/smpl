@@ -9,37 +9,55 @@ public class SMPLEvaluator extends SMPLVisitor<SMPLContext, SMPLValue<T>> {
 	private final ArithEvaluator arithEval;
 	private final CIREvaluator condEval;
 	Map<String, SMPLFunction> baseFuncMap;
-	SMPLValue result; // collects results
+	SMPLValue lastResult; // collects results
 
-	// change this
-	Double lastResult;
 
 	public SMPLEvaluator() {
 		arithEval = new ArithEvaluator();
 		condEval = new CIREvaluator();
-
-		
-
-		lastResult = 0;
+		lastResult = SMPLValue.DEFAULT;
 	}
 
-	public SMPLContext mkInitialContext() {
-		SMPLContext context = new SMPLContextImpl();
 
-		context.
+	@Override
+	public SMPLValue<T> visitSMPLProgram(SMPLProgram program, SMPLContext state) {
+		return null;
 	}
 
 	@Override
-	public T visitSMPLProgram(SMPLProgram program, S args) 
-	throws SMPLException {
-		SMPLSequence stmts = program.getSequence();
-		
-
+	public SMPLValue<T> visitSMPLStmtSequence(SMPLStmtSequence s) {
+		return null;
 	}
 
-	public T visitSMPLSequence(SMPLSequence seq, S state) 
-	throws HPLException {
-
+	@Override
+	public SMPLValue<T> visitSMPLAssignment(SMPLAssignment smplAssignment, SMPLContext state) {
+		return null;
 	}
 
+	@Override
+	public SMPLValue<T> visitSMPLFunCall(SMPLFunCall smplFunCall, SMPLContext state) {
+		return null;
+	}
+
+	@Override
+	public SMPLValue<T> visitVar(ASTVar<SMPLExp> var, SMPLContext state) throws SMPLException, SMPLException {
+		return null;
+	}
+
+	@Override
+	public SMPLValue<T> visitUnaryExp(ASTUnaryExp<SMPLExp> exp, SMPLContext state) throws SMPLException, SMPLException {
+		return null;
+	}
+
+	@Override
+	public SMPLValue<T> visitBinaryExp(ASTBinaryExp<SMPLExp> exp, SMPLContext state) throws SMPLException, SMPLException {
+		return null;
+	}
+
+	public SMPLContext mkInitialContext() {
+	}
+
+	public SMPLValue getResult() {
+		return lastResult;
+	}
 }

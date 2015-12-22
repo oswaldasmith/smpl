@@ -55,7 +55,7 @@ alpha = [a-zA-Z_"$""#""?""~"]
 
 alphanum = {alpha}|[0-9]
 
-hex = [0-9A-Fa-f+]
+//hex = [0-9A-Fa-f+] #TODO
 
 num = [0-9]
 
@@ -116,10 +116,8 @@ num = [0-9]
 
 <YYINITIAL> "#t" {return new Symbol(sym.TRUE, yytext());}
 <YYINITIAL> "#f" {return new Symbol(sym.FALSE, yytext());}
-<YYINITIAL>  "#x"{hex} {return new Symbol(sym.HEX, yytext());}
-<YYINITIAL>  "#b"[0-1]+ {return new Symbol(sym.BIN, yytext());}
-
-
+//<YYINITIAL>  "#x"{hex} {return new Symbol(sym.HEX, yytext());}  #TODO
+//<YYINITIAL>  "#b"[0-1]+ {return new Symbol(sym.BIN, yytext());} #TODO
 
 <YYINITIAL>    [0-9]+ {
 	       // INTEGER

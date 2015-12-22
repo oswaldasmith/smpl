@@ -10,10 +10,10 @@ import java.util.ArrayList;
 public class SMPLExpFnCall extends SMPLStatement {
 
     private  String fn;
-    private ArrayList<ASTExp<AIRExp>> args;
+    private ArrayList<ASTExp> args;
 
 
-    public SMPLExpFnCall(String fn, ArrayList<ASTExp<AIRExp>> args) {
+    public SMPLExpFnCall(String fn, ArrayList<ASTExp> args) {
         this.fn = fn;
         this.args = args;
     }
