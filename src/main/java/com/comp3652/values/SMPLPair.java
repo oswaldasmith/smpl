@@ -4,7 +4,23 @@ import java.util.*;
 
 public class SMPLPair extends SMPLValue<SMPLPair>{
 
-	public SMPLPair(SMPLExp exp) {
+	protected ASTNode leftValue, rightValue;
 
+	public SMPLPair(ASTNode leftExp, rightExp) {
+		leftValue = leftExp;
+		rightValue = rightExp;
+	}
+
+	public ASTNode getLeft() {
+		return left;
+	}
+
+	public ASTNode getRight() {
+		return right;
+	}
+
+	@Override
+	public String toString() {
+		return "(" + leftValue.toString + ", " + rightValue.toString() + ")";
 	}
 } 

@@ -9,12 +9,6 @@ public abstract class SMPLValue<T> extends SMPLExp {
 
     public static final SMPLValue<PrimitiveSMPLValue> DEFAULT =  new PrimitiveSMPLValue();
 
-    SMPLExp exp;
-
-    public SMPLValue(SMPLExp exp) {
-    	this.exp = exp;
-    }
-
     public T getType() {
     	return T;
     }
