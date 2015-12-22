@@ -8,12 +8,21 @@ parser code {:
 	SMPLLexer lexer;
 
 	public SMPLParser(SMPLLexer l) {
-		super(l);
-		lexer = l;
+	    // As of CUP v0.11, need to pass Lexer to superclass
+	    super(l);
+	    lexer = l;
 	}
 
+	public SMPLParser(String file) throws FileNotFoundException {
+        this(new SMPLLexer(new FileReader(file)));
+    }
+
+    public SMPLParser(InputStream is) {
+        this(new SMPLLexer(is));
+    }
+
 	public void report_error(String message, Object info) {
-		    System.err.println(message);
+	    System.err.println(message);
 	}
 
 	public void syntax_error(Symbol cur_token) {
@@ -69,7 +78,10 @@ terminal String STRING;
 
 non terminal SMPLProgram program;
 non terminal SMPLSequence stmtList;
-non terminal SMPLLStatement stmt;
+non terminal SMPLStatement stmt;
+
+non terminal SMPLAssign assign;
+non terminal SMPLMulAssign mulAssign;
 
 non terminal SMPLStatement funDef;
 non terminal SMPLStatement condStmt;
@@ -90,7 +102,8 @@ non terminal ArrayList<ASTExp<AIRExp>> aExpListE;  /* potentially empty arith ex
 non terminal ArrayList<String> paramList;
 non terminal ArrayList<String> paramListE;
 
-
+non terminal ArrayList<String> varList;
+non terminal ArrayList<String> remainingVarList;
 
 non terminal empty;
 
@@ -104,11 +117,48 @@ stmtList ::= stmtList:seq stmt:s {:
 				RESULT = new SMPLSequence();
 			:}
 
-stmt ::= condStmt:s {: RESULT = s; :} |
-		funDef:s {: RESULT = s; :} |
-		assignStmt:s {: RESULT = s; :} |
-		arithExp:s {: RESULT = s; :} |
-		predExp:s {: RESULT = s; :} ;
+//stmt ::= expStmt:s {: RESULT = s; :} |
+//		condStmt:s {: RESULT = s; :} |
+//		caseStmt:s {: RESULT = s; :} |
+//		defStmt:s {: RESULT = s; :} |
+//		assign:s {: RESULT = s; :} |
+//		mulAssign:s {: RESULT = s; :} |
+//		arithExp:s {: RESULT = s; :} |
+//		predExp:s {: RESULT = s; :} ;
+
+stmt := expression:e {: RESULT = e; :} |
+		case:c {: RESULT = c; :} |
+		assign:a {: RESULT = a; :} |
+		multipleAssign:m {: RESULT = m; :} |
+		definition:d {: RESULT = d; :} ;
+
+expression := expression:e AND:a conditionAnd:c {: RESULT = new CIRExp(e, c, c); :} |
+			body:b {: RESULT = b; :} |
+			conditionalAnd:c {: RESULT = c; :};
+
+// not sure about this
+// the body of the func can be a { stmts } or stmt
+body := LBRACE stmtList:seq RBRACE {: RESULT = seq; :} |
+		stmt:s {: RESULT = s; :};
+
+case := CASE LBRACE caseStmts:seq RBRACE {: RESULT = new SMPLCaseStmt(seq); :};
+
+caseStmts := caseStmts:cs COMMA caseExp:ce
+
+assign ::= DEF VAR:v expression:e {: RESULT = new SMPLAssign(v, e); } |
+			DEF VAR:v ASSIGN expression:e {: RESULT = new SMPLAssign(v, e); };
+
+mulAssign := varList:lst ASSIGN expression:e {: RESULT = new SMPLMulAssign(lst, e); };
+
+varList ::= VAR:v COMMA varList:lst {: 
+			lst.add(0, v);
+			RESULT = lst;
+		:}
+
+remainingVarList ::= remainingVarList:lst COMMA VAR:v {: 
+			lst.add(v);
+			RESULT = lst;
+		:};
 
 condStmt ::= IF predExp:cex THEN stmtList:cons {:
 				RESULT = new SMPLCondStmt(cex, cons);
@@ -123,7 +173,7 @@ condStmt ::= IF predExp:cex THEN stmtList:cons {:
 predExp ::= predExp:pex CMP:cmp arithExp:exp
 
 
-funDef ::= DEF VAR:v PROC LPAREN paramListE:lst RPAREN
+funDef ::= DEF VAR:v PROC LPAREN expressionListE:elist RPAREN stmtList:body
 
 
 funCall ::= VAR:id LPAREN paramListE RPAREN {:

@@ -17,6 +17,4 @@ public class SMPLProgram extends SMPLStatement {
 	public <S, T> T visit(SMPLVisitor<S,T> v, S state) throws SMPLException {
 		return v.visitSMPLProgram(this, state);
 	}
-
-	
 }
