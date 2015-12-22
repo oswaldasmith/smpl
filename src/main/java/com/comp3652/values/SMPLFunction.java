@@ -16,7 +16,7 @@ public class SMPLFunction {
 						SMPLStmtSequence body, SMPLContext env) {
         this.name = id;
         this.params = params;
-        this.body = b;
+        this.body = body;
         this.closingEnv = env;
     }
 

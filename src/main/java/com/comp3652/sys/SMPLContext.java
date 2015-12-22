@@ -2,6 +2,7 @@ package com.comp3652.sys;
 
 import com.comp3652.values.SMPLFunction;
 import com.comp3652.values.SMPLValue;
+import com.comp3652.values.SMPLVector;
 
 import java.util.ArrayList;
 
@@ -25,15 +26,6 @@ public interface SMPLContext {
 	 */
 	public SMPLFunction getF(String name) throws SMPLException;
 
-	/**
-	 * Lookup a reference to a SMPLValue
-	 * @param name The identifier of the SMPLValue
-	 * @return The painter associated with the given name in this context
-	 * @throws SMPLException if the name is not bound to a painter in this
-	 * context
-	 */
-	public SMPLValue getP(String name) throws SMPLException;
-conte
 
 	/**
 	 * Functions
@@ -54,12 +46,13 @@ conte
 
 	/**
 	 * Vectors
-	 * 
-	 * @return [description]
+	 *
+	 * @param vParams The corresponding names of the values
+	 * @param args The corresponding values for the names
+	 * @return new created context with Vectors is extended with new bindings
 	 */
-	public SMPLContext extendV();
+	public SMPLContext extendV(ArrayList<String> vParams, ArrayList<SMPLVector> args);
 
-	public SMPLContext extendP();
 
 	/**
 	 * Get the numerical environment associated with this context
