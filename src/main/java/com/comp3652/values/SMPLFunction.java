@@ -3,7 +3,7 @@ package com.comp3652.values;
 import com.comp3652.lang.*;
 import java.util.*;
 
-public class SMPLFunction {
+public class SMPLFunction extends SMPLValue<SMPLFunction> {
 
 	String name;
 	ArrayList<String> params;

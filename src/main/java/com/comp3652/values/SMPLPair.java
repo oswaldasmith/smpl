@@ -1,6 +1,6 @@
 package com.comp3652.values;
 
-import java.util.*;
+import com.comp3652.lang.*;
 
 public class SMPLPair extends SMPLValue<SMPLPair>{
 

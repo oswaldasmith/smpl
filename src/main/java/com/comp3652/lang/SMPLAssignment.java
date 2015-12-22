@@ -5,9 +5,9 @@ import com.comp3652.sys.*;
 public class SMPLAssignment extends SMPLStatement {
 
 	protected String var;
-	protected ASTExp<SMPLExp> exp;
+	protected AST exp;
 
-	public SMPLAssignment(String id, ASTExp<SMPLExp> exp) {
+	public SMPLAssignment(String id, ASTNode exp) {
 		this.var = id;
 		this.exp = exp;
 	}

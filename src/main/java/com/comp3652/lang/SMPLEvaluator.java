@@ -4,8 +4,8 @@ import com.comp3652.sys.*;
 import com.comp3652.values.*;
 import java.util.*;
 
-public class SMPLEvaluator extends SMPLVisitor<SMPLContext, Double> {
-	
+public class SMPLEvaluator extends SMPLVisitor<SMPLContext, SMPLValue> {
+
 	private final ArithEvaluator arithEval;
 	private final CIREvaluator condEval;
 	
@@ -22,16 +22,16 @@ public class SMPLEvaluator extends SMPLVisitor<SMPLContext, Double> {
 	}
 
 	@Override
-	public T visitSMPLProgram(SMPLProgram program, S args) 
+	public SMPLValue visitSMPLProgram(SMPLProgram program, S args) 
 	throws SMPLException {
 		SMPLSequence stmts = program.getSequence();
 		
 
 	}
 
-	public T visitSMPLSequence(SMPLSequence seq, S state) 
+	@Override
+	public SMPLValue visitSMPLSequence(SMPLSequence seq, S state) 
 	throws HPLException {
 
 	}
-
 }
