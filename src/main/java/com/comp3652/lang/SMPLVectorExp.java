@@ -8,7 +8,7 @@ import java.util.ArrayList;
  * Created by carlos on 12/20/15.
  */
 public class SMPLVectorExp extends ASTExp<SMPLExp> {
-    private ArrayList<ASTExp<AIRExp>> list;
+    private ArrayList<ASTExp<SMPLExp>> list;
 
     public SMPLVectorExp(ArrayList<ASTExp<SMPLExp>> l) {
         this.list = l;

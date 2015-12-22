@@ -13,7 +13,7 @@ public class SMPLCaseStmt extends SMPLStatement {
     }
 
     @Override
-    public <S, T> T visit(SMPLEvaluator v, Object state) throws SMPLException {
-        return null;
+    public <S, T> T visit(SMPLVisitor<S, T> v, S state) throws SMPLException {
+        return v.visitSMPLCaseStmt(this,state);
     }
 }

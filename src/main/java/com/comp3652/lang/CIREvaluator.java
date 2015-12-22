@@ -14,7 +14,7 @@ public class CIREvaluator implements CIRVisitor<SMPLContext, Boolean> {
 
 	@Override
 	public Boolean visitCIRExp(CIRExp exp, SMPLContext state) throws SMPLException {
-		SMPLEnvironment<Double> nEnv = state.getNumEnv();
+		SMPLEnvironment<Double> numEnv = state.getNumEnv();
 
 		String comp = exp.getComparator();
 

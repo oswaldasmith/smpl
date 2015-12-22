@@ -29,4 +29,10 @@ public interface SMPLContext {
 	public SMPLContext extendV();
 
 	public SMPLContext extendP();
+
+	/**
+	 * Get the numerical environment associated with this context
+	 * @return this numerical environment
+     */
+	public SMPLEnvironment<Double> getNumEnv();
 }

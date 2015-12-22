@@ -5,7 +5,7 @@ package com.comp3652.lang;
  */
 public class SMPLCarStmt extends SMPLExpFnCall {
     public SMPLCarStmt(SMPLPairExp p) {
-        super(args);
+        super(p);
 
     }
 }
