@@ -85,8 +85,8 @@ non terminal SMPLProgram program;
 non terminal SMPLSequence stmtList;
 non terminal SMPLStatement stmt;
 
-non terminal SMPLAssign assign;
-non terminal SMPLMulAssign mulAssign;
+non terminal SMPLStatement assign;
+non terminal SMPLStatement mulAssign;
 
 non terminal SMPLStatement funDef;
 non terminal SMPLStatement condStmt;
@@ -235,7 +235,29 @@ factor ::=  VAR:var {: RESULT = new ASTVar(var); :} |
             let:l {: RESULT = l; :} |
 
             funDef:f {: RESULT = f; :} |
-            funCall:f {: RESULT = f; :};
+            funCall:f {: RESULT = f; :} |
+
+            vectorExp:v {: RESULT = v; :} |
+            pairExp:p {: RESULT = p; :} |
+            listExp:l {: RESULT = l; :};
+
+
+vectorExp ::= LBRACKET COLON expressionListE:lst COLON RBRACKET {:
+				RESULT = new SMPLVectorExp(lst);
+			:};
+
+
+
+pairExp ::= PAIR LPAREN expression:leftExp COMMA expression:rightExp RPAREN {:
+				RESULT = new SMPLPairExp(leftExp, rightExp);
+			:};
+
+listExp ::= LIST LPAREN LBRACE expressionList:lst RBRACE RPAREN {:
+				RESULT = new SMPLListExp(lst);
+			:} |
+			LIST LPAREN LBRACE empty RBRACE RPAREN {:
+				RESULT = new SMPLListExp();
+			:};
 
 // function call
 
@@ -311,7 +333,9 @@ caseStmts ::= caseStmts:seq COMMA caseExp:ce {:
 				lst.add(ce);
 				RESULT = lst;
 			:} |
-			empty; // not sure if this breaks it, how do u return nothing?
+			empty {: 
+				RESULT = new ArrayList<>();
+			:}; // not sure if this breaks it, how do u return nothing?
 
 caseExp ::= expression:exp1 COLON expression:exp2 {: RESULT = new SMPLCaseExp(exp1, exp2); :} |
 		ELSE COLON expression:e {: RESULT = new SMPLCaseExp(e); :};

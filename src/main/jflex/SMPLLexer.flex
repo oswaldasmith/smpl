@@ -51,7 +51,7 @@ cc = ([\b\f]|{nl})
 
 ws = {cc}|[\t ]
 
-special = [_"$""#""?""~"]
+//special = [_"$""#""?""~"]
 
 hex = [0-9a-fA-F]
 
@@ -61,7 +61,7 @@ num = [0-9]
 
 alphanum = {alpha}|{num}
 
-all = {alphanum}|{special}
+//all = {alphanum}|{special}
 
 LineTerminator = \r|\n|\r\n
 InputCharacter = [^\r\n]
@@ -161,7 +161,7 @@ CommentContent       = ( [^*] | \*+ [^/*] )*
 				 new Integer(yytext()));
 	       }
 
-<YYINITIAL> #b{0|1}+ { return new Symbol(sym.BIN, Integer.parseInt(yytext().substring(2), 2)); }
+<YYINITIAL> #b(0|1)+ { return new Symbol(sym.BIN, Integer.parseInt(yytext().substring(2), 2)); }
 
 <YYINITIAL> #x{hex}+ { return new Symbol(sym.HEX, Integer.parseInt(yytext().substring(2), 16)); }
 

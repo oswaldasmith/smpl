@@ -8,7 +8,7 @@ import com.comp3652.sys.SMPLException;
 public class SMPLExp extends ASTExp<SMPLExp> {
 
     @Override
-    public <S, T> T visit(ASTVisitor<SMPLExp, S, T> v, S state) throws SMPLException {
+    public <S, T> T visit(SMPLVisitor<SMPLExp, S, T> v, S state) throws SMPLException {
         return visit(SMPLVisitor<S,T> v,state);
     }
 }
