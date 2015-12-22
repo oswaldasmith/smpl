@@ -8,7 +8,19 @@ import java.util.ArrayList;
  * Created by carlos on 12/20/15.
  */
 public class SMPLLetStmt extends SMPLStatement {
+
+    private ArrayList<SMPLStmtDefinition> ids;
+    private SMPLStmtSequence body;
+
     public SMPLLetStmt(ArrayList<SMPLStmtDefinition> ids, SMPLStmtSequence body) {
+
+        this.ids = ids;
+        this.body = body;
+    }
+
+    public SMPLLetStmt(SMPLStmtDefinition ids, SMPLStmtSequence body) {
+        this.body = body;
+        this.ids.add(ids);
 
     }
 

@@ -11,5 +11,5 @@ public class SMPLContextImpl implements SMPLContext {
 	protected SMPLEnvironemnt<String> sEnv;
 	protected SMPLEnvironemnt<SMPLPair> sEnv;
 
-	public SMPLContextImpl(SMPLEnvironemnt<Double> numEnv, SMPLEnvironemnt<SMPLFunction> funcEnv, SMPLEnvironemnt<SMPLVector> vecEnv, SMPLEnvironemnt<SMPL>)
+	public SMPLContextImpl(SMPLEnvironment<Double> numEnv, SMPLEnvironment<SMPLFunction> funcEnv, SMPLEnvironment<SMPLVector> vecEnv, SMPLEnvironemnt<SMPL>)
 }

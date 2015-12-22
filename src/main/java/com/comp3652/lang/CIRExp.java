@@ -7,11 +7,17 @@ public class CIRExp extends ASTExp<CIRExp> {
 	protected String id;
 	protected String comparator;
 	protected ASTExp<AIRExp> arithExp;
+	protected ASTExp<SMPLExp> smplExp;
+
 
 	public CIRExp(String var, String cmp, ASTExp<AIRExp> exp) {
 		id = var;
 		comparator = cmp;
 		arithExp = exp;
+	}
+
+	public CIRExp(String id, String cmp, ASTExp<SMPLExp> e) {
+
 	}
 
 	public String getId() {
@@ -27,11 +33,11 @@ public class CIRExp extends ASTExp<CIRExp> {
 	}
 
 	@Override
-    public <S, T> T visit(ASTVisitor<CIRExp, S, T> v, S state) throws HPLException {
+    public <S, T> T visit(ASTVisitor<CIRExp, S, T> v, S state) throws SMPLException {
         return visit((CIRVisitor<S, T>) v, state);
     }
 
-    public <S, T> T visit(CIRVisitor<S, T> v, S context) throws HPLException{
+    public <S, T> T visit(CIRVisitor<S, T> v, S context) throws SMPLException{
     	return v.visitCIRExp(this, context);
     }
 }

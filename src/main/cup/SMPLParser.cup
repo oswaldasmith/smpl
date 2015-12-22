@@ -59,7 +59,8 @@ terminal String CMP,IF,THEN,ELSE,LET;
 
 // terminals with values
 terminal Integer INTEGER;
-terminal Double FLOAT;
+terminal Double HEX;
+terminal Integer BIN;
 terminal Double FRACTION;
 terminal char CHAR;
 terminal Boolean TRUE;
@@ -90,7 +91,8 @@ non terminal SMPLReadStmt read;
 non terminal SMPLExpFnCall funCall;
 
 non terminal ASTExp<SMPLExp> smplExp;
-non terminal ASTExp<LIRExp> predExp;
+non terminal ArrayList<ASTExp<SMPLExp>> smplExpList;
+non terminal ASTExp<CIRExp> predExp;
 non terminal ArrayList<ASTExp<AIRExp>> arithExpList;
 non terminal SMPLPairExp exPair;
 non terminal SMPLVectorExp vector;
@@ -140,16 +142,13 @@ stmt ::= binding:b SEMI{:
                 RESULT = c;
             :};
 
-binding ::= DEF VAR:v arithExp:e {:
-            		   RESULT = new SMPLStmtDefinition(v, e);
-            		:} |
-            		DEF VAR:v smplExp:e {:
+binding ::= DEF VAR:v smplExp:e {:
             		    RESULT = new SMPLStmtDefinition(v,e);
                     :} |
                     VAR:v BE smplExp:e  {:
                         RESULT = new SMPLStmtDefinition(v,e);
                     :} |
-                    VAR:v BE arithExp:e  {:
+                    VAR:v ASSIGN smplExp:e {:
                         RESULT = new SMPLStmtDefinition(v,e);
                     :};
 
@@ -158,31 +157,41 @@ bindList ::= bindList:l COMMA binding:b {:
                 RESULT = l;
              :};
 
-predExp ::= arithExp:e1 CMP arithExp:e2 {:
-                RESULT = new ASTExp<LIRExp>(e1,e2);
-            :} |
-            smplExp:e1 CMP smplExp:e2 {:
-                RESULT = new ASTExp<LIRExp>(e1,e2);
+predExp ::= VAR:id CMP:cmp smplExp:e {:
+                RESULT = new CIRExp(id,cmp,e);
             :};
 
-smplExp ::= exPair:p {:
-                RESULT = p;
+smplExp ::= arithExp:e {:
+                RESULT = new ASTExp<SMPLExp>(e);
             :} |
-            vector:v {:
-                RESULT = v;
+            CHAR:c {:
+                RESULT = new ASTExp<SMPLExp>(c);
+            :} |
+            TRUE:t {:
+                RESULT = new ASTExp<SMPLExp>(t);
+            :} |
+            FALSE:f {:
+                RESULT = new ASTExp<SMPLExp>(f);
+            :} |
+            STRING:s {:
+                RESULT = new ASTExp<SMPLExp>(s);
             :};
 
-exPair ::= PAIR LPAREN smplExp:e1 COMMA smplExp:e2 RPAREN {:
+smplExpList ::= smplExpList:l COMMA smplExp:e {:
+                    RESULT = l;
+
+exPair ::= PAIR:p LPAREN smplExp:e1 COMMA smplExp:e2 RPAREN {:
                 RESULT = new exPair(e1,e2);
             :};
+
+vector ::= LBRACKET COLON smplExpList:l COLON RBRACKET {: RESULT = new SMPLVectorExp(l); :};
+
 
 car ::= CAR LPAREN exPair:p RPAREN {: RESULT = new SMPLCarStmt(p); :};
 
 cdr ::= CDR LPAREN exPair:p RPAREN {: RESULT = new SMPLCdrStmt(p); :};
 
 isPair ::= IFPAIR LPAREN exPair:p RPAREN {: RESULT = new SMPLisPairStmt(p); :};
-
-vector ::= LBRACKET COLON arithExpList:l COLON RBRACKET {: RESULT = new SMPLVectorExp(l); :};
 
 retVec ::= vector:v LBRACKET INTEGER:i RBRACKET {: RESULT = new retVectStmt(v,i); :};
 
@@ -263,6 +272,12 @@ funCall ::= VAR:fn LPAREN arithExpList:args RPAREN {:
         :} |
         lazy:l {:
             RESULT = l;
+        :} |
+        exPair:p {:
+            RESULT = p;
+        :} |
+        vector:v {:
+            RESULT = v;
         :};
 
 

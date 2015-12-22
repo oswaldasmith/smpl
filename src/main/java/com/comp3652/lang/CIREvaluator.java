@@ -9,7 +9,7 @@ public class CIREvaluator implements CIRVisitor<SMPLContext, Boolean> {
 	protected ArithEvaluator arithEval;
 
 	public CIREvaluator(ArithEvaluator arithEval) {
-		this.arithEval = eval;
+		this.arithEval = arithEval;
 	}
 
 	@Override
@@ -32,26 +32,26 @@ public class CIREvaluator implements CIRVisitor<SMPLContext, Boolean> {
 			case "!=":
 				return numEnv.get(exp.getId()) != exp.getArithExp().visit(arithEval, numEnv);
 			default:
-				throw new HPLException("Invalid comparator.");
+				throw new SMPLException("Invalid comparator.");
 		}
 	}
 
 	@Override
-	public Boolean visitVar(ASTVar<CIRExp> var, HPLContext state) throws HPLException {
-		throw new HPLException("Unimplemented.");
+	public Boolean visitVar(ASTVar<CIRExp> var, SMPLContext state) throws SMPLException {
+		throw new SMPLException("Unimplemented.");
 	}
 
 	@Override
-	public Boolean visitUnaryExp(ASTUnaryExp<CIRExp> exp, HPLContext state)
-	throws HPLException  {
+	public Boolean visitUnaryExp(ASTUnaryExp<CIRExp> exp, SMPLContext state)
+	throws SMPLException  {
 		// should never get here unless language changes
-		throw new HPLException("Unimplemented.");
+		throw new SMPLException("Unimplemented.");
 	}
 
 	@Override
-	public Boolean visitBinaryExp(ASTBinaryExp<CIRExp> exp, HPLContext state)
-	throws HPLException {
+	public Boolean visitBinaryExp(ASTBinaryExp<CIRExp> exp, SMPLContext state)
+	throws SMPLException {
 		// should never get here unless language changes
-		throw new HPLException("Unimplemented.");
+		throw new SMPLException("Unimplemented.");
 	}
 }

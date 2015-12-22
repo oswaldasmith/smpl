@@ -116,6 +116,8 @@ num = [0-9]
 
 <YYINITIAL> "#t" {return new Symbol(sym.TRUE, yytext());}
 <YYINITIAL> "#f" {return new Symbol(sym.FALSE, yytext());}
+<YYINITIAL>  "#x"{hex} {return new Symbol(sym.HEX, yytext());}
+<YYINITIAL>  "#b"[0-1]+ {return new Symbol(sym.BIN, yytext());}
 
 
 
@@ -124,9 +126,6 @@ num = [0-9]
 	       return new Symbol(sym.INTEGER,
 				 new Integer(yytext()));
 	       }
-
-//<YYINITIAL> {hex} { return; }#todo
-
 
 <YYINITIAL>    {alpha}{alphanum}* {
 	       // VARIABLE
@@ -137,10 +136,4 @@ num = [0-9]
 			// FRACTION
 			return new Symbol(sym.FRACTION, new Double(yytext()));
 		}
-
-<YYINITIAL>	{num}+"."{num}+ {
-			// REAL no. used for defining frames
-			return new Symbol(sym.FLOAT, new Double(yytext()));
-		}
-
 

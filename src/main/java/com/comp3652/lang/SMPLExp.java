@@ -5,11 +5,9 @@ import com.comp3652.sys.SMPLException;
 /**
  * Created by carlos on 12/19/15.
  */
-public class SMPLExp extends ASTExp<SMPLExp>{
+public abstract class SMPLExp extends ASTExp<SMPLExp>{
 
-    public SMPLExp(ASTExp<SMPLExp> e1, ASTExp<SMPLExp> e2) {
-        super(e1, e2);
-    }
+    public abstract <S,T> T visit(SMPLVisitor<S,T> v, S context) throws SMPLException;
 
     @Override
     public <S, T> T visit(ASTVisitor<SMPLExp, S, T> v, S state) throws SMPLException {
