@@ -60,6 +60,9 @@ terminal PLUS, MINUS, DIV, MOD, TIMES;
 //Builtin Statements
 terminal PRINT, PRINTLN, READ, READINT, CASE;
 
+//bitwise
+terminal BITAND, BITOR, BITNOT;
+
 //unary operators and Logic Extensions
 terminal AND, OR, NOT;
 terminal CMP, IF, THEN, ELSE, LET;
@@ -126,20 +129,40 @@ stmtList ::= stmtList:seq stmt:s {:
 //		arithExp:s {: RESULT = s; :} |
 //		predExp:s {: RESULT = s; :} ;
 
-stmt := expression:e {: RESULT = e; :} |
+stmt ::= expression:e {: RESULT = e; :} |
 		case:c {: RESULT = c; :} |
+		case:c SEMI {: RESULT = c; :} | // he had alt thing on the pdf online like this
 		assign:a {: RESULT = a; :} |
 		multipleAssign:m {: RESULT = m; :} |
 		definition:d {: RESULT = d; :} ;
 
-expression := expression:e AND:a conditionAnd:c {: RESULT = new CIRExp(e, c, c); :} |
+expression ::= expression:e OR:o conditionAnd:c {: RESULT = new SMPLCondition(e, c, o); :} |
 			body:b {: RESULT = b; :} |
 			conditionalAnd:c {: RESULT = c; :};
+
+// conditionals
+conditionalAnd ::= conditionalAnd:ca AND:a conditionalNot:cn {:
+				RESULT = new SMPLCondition(ca, cn, a); 
+			:} |
+			conditionalNot:c {: RESULT = c; :};
+
+// might have to change this
+// CIRExp doing a lot, could use a diff class
+conditionalNot ::= NOT:n predExp:p {: RESULT = new SMPLCondition(p, n) :} |
+				predExp:b {: RESULT = p; :};
+
+predExp ::= predExp:p CMP:c bitExp:e {: RESULT = new CIRExp(p, e, c); :} |
+			bitExp:b {: RESULT = b; :};
+
+bitExp ::= bitExp:b BITOR:op EXPRESSION
+
 
 // not sure about this
 // the body of the func can be a { stmts } or stmt
 body := LBRACE stmtList:seq RBRACE {: RESULT = seq; :} |
 		stmt:s {: RESULT = s; :};
+
+// case statements
 
 case := CASE LBRACE caseStmts:seq RBRACE {: RESULT = new SMPLCaseStmt(seq); :};
 
@@ -153,6 +176,12 @@ caseStmts := caseStmts:seq COMMA caseExp:ce {:
 				RESULT = lst;
 			:} |
 			empty; // not sure if this breaks it, how do u return nothing?
+
+caseExp := expression:exp1 COLON expression:exp2 {: RESULT = new SMPLCaseExp(exp1, exp2); :} |
+		ELSE COLON expression:e {: RESULT = new SMPLCaseExp(e); :};
+
+
+
 
 assign ::= DEF VAR:v expression:e {: RESULT = new SMPLAssign(v, e); } |
 			DEF VAR:v ASSIGN expression:e {: RESULT = new SMPLAssign(v, e); };
