@@ -16,13 +16,13 @@ public class SMPLEvaluator extends SMPLVisitor<SMPLContext, SMPLValue> {
 	public SMPLEvaluator() {
 		arithEval = new ArithEvaluator();
 		condEval = new CIREvaluator();
-		lastResult = 0;
+		lastResult = SMPLValue.DEFAULT;
 
 		init();
 	}
 
 	@Override
-	public SMPLValue visitSMPLProgram(SMPLProgram program, S args) 
+	public SMPLValue visitSMPLProgram(SMPLProgram program, SMPLContext args) 
 	throws SMPLException {
 		SMPLSequence stmts = program.getSequence();
 		
@@ -30,8 +30,27 @@ public class SMPLEvaluator extends SMPLVisitor<SMPLContext, SMPLValue> {
 	}
 
 	@Override
-	public SMPLValue visitSMPLSequence(SMPLSequence seq, S state) 
+	public SMPLValue visitSMPLSequence(SMPLSequence seq, SMPLContext state) 
 	throws HPLException {
 
 	}
+
+	@Override
+	public SMPLValue visitSMPLDefinition(SMPLDefinition def, SMPLContext state) 
+	throws SMPLException {
+
+	} 
+
+	@Override
+	public SMPLValue visitSMPLFunCall(SMPLFunCall funCall, SMPLContext state) 
+	throws SMPLException {
+
+	}
+
+	@Override
+	public SMPLValue visitSMPLFunDef(SMPLFunDef funDef, SMPLContext state) 
+	throws SMPLException {
+
+	}
+	
 }
