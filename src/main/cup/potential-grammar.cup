@@ -234,6 +234,47 @@ factor ::=  VAR:var {: RESULT = new ASTVar(var); :} |
             case:c {: RESULT = c; :} |
             let:l {: RESULT = l; :} |
 
+            funDef:f {: RESULT = f; :} |
+            funCall:f {: RESULT = f; :};
+
+// function call
+
+funCall ::= CALL LPAREN expression:funExp COMMA expression:funParams RPAREN {:
+				RESULT = new SMPLFunCall(funExp, funParams);
+			:} |
+			VAR:id LPAREN expressionListE:params RPAREN {:
+				RESULT = new SMPLFunCall(id, params);
+			:};
+
+expressionListE ::= expressionList:lst {: RESULT = lst; :} |
+				empty {: RESULT = new ArrayList<>(); :};
+
+expressionList ::= expressionList:lst COMMA expression:e {: 
+					lst.add(e);
+					RESULT = lst;
+				:} |
+				expression:e {:
+					RESULT = new ArrayList<>();
+					RESULT.add(e);
+				:};
+
+// function definitions
+
+funDef ::= PROC LPAREN paramListE:p RPARAM stmt:s {:
+				RESULT = new SMPLFunDef(p, s);
+			:};
+
+paramListE ::= paramList:lst {: RESULT = lst; :} |
+			   empty {: RESULT = new ArrayList<>(); :};
+
+paramList ::= paramList:lst COMMA VAR:id {:
+				lst.add(id);
+				RESULT = lst;
+			:} |
+			VAR:id {:
+				RESULT = new ArrayList<>();
+				RESULT.add(id);
+			:}
 
 // let expressions
 
