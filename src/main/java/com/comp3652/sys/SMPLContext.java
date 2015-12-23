@@ -1,12 +1,22 @@
 package com.comp3652.sys;
 
 import com.comp3652.values.SMPLFunction;
+import com.comp3652.values.SMPLPair;
 import com.comp3652.values.SMPLValue;
 import com.comp3652.values.SMPLVector;
 
 import java.util.ArrayList;
 
 public interface SMPLContext {
+
+
+    /**
+	 *
+	 * Resole an SMPLValue and make the result be the new current frame in a newly created context
+	 * @param v the value to be derived from the current value
+	 * @return new created context
+	 */
+	public SMPLContext composeSMPLValue(SMPLValue v);
 
 	/**
 	 * Lookup a reference to a number
@@ -21,10 +31,26 @@ public interface SMPLContext {
 	 * Lookup a reference to a SMPL function.
 	 * @param name The identifier of the HPL function
 	 * @return The HPL function associated with the given name in this context
-	 * @throws SMPLException if the name is not bound to a painter in this
+	 * @throws SMPLException if the name is not bound to a Function in this
 	 * context
 	 */
 	public SMPLFunction getF(String name) throws SMPLException;
+
+	/**
+	 * Lookup a reference to a SMPL Vector
+	 * @param name The identifier of the Vector
+	 * @return The vector associated
+	 *@throws SMPLException if the name is unbound in this context
+	 */
+	public SMPLVector getV(String name) throws SMPLException;
+
+	/**
+	 * Lookup a reference to a SMPL Pair
+	 * @param name the identifier fo the pair
+	 * @return The pair associated
+	 * @throws SMPLException
+	 */
+	public SMPLPair getP(String name) throws SMPLException;
 
 
 	/**
@@ -53,6 +79,14 @@ public interface SMPLContext {
 	 */
 	public SMPLContext extendV(ArrayList<String> vParams, ArrayList<SMPLVector> args);
 
+	/**
+	 * Pairs
+	 *
+	 * @param pParams The corresponding names of the values
+	 * @param args Corresponding values for the pair
+	 * @return new created context with pairs extended with new bindings
+	 */
+	public SMPLContext extendP(ArrayList<String> pParams, ArrayList<SMPLPair> args);
 
 	/**
 	 * Get the numerical environment associated with this context
