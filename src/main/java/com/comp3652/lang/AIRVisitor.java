@@ -7,8 +7,6 @@ public interface AIRVisitor<S, T> extends ASTVisitor<AIRExp, S, T> {
     T visitAIRExpInt(AIRExpInt exp, S state) throws SMPLException;
 
     T visitAIRExpFrac(AIRExpFrac exp, S state) throws SMPLException;
-    
-    T visitAIRExpVar(AIRExpVar exp, S state) throws SMPLException;
 
     T visitAIRFunCall(SMPLFunCall smplFunCall, S arg) throws SMPLException;
 }

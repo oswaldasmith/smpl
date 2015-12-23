@@ -10,7 +10,4 @@ public interface ASTVisitor<E extends ASTExp<E>, S, T> {
     
     T visitBinaryExp(ASTBinaryExp<E> exp, S state) throws SMPLException;
 
-    T visitBoolExp(BoolExp boolExp, S state)throws SMPLException;
-
-    T visitStringExp(StringExp stringExp, S state)throws SMPLException;
 }
