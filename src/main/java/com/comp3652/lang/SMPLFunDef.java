@@ -8,8 +8,11 @@ public class SMPLFunDef extends SMPLStatement {
 	protected ArrayList<String> params;
 	protected SMPLSequence statements;
 
-	public SMPLFunDef() {
-
+	public SMPLFunDef(String functionName, ArrayList args,
+		SMPLSequence body) {
+		name = functionName;
+		params = args;
+		statements = body;
 	}
 
 	public String getFunctionName() {
@@ -26,6 +29,6 @@ public class SMPLFunDef extends SMPLStatement {
 
 	@Override
 	public <S, T> T visit(SMPLVisitor<S, T> v, S state) throws SMPLException {
-		return v.visitSMPLFunDef(this, state);
+		return v.visitSMPLFunctionDefinition(this, state);
 	}
 }

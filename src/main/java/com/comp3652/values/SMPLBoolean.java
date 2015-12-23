@@ -1,7 +1,7 @@
 package com.comp3652.values;
 
 
-public class SMPLBoolean extends SMPLValues<SMPLBoolean> {
+public class SMPLBoolean extends SMPLPrimitive<SMPLBoolean> {
 
 	protected boolean value;
 

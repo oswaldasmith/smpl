@@ -12,20 +12,20 @@ public class SMPLSequence extends PIRExp {
         sequence = new ArrayList<>();
     }
 
-    public SMPLSequence(ArrayList<PIRStatement> seq) {
+    public SMPLSequence(ArrayList<SMPLExp> seq) {
         sequence = seq;
     }
 
-    public void addStatement(PIRStatement stmt) {
+    public void addStatement(SMPLStatement stmt) {
         sequence.add(stmt);
     }
 
-    public final ArrayList<PIRStatement> getStatements() {
+    public final ArrayList<SMPLStatement> getStatements() {
         return sequence;
     }
 
     @Override
-    public <S, T> T visit(HPLVisitor<S, T> v, S state) throws HPLException {
+    public <S, T> T visit(SMPLVisitor<S, T> v, S state) throws SMPLException {
         return v.visitSMPLSequence(this, state);
     }
 }

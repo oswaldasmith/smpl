@@ -81,34 +81,58 @@ terminal String STRING;
 
 /* Non terminals */
 
+// basic expressions
+non terminal ASTExp<SMPLExp> expression;
+
 non terminal SMPLProgram program;
 non terminal SMPLSequence stmtList;
 non terminal SMPLStatement stmt;
 
-non terminal SMPLStatement assign;
-non terminal SMPLStatement mulAssign;
+// assignment
+non terminal SMPLAssignment assign;
+non terminal SMPLMultipleAssignment mulAssign;
 
-non terminal SMPLStatement funDef;
+// function
+non terminal SMPLFuncDef funDef;
+non terminal SMPLFuncCall funCall;
+
+non terminal ArrayList<String> paramList;
+non terminal ArrayList<String> paramListE;
+
+// conditional
 non terminal SMPLStatement condStmt;
 non terminal SMPLStatement predExp;
 
-non terminal SMPLFunCall funCall;
+// logic operators
+non terminal SMPLLogicJoin conditionalAnd;
+non terminal SMPLLogicNot conditionalNot;
+
+// let
+non terminal SMPLStatement let;
+non terminal SMPLStatement bindList;
+non terminal SMPLStatement binding;
+
+// case
+non terminal SMPLStatement case;
+non terminal SMPLStatement caseStmts;
+non terminal SMPLStatement caseExp;
+
+// if
+non terminal SMPLStatement condition;
 
 non terminal ASTExp<AIRExp> arithExp;
 non terminal ASTExp<AIRExp> arithTerm;
 non terminal ASTExp<AIRExp> arithConstFactor;
 non terminal ASTExp<AIRExp> arithFactor;
 
+// TODO
+// not used, delete
 non terminal ArrayList<ASTExp<AIRExp>> aExpList;   /* non-empty arith exp list */
 non terminal ArrayList<ASTExp<AIRExp>> aExpListE;  /* potentially empty arith exp list */
 
-// change this
-// a function can be a parameter to another function
-non terminal ArrayList<String> paramList;
-non terminal ArrayList<String> paramListE;
-
 non terminal ArrayList<String> varList;
 non terminal ArrayList<String> remainingVarList;
+
 
 non terminal empty;
 
@@ -136,19 +160,17 @@ assign ::= DEF VAR:v expression:e {: RESULT = new SMPLAssign(v, e); } |
 mulAssign := varList:lst ASSIGN expression:e {: RESULT = new SMPLMulAssign(lst, e); };
 
 
-expression ::= expression:e OR:o conditionAnd:c {: RESULT = new SMPLCondition(e, c, o); :} |
+expression ::= expression:e OR:o conditionAnd:c {: RESULT = new SMPLLogicJoin(e, c, o); :} |
 			body:b {: RESULT = b; :} |
 			conditionalAnd:c {: RESULT = c; :};
 
 // conditionals
 conditionalAnd ::= conditionalAnd:ca AND:a conditionalNot:cn {:
-				RESULT = new SMPLCondition(ca, cn, a); 
+				RESULT = new SMPLLogicJoin(ca, cn, a); 
 			:} |
 			conditionalNot:c {: RESULT = c; :};
 
-// might have to change this
-// CIRExp doing a lot, could use a diff class
-conditionalNot ::= NOT:n predExp:p {: RESULT = new SMPLCondition(p, n) :} |
+conditionalNot ::= NOT:n predExp:p {: RESULT = new SMPLLogicNot(p, n) :} |
 				predExp:b {: RESULT = p; :};
 
 predExp ::= predExp:p CMP:c bitExp:e {: RESULT = new CIRExp(p, e, c); :} |
@@ -261,7 +283,7 @@ listExp ::= LIST LPAREN LBRACE expressionList:lst RBRACE RPAREN {:
 
 // function call
 
-funCall ::= CALL LPAREN expression:funExp COMMA expression:funParams RPAREN {:
+funCall ::= CALL LPAREN expression:funExp COMMA expressionList:funParams RPAREN {:
 				RESULT = new SMPLFunCall(funExp, funParams);
 			:} |
 			VAR:id LPAREN expressionListE:params RPAREN {:
@@ -301,10 +323,10 @@ paramList ::= paramList:lst COMMA VAR:id {:
 // let expressions
 
 let ::= LET LPAREN bindList:lst RPAREN body:b {: 
-			RESULT = new SMPLetDef(lst, b);
+			RESULT = new SMPLet(lst, b);
 		:} |
 		LET LPAREN bindList:lst RPAREN expression:e {:
-			RESULT = new SMPLetDef(lst, e);
+			RESULT = new SMPLet(lst, e);
 		:};
 
 bindList ::= bindList:lst COMMA binding:b {: 
@@ -313,7 +335,7 @@ bindList ::= bindList:lst COMMA binding:b {:
 		:} |
 		binding:b {: 
 			// change this
-			ArrayList<SMPLStatement> lst = new ArrayList<>();
+			ArrayList<SMPLExp> lst = new ArrayList<>();
 			lst.add(b);
 			RESULT = lst;
 		:};
@@ -322,30 +344,30 @@ binding ::= VAR:v BE expression:e {: RESULT = new SMPLAssignment(v, e); :};
 
 // case statements
 
-case ::= CASE LBRACE caseStmts:seq RBRACE {: RESULT = new SMPLCaseStmt(seq); :};
+case ::= CASE LBRACE caseStmts:seq RBRACE {: RESULT = new SMPLCase(seq); :};
 
 caseStmts ::= caseStmts:seq COMMA caseExp:ce {: 
 				seq.add(ce);
 				RESULT = seq;
 			:} |
 			caseExp:ce {:
-				ArrayList<SMPLStatement> lst = new ArrayList<>();
+				ArrayList<SMPLExp> lst = new ArrayList<>();
 				lst.add(ce);
 				RESULT = lst;
 			:} |
 			empty {: 
 				RESULT = new ArrayList<>();
-			:}; // not sure if this breaks it, how do u return nothing?
+			:}; 
 
 caseExp ::= expression:exp1 COLON expression:exp2 {: RESULT = new SMPLCaseExp(exp1, exp2); :} |
 		ELSE COLON expression:e {: RESULT = new SMPLCaseExp(e); :};
 
 
-condition ::= IF expression:e THEN stmtList:cons {:
-				RESULT = new SMPLCondStmt(e, cons);
+condition ::= IF expression:exp THEN stmtList:cons {:
+				RESULT = new SMPLCondition(exp, cons);
 			:} |
-			IF expression:e THEN stmtList:cons ELSE stmtList:alt {:
-				RESULT = new SMPLCond(e, cons, alt);
+			IF expression:exp THEN stmtList:cons ELSE stmtList:alt {:
+				RESULT = new SMPLCondition(exp, cons, alt);
 			:};
 
 empty ::= ;
