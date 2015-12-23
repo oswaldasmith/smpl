@@ -88,6 +88,7 @@ non terminal SMPLLetStmt let;
 non terminal SMPLCaseStmt case;
 non terminal SMPLReadStmt read;
 non terminal SMPLFunCall funCall;
+non terminal SMPLExpFunCall smplFunCall;
 
 non terminal ASTExp<SMPLExp> smplExp;
 non terminal ArrayList<ASTExp<SMPLExp>> smplExpList;
@@ -188,6 +189,9 @@ smplExp ::= exPair:p {:
             :}|
             funCall:f SEMI {:
                 RESULT = f;
+            :}|
+            smplFunCall:f {:
+                RESULT = f;
             :};
 
 smplExpList ::= smplExpList:l COMMA smplExp:e {:
@@ -259,18 +263,18 @@ let ::= LET LPAREN bindList:ids RPAREN stmtList:body {:
             RESULT = new SMPLLetStmt(ids,body);
         :};
 
+smplFunCall ::= CALL LPAREN VAR:fn COMMA smplExpList:args RPAREN {:
+                    RESULT = new SMPLFunCall(fn, args);
+               :} |
+               VAR:fn LPAREN smplExpList:args RPAREN {:
+                   RESULT = new SMPLFunCall(fn, args);
+               :};
 
 funCall ::= VAR:fn LPAREN arithExpListE:args RPAREN {:
 	    	RESULT = new SMPLFunCall(fn, args);
 	    :} |
-	    VAR:fn LPAREN smplExpList:args RPAREN {:
-            RESULT = new SMPLFunCall(fn, args);
-        :} |
 	    CALL LPAREN VAR:fn  COMMA arithExpList:args RPAREN {:
 	        RESULT = new SMPLFunCall(fn, args);
-        :} |
-        CALL LPAREN VAR:fn COMMA smplExpList:args RPAREN {:
-        	        RESULT = new SMPLFunCall(fn, args);
         :} |
         car:c {:
             RESULT = c;

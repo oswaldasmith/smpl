@@ -7,13 +7,19 @@ import java.util.ArrayList;
 
 public class SMPLFunCall extends SMPLExp {
     private  String funName;
-    private  ArrayList<ASTExp> ArgExps;
+    private  ArrayList<ASTExp> argExps;
 
     public SMPLFunCall() {
     }
 
     public SMPLFunCall(String fn, ArrayList<ASTExp<AIRExp>> args) {
+        this.funName = fn;
+        this.argExps = args;
+    }
 
+    public SMPLFunCall(String fn, ArrayList<ASTExp<SMPLExp>> args) {
+        this.funName = fn;
+        this.argExps = args;
     }
 
     /**
