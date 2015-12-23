@@ -47,31 +47,35 @@ import java.io.IOException;
 
 nl = [\n\r]
 
+comment = = [^\r\n]
+
 cc = ([\b\f]|{nl})
 
 ws = {cc}|[\t ]
 
 alpha = [a-zA-Z_"$""#""?""~"]
 
-alphanum = {alpha}|[0-9]
-
-//hex = [0-9A-Fa-f+] #TODO
-
 num = [0-9]
+
+alphanum = {alpha}|{num}
+
+specialchars = ["#""+""-""*"".""!"]
+
+allchars={alphanum}|{specialchars}
+
+variable = {alphanum}+{allchars}*
+
+string = \"(.+|"\t"|"\n"|"\f"|\\\\)\"
+
+char = \'(.|"\t"|"\n"|\\\\|"\f"|"\'")\'
+
+hex = [0-9A-Fa-f]
 
 %%
 
 <YYINITIAL>	{ws}	{/* ignore whitespace */}
-<YYINITIAL>	"."	{ //. on a line by itself is EOF
-			  return new Symbol(sym.EOF);}
-
-<YYINITIAL>    {nl} {
-                        //skip newline, but reset char counter
-                        yychar = 0;
-                      }
-<YYINITIAL>    \#.*  { // ignore line comments
-                    }
-
+<YYINITIAL> "//"    {comment}* {nl} { /* ignore comments */ }
+<YYINITIAL> \/\*([^*]|\*[^/])*\*+\/ { /* comments */ }
 <YYINITIAL>	"+"	{return new Symbol(sym.PLUS);}
 <YYINITIAL>	"-"	{return new Symbol(sym.MINUS);}
 <YYINITIAL>	"*"	{return new Symbol(sym.TIMES);}
@@ -112,12 +116,11 @@ num = [0-9]
 <YYINITIAL> "then" {return new Symbol(sym.THEN);}
 <YYINITIAL> "else" {return new Symbol(sym.ELSE);}
 <YYINITIAL> "list" {return new Symbol(sym.LIST);}
-
-
 <YYINITIAL> "#t" {return new Symbol(sym.TRUE, yytext());}
 <YYINITIAL> "#f" {return new Symbol(sym.FALSE, yytext());}
-//<YYINITIAL>  "#x"{hex} {return new Symbol(sym.HEX, yytext());}  #TODO
-//<YYINITIAL>  "#b"[0-1]+ {return new Symbol(sym.BIN, yytext());} #TODO
+<YYINITIAL>  "#b"(0|1)+ { return new Symbol( sym.BIN, Integer.parseInt( yytext().substring(2),2)); }
+<YYINITIAL>  "#x"{hex}+ { return new Symbol( sym.HEX, Integer.parseInt(yytext().substring(2), 16)); }
+
 
 <YYINITIAL>    [0-9]+ {
 	       // INTEGER
@@ -125,7 +128,7 @@ num = [0-9]
 				 new Integer(yytext()));
 	       }
 
-<YYINITIAL>    {alpha}{alphanum}* {
+<YYINITIAL>    {variable} {
 	       // VARIABLE
 	       return new Symbol(sym.VAR, yytext());
 	       }
@@ -133,5 +136,9 @@ num = [0-9]
 <YYINITIAL>     0?"."{num}+ {
 			// FRACTION
 			return new Symbol(sym.FRACTION, new Double(yytext()));
-		}
+		    }
+
+<YYINITIAL> {char} { return new Symbol(sym.CHAR, yytext().substring(1, yylength() - 1));}
+
+<YYINITIAL> {string} { return new Symbol(sym.STRING, yytext().substring(1, yylength() - 1));}
 
