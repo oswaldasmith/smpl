@@ -7,6 +7,7 @@ import java.util.HashMap;
 public class CIREvaluator implements CIRVisitor<SMPLContext, Boolean> {
 
 	protected ArithEvaluator arithEval;
+	protected BooleanEvaluator boolEval;
 
 	public CIREvaluator(ArithEvaluator arithEval) {
 		this.arithEval = arithEval;
@@ -15,6 +16,7 @@ public class CIREvaluator implements CIRVisitor<SMPLContext, Boolean> {
 	@Override
 	public Boolean visitCIRExp(CIRExp exp, SMPLContext state) throws SMPLException {
 		SMPLEnvironment<Double> numEnv = state.getNumEnv();
+		SMPLEnvironment<Boolean> boolEnv = state.getBoolEnv();
 		String comp = exp.getComparator();
 
 		switch (comp) {
@@ -30,6 +32,8 @@ public class CIREvaluator implements CIRVisitor<SMPLContext, Boolean> {
 				return numEnv.get(exp.getId()) == exp.getArithExp().visit(arithEval, numEnv);
 			case "!=":
 				return numEnv.get(exp.getId()) != exp.getArithExp().visit(arithEval, numEnv);
+			case "and":
+				return boolEnv.get(exp.getId()) && exp.getBoolExp().visit()
 			default:
 				throw new SMPLException("Invalid comparator.");
 		}

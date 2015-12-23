@@ -107,4 +107,11 @@ public interface SMPLContext {
 	 * @param n The numerical value to be associated with the name
 	 */
 	public void putN(String name, Double n);
+
+	/**
+	 *
+	 * Get boolean environment associated with this context
+	 * @return bool this associated boolean environment
+     */
+	public  SMPLEnvironment<Boolean> getBoolEnv();
 }

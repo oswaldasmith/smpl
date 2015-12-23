@@ -7,7 +7,7 @@ public class CIRExp extends ASTExp<CIRExp> {
 	protected String id;
 	protected String comparator;
 	protected ASTExp<AIRExp> arithExp;
-
+	protected BoolExp boolExp;
 
 
 	public CIRExp(String var, String cmp, ASTExp<AIRExp> exp) {
@@ -28,6 +28,8 @@ public class CIRExp extends ASTExp<CIRExp> {
 	public ASTExp<AIRExp> getArithExp() {
 		return arithExp;
 	}
+
+	public BoolExp getBoolExp() { return boolExp; }
 
 	@Override
     public <S, T> T visit(ASTVisitor<CIRExp, S, T> v, S state) throws SMPLException {
