@@ -1,7 +1,7 @@
 package com.comp3652.values;
 
 
-public class SMPLString extends SMPLValue<SMPLString> {
+public class SMPLString extends SMPLPrimitive<SMPLString> {
 
 	protected String value;
 

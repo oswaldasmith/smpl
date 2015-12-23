@@ -120,6 +120,9 @@ non terminal ASTExp<AIRExp> arithTerm;
 non terminal ASTExp<AIRExp> arithConstFactor;
 non terminal ASTExp<AIRExp> arithFactor;
 
+/* Generic Expressions */
+non terminal ASTNode expression;
+
 
 non terminal empty;
 /* Grammar rules */
