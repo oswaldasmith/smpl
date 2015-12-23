@@ -138,12 +138,6 @@ stmt ::= binding:b SEMI{:
             :} |
             case:c SEMI {:
                 RESULT = c;
-            :} |
-            funCall:f SEMI {:
-                RESULT = f;
-            :} |
-            smplExp:e SEMI {:
-                RESULT = e;
             :};
 
 binding ::= DEF VAR:v arithExp:e {:
@@ -191,6 +185,9 @@ smplExp ::= exPair:p {:
             :}|
             FALSE:f {:
                 RESULT = new BoolExp(f);
+            :}|
+            funCall:f SEMI {:
+                RESULT = f;
             :};
 
 smplExpList ::= smplExpList:l COMMA smplExp:e {:
