@@ -29,4 +29,6 @@ public interface SMPLVisitor<S, T> extends ASTVisitor<SMPLExp,S,T> {
 	T visitSMPLLetStmt(SMPLLetStmt smplLetStmt, S state);
 
 	T visitSMPLStmtDefinition(SMPLStmtDefinition smplStmtDefinition, S state);
+
+	T visitSMPLExpFunCall(SMPLExpFunCall smplExpFunCall, S context);
 }

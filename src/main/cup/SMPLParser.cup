@@ -187,9 +187,6 @@ smplExp ::= exPair:p {:
             FALSE:f {:
                 RESULT = new BoolExp(f);
             :}|
-            funCall:f SEMI {:
-                RESULT = f;
-            :}|
             smplFunCall:f {:
                 RESULT = f;
             :};
@@ -264,10 +261,10 @@ let ::= LET LPAREN bindList:ids RPAREN stmtList:body {:
         :};
 
 smplFunCall ::= CALL LPAREN VAR:fn COMMA smplExpList:args RPAREN {:
-                    RESULT = new SMPLFunCall(fn, args);
+                    RESULT = new SMPLExpFunCall(fn, args);
                :} |
                VAR:fn LPAREN smplExpList:args RPAREN {:
-                   RESULT = new SMPLFunCall(fn, args);
+                   RESULT = new SMPLExpFunCall(fn, args);
                :};
 
 funCall ::= VAR:fn LPAREN arithExpListE:args RPAREN {:
@@ -342,7 +339,10 @@ arithExpListE ::= arithExpList:lst {: RESULT = lst; :} |
 
 arithExp ::= arithExp:e PLUS arithTerm:t {: RESULT = new ASTBinaryExp<AIRExp>("+", e, t); :} |
 	     arithExp:e MINUS arithTerm:t {: RESULT = new ASTBinaryExp<AIRExp>("-", e, t); :} |
-	     arithTerm:t {: RESULT = t; :};
+	     arithTerm:t {: RESULT = t; :} |
+	     funCall:f SEMI {:
+            RESULT = f;
+         :};
 
 arithTerm ::= arithTerm:t TIMES arithFactor:f {: RESULT = new ASTBinaryExp<AIRExp>("*", t, f); :}|
 	      arithTerm:t DIV arithFactor:f {: RESULT = new ASTBinaryExp<AIRExp>("/", t, f); :}|
