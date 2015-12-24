@@ -33,7 +33,11 @@ public class CIREvaluator implements CIRVisitor<SMPLContext, Boolean> {
 			case "!=":
 				return numEnv.get(exp.getId()) != exp.getArithExp().visit(arithEval, numEnv);
 			case "and":
-				return boolEnv.get(exp.getId()) && exp.getBoolExp().visit()
+				return boolEnv.get(exp.getId()) && exp.getBoolExp().visit(boolEval,boolEnv);
+			case "not":
+				return !(boolEnv.get(exp.getId()));
+			case "or" :
+				return boolEnv.get(exp.getId()) || exp.getBoolExp().visit(boolEval,boolEnv);
 			default:
 				throw new SMPLException("Invalid comparator.");
 		}
