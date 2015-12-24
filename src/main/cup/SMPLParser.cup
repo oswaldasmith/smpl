@@ -35,8 +35,8 @@ parser code {:
 		}
 	    :};
 
-init with {:
-	  :};
+init with {: :};
+
 scan with {:
 		try {
 		    return lexer.next_token();
@@ -63,12 +63,8 @@ terminal SIZE,IFEQUIVALENT,IFEQUAL,LIST,SUBSTRING,CAR,CDR;
 terminal PRINT,PRINTLN,READ,READINT,CASE;
 
 //unary operators and Logic Extensions
-<<<<<<< HEAD
 terminal AND, OR, NOT;
-terminal CMP,IF,THEN,ELSE,LET;
-=======
 terminal String CMP,IF,THEN,ELSE,LET;
->>>>>>> chadsmpl
 
 // terminals with values
 terminal Integer INTEGER,BIN,HEX;
@@ -173,9 +169,6 @@ binding ::= DEF VAR:v arithExp:e {:
                         RESULT = new SMPLDefinition(v,e);
                     :} |
                     VAR:v BE arithExp:e  {:
-<<<<<<< HEAD
-                        RESULT = new SMPLDefinition(v,e);
-=======
                         RESULT = new SMPLStmtDefinition(v,e);
                     :} |
                     VAR:v ASSIGN smplExp:e {:
@@ -183,7 +176,6 @@ binding ::= DEF VAR:v arithExp:e {:
                     :}|
                     VAR:v ASSIGN arithExp:e {:
                         RESULT = new SMPLStmtDefinition(v,e);
->>>>>>> chadsmpl
                     :};
 
 bindList ::= bindList:l COMMA binding:b {:

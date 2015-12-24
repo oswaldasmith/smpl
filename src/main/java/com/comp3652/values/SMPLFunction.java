@@ -5,12 +5,7 @@ import com.comp3652.sys.SMPLContext;
 
 import java.util.*;
 
-<<<<<<< HEAD
 public class SMPLFunction extends SMPLValue<SMPLFunction> {
-=======
-public class SMPLFunction extends SMPLValue {
->>>>>>> chadsmpl
-
 	String name;
 	ArrayList<String> params;
 	SMPLSequence body;

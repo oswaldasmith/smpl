@@ -6,78 +6,19 @@ import com.sun.xml.internal.bind.v2.TODO;
 
 import java.util.*;
 
-<<<<<<< HEAD
 public class SMPLEvaluator extends SMPLVisitor<SMPLContext, SMPLValue<SMPLExp>> {
 
 	private final ArithEvaluator arithEval;
 	private final CIREvaluator condEval;
 	private SMPLValue<SMPLExp> lastResult;
-
-	public SMPLEvaluator() {
-		arithEval = new ArithEvaluator();
-		condEval = new CIREvaluator();
-		lastResult = SMPLValue.DEFAULT;
-
-	}
-
-	public SMPLValue<SMPLExp> getLastValue() {
-		return lastResult;
-	}
-
-	@Override
-	public SMPLValue<SMPLExp> visitSMPLProgram(SMPLProgram program, SMPLContext state) 
-	throws SMPLException {
-		SMPLSequence stmts = program.getSequence();
-		return stmts.visit(this, state);
-	}
-
-	@Override
-	public SMPLValue<SMPLExp> visitSMPLSequence(SMPLSequence seq, SMPLContext state) 
-	throws HPLException {
-		ArrayList<SMPLStatement> stmts = seq.getStatements();
-		SMPLValue<SMPLExp> result = SMPLValue.DEFAULT;
-
-		for (SMPLStatement stmt : stmts)
-			result = stmt.visit(this, state);
-
-		return result;
-	}
-
-
-	@Override
-	public SMPLValue<SMPLExp> visitSMPLFunDef(SMPLFunDef funDef, SMPLContext state) 
-	throws SMPLException {
-		SMPLFun
-	}
-	
-	@Override
-	public SMPLValue<SMPLExp> visitSMPLDefinition(SMPLDefinition def, SMPLContext state) 
-	throws SMPLException {
-
-	} 
-
-	@Override
-	public SMPLValue<SMPLExp> visitSMPLFunCall(SMPLFunCall funCall, SMPLContext state) 
-	throws SMPLException {
-
-	}
-
-	
-=======
-public class SMPLEvaluator implements SMPLVisitor<SMPLContext, SMPLValue<SMPLExp>> {
-	
-	private final ArithEvaluator arithEval;
-	private final CIREvaluator condEval;
 	Map<String, SMPLFunction> baseFuncMap;
-	SMPLValue lastResult; // collects results
-
+	SMPLValue<SMPLExp> lastResult; // collects results
 
 	public SMPLEvaluator() {
 		arithEval = new ArithEvaluator();
 		condEval = new CIREvaluator(arithEval);
 		lastResult = SMPLValue.DEFAULT;
 	}
-
 
 	@Override
 	public SMPLValue<SMPLExp> visitSMPLProgram(SMPLProgram program, SMPLContext state) throws SMPLException {
@@ -193,5 +134,4 @@ public class SMPLEvaluator implements SMPLVisitor<SMPLContext, SMPLValue<SMPLExp
 	public SMPLValue getResult() {
 		return lastResult;
 	}
->>>>>>> chadsmpl
 }

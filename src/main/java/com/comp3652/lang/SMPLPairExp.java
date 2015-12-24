@@ -1,13 +1,5 @@
 package com.comp3652.lang;
 
-
-<<<<<<< HEAD
-public class SMPLPairExp extends SMPLExp {
-
-	
-
-}
-=======
 import com.comp3652.sys.SMPLException;
 
 /**
@@ -28,4 +20,3 @@ public class SMPLPairExp extends ASTExp<SMPLExp> {
         return null;
     }
 }
->>>>>>> chadsmpl
