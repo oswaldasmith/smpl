@@ -1,20 +1,27 @@
 package com.comp3652.values;
 
 import com.comp3652.lang.*;
+import com.comp3652.sys.SMPLContext;
+
 import java.util.*;
 
+<<<<<<< HEAD
 public class SMPLFunction extends SMPLValue<SMPLFunction> {
+=======
+public class SMPLFunction extends SMPLValue {
+>>>>>>> chadsmpl
 
 	String name;
 	ArrayList<String> params;
 	SMPLSequence body;
 	SMPLContext closingEnv;
 
-	public HPLFunction(String id, ArrayList<String> params,
-						SMPLSequence body, SMPLContext env) {
+	public SMPLFunction(String id, ArrayList<String> params,
+						SMPLStmtSequence body, SMPLContext env) {
+        super();
         this.name = id;
         this.params = params;
-        this.body = b;
+        this.body = body;
         this.closingEnv = env;
     }
 
@@ -26,7 +33,7 @@ public class SMPLFunction extends SMPLValue<SMPLFunction> {
     	return params;
     }
 
-    public SMPLSequence getBody() {
+    public SMPLStmtSequence getBody() {
     	return body;
     }
 

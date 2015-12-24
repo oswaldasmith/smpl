@@ -1,6 +1,7 @@
 package com.comp3652.lang;
 
-import com.comp3652.sys.HPLException;
+
+import com.comp3652.sys.SMPLException;
 
 public class ASTVar<E extends ASTExp<E>> extends ASTExp<E> {
     private final String id;
@@ -14,7 +15,7 @@ public class ASTVar<E extends ASTExp<E>> extends ASTExp<E> {
     }
 
     @Override
-    public <S, T> T visit(ASTVisitor<E, S, T> v, S state) throws HPLException {
+    public <S, T> T visit(ASTVisitor<E, S, T> v, S state) throws SMPLException {
         return v.visitVar(this, state);
     }
     

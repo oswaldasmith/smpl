@@ -1,5 +1,6 @@
 package com.comp3652.lang;
 
+<<<<<<< HEAD
 
 public class SMPLCaseExp extends SMPLStatement {
 
@@ -26,3 +27,11 @@ public class SMPLCaseExp extends SMPLStatement {
 		v.visitSMPLCaseExp(this, state);
 	}
 }
+=======
+/**
+ * Created by carlos on 12/20/15.
+ */
+public class SMPLCaseExp {
+    //#TODO
+}
+>>>>>>> chadsmpl

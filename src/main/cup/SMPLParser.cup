@@ -50,7 +50,7 @@ scan with {:
 /* Terminals (tokens returned by the scanner). */
 
 // special symbols
-terminal DEF,PROC,LAZY,IFPAIR,PAIR,CALL,BE;
+terminal DEF,PROC,LAZY,IFPAIR,PAIR,CALL,BE,ASSIGN;
 terminal LBRACKET,RBRACKET,LPAREN, RPAREN,COMMA, LBRACE, RBRACE, SEMI,COLON;
 
 // arithmetic operators
@@ -63,11 +63,15 @@ terminal SIZE,IFEQUIVALENT,IFEQUAL,LIST,SUBSTRING,CAR,CDR;
 terminal PRINT,PRINTLN,READ,READINT,CASE;
 
 //unary operators and Logic Extensions
+<<<<<<< HEAD
 terminal AND, OR, NOT;
 terminal CMP,IF,THEN,ELSE,LET;
+=======
+terminal String CMP,IF,THEN,ELSE,LET;
+>>>>>>> chadsmpl
 
 // terminals with values
-terminal Integer INTEGER;
+terminal Integer INTEGER,BIN,HEX;
 terminal Double FLOAT;
 terminal Double FRACTION;
 terminal char CHAR;
@@ -101,13 +105,16 @@ non terminal SMPLLazyStmt lazy;
 non terminal SMPLIfStmt if;
 non terminal SMPLLetStmt let;
 non terminal SMPLCaseStmt case;
-non terminal SMPLReadStmt read; 
-non terminal SMPLExpFnCall funCall;
+non terminal SMPLReadStmt read;
+non terminal SMPLFunCall funCall;
+non terminal SMPLExpFunCall smplFunCall;
 
 non terminal ASTExp<SMPLExp> smplExp;
-non terminal ASTExp<SMPLExp> primitiveExp;
-non terminal ASTExp<LIRExp> predExp;
+non terminal ArrayList<ASTExp<SMPLExp>> smplExpList;
+non terminal ArrayList<ASTExp<SMPLExp>> smplExpListE;
+non terminal ASTExp<CIRExp> predExp;
 non terminal ArrayList<ASTExp<AIRExp>> arithExpList;
+non terminal ArrayList<ASTExp<AIRExp>> arithExpListE;
 non terminal SMPLPairExp exPair;
 non terminal SMPLVectorExp vector;
 non terminal SMPLExpProcedure proc;
@@ -146,11 +153,14 @@ stmt ::= binding:b SEMI{:
             read:r SEMI {:
                 RESULT = r;
             :} |
-            funCall:f SEMI {:
-                RESULT = f;
-            :} |
             if:i SEMI {:
                 RESULT = i;
+            :} |
+            let:l SEMI {:
+                RESULT = l;
+            :} |
+            case:c SEMI {:
+                RESULT = c;
             :};
 
 binding ::= DEF VAR:v arithExp:e {:
@@ -163,7 +173,17 @@ binding ::= DEF VAR:v arithExp:e {:
                         RESULT = new SMPLDefinition(v,e);
                     :} |
                     VAR:v BE arithExp:e  {:
+<<<<<<< HEAD
                         RESULT = new SMPLDefinition(v,e);
+=======
+                        RESULT = new SMPLStmtDefinition(v,e);
+                    :} |
+                    VAR:v ASSIGN smplExp:e {:
+                        RESULT = new SMPLStmtDefinition(v,e);
+                    :}|
+                    VAR:v ASSIGN arithExp:e {:
+                        RESULT = new SMPLStmtDefinition(v,e);
+>>>>>>> chadsmpl
                     :};
 
 bindList ::= bindList:l COMMA binding:b {:
@@ -171,11 +191,11 @@ bindList ::= bindList:l COMMA binding:b {:
                 RESULT = l;
              :};
 
-predExp ::= arithExp:e1 CMP arithExp:e2 {:
-                RESULT = new ASTExp<LIRExp>(e1,e2);
+predExp ::= VAR:id CMP:cmp arithExp:e {:
+                RESULT = new CIRExp(id,cmp,e);
             :} |
-            smplExp:e1 CMP smplExp:e2 {:
-                RESULT = new ASTExp<LIRExp>(e1,e2);
+            VAR:id CMP:cmp smplExp:e {:
+                RESULT = new CIRExp(id,cmp,(SMPLExp)e);
             :};
 
 smplExp ::= exPair:p {:
@@ -183,11 +203,50 @@ smplExp ::= exPair:p {:
             :} |
             vector:v {:
                 RESULT = v;
+            :}|
+            CHAR:c {:
+                RESULT = new StringExp(c);
+            :} |
+            TRUE:t {:
+                RESULT = new BoolExp(t);
+            :}|
+            FALSE:f {:
+                RESULT = new BoolExp(f);
+            :}|
+            smplFunCall:f {:
+                RESULT = f;
             :};
 
-exPair ::= PAIR LPAREN arithExp:e1 COMMA arithExp:e2 RPAREN {:
+smplExpList ::= smplExpList:l COMMA smplExp:e {:
+                    l.add(e);
+                    RESULT = l;
+                :}|
+                smplExp:e {:
+                  RESULT = new ArrayList<>();
+                  RESULT.add(e);
+                :};
+
+smplExpListE ::= smplExpList:lst {:
+                    RESULT = lst;
+                 :} |
+                 empty {:
+                    RESULT = new ArrayList<>();
+                 :};
+
+exPair ::= PAIR LPAREN smplExp:e1 COMMA smplExp:e2 RPAREN {:
+                RESULT = new exPair((SMPLExp)e1,(SMPLExp)e2);
+            :} |
+            PAIR LPAREN arithExp:e1 COMMA arithExp:e2 RPAREN {:
                 RESULT = new exPair(e1,e2);
             :};
+
+vector ::= LBRACKET COLON smplExpList:l COLON RBRACKET {:
+                RESULT = new SMPLVectorExp(l);
+            :} |
+            LBRACKET COLON arithExpList:l COLON RBRACKET {:
+                RESULT = new SMPLVectorExp(l);
+            :};
+
 
 car ::= CAR LPAREN exPair:p RPAREN {: RESULT = new SMPLCarStmt(p); :};
 
@@ -195,30 +254,34 @@ cdr ::= CDR LPAREN exPair:p RPAREN {: RESULT = new SMPLCdrStmt(p); :};
 
 isPair ::= IFPAIR LPAREN exPair:p RPAREN {: RESULT = new SMPLisPairStmt(p); :};
 
-vector ::= LBRACKET COLON arithExpList:l COLON RBRACKET {: RESULT = new SMPLVectorExp(lst); :};
-
 retVec ::= vector:v LBRACKET INTEGER:i RBRACKET {: RESULT = new retVectStmt(v,i); :};
 
 size ::= SIZE LPAREN vector:v RPAREN {: RESULT = new SMPLSizeStmt(v); :};
 
-isEqual ::= IFEQUAL LPAREN smplExp:e COMMA arithExp:e2 RPAREN {: RESULT = new SMPLIsEqualStmt(e,e2); :};
+isEqual ::= IFEQUAL LPAREN smplExp:e COMMA smplExp:e2 RPAREN {: RESULT = new SMPLIsEqualStmt(e,e2); :};
 
-isEqv ::= IFEQUIVALENT LPAREN smplExp:e COMMA arithExp:e2 RPAREN {: RESULT = new SMPLIsEqvStmt(e1,e2); :};
+isEqv ::= IFEQUIVALENT LPAREN smplExp:e COMMA smplExp:e2 RPAREN {: RESULT = new SMPLIsEqvStmt(e,e2); :};
 
 substr ::= SUBSTRING LPAREN STRING:s COMMA INTEGER:start COMMA INTEGER:end RPAREN {: RESULT = new SMPLSubStrStmt(s,start,end); :};
 
 proc ::= PROC LPAREN idListE:lst RPAREN LBRACE stmtList:body RBRACE {: RESULT = new SMPLExpProcedure(lst,body); :};
 
-print ::= PRINT LPAREN arithExp:e RPAREN {:
-            RESULT = new SMPLPrintStmt(e);
+print ::= PRINT LPAREN smplExp:e RPAREN {:
+            RESULT = new SMPLPrintStmt((SMPLExp)e,true);
           :} |
-          PRINTLN LPAREN arithExp:e RPAREN {: RESULT = new SMPLPrintStmt(e); :};
+          PRINTLN LPAREN smplExp:e RPAREN {:
+            RESULT = new SMPLPrintStmt((SMPLExp)e,true);
+          :} |
+          PRINT LPAREN arithExp:e RPAREN {:
+            RESULT = new SMPLPrintStmt(e,false);
+          :} |
+          PRINTLN LPAREN arithExp:e RPAREN {: RESULT = new SMPLPrintStmt(e,true); :};
 
 read ::= READ LPAREN RPAREN {:
-                RESULT = new SMPLReadStmt();
+                RESULT = new SMPLReadStmt(false);
          :} |
          READINT LPAREN RPAREN {:
-                RESULT = new SMPLReadStmt();
+                RESULT = new SMPLReadStmt(true);
          :};
 
 if ::=  IF predExp:p THEN stmtList:cons {:
@@ -233,19 +296,22 @@ case ::= CASE LBRACE arithExpList:lst RBRACE arithExp:e1 COLON arithExp:e2 {: RE
 let ::= LET LPAREN bindList:ids RPAREN stmtList:body {:
             RESULT = new SMPLLetStmt(ids,body);
         :} |
-        LET LPAREN binding:id RPAREN stmtList:body {:
-                    RESULT = new SMPLLetStmt(ids,body);
+        LET LPAREN binding:ids RPAREN stmtList:body {:
+            RESULT = new SMPLLetStmt(ids,body);
         :};
 
+smplFunCall ::= CALL LPAREN VAR:fn COMMA smplExpList:args RPAREN {:
+                    RESULT = new SMPLExpFunCall(fn, args);
+               :} |
+               VAR:fn LPAREN smplExpList:args RPAREN {:
+                   RESULT = new SMPLExpFunCall(fn, args);
+               :};
 
-funCall ::= VAR:fn LPAREN arithExpList:args RPAREN {:
-	    	RESULT = new SMPLExpFnCall(fn, args);
-	    :} |
-	    VAR:fn LPAREN RPAREN {:
-	    	RESULT = new SMPLExpFnCall(fn, new ArrayList<Exp>());
+funCall ::= VAR:fn LPAREN arithExpListE:args RPAREN {:
+	    	RESULT = new SMPLFunCall(fn, args);
 	    :} |
 	    CALL LPAREN VAR:fn  COMMA arithExpList:args RPAREN {:
-	        RESULT = new SMPLExpFnCall(fn, args);
+	        RESULT = new SMPLFunCall(fn, args);
         :} |
         car:c {:
             RESULT = c;
@@ -282,14 +348,15 @@ funCall ::= VAR:fn LPAREN arithExpList:args RPAREN {:
 lazy ::= LAZY LPAREN arithExp:e RPAREN {: RESULT = new SMPLLazyStmt(e); :};
 
 idList ::= idList:lst COMMA VAR:id {:
-		lst.add(id);
-		RESULT = lst; :} |
-	      VAR:id {:
+		    lst.add(id);
+		    RESULT = lst;
+		    :} |
+	         VAR:id {:
 				RESULT = new ArrayList<>();
 				RESULT.add(id);
 			:};
 
-idListE ::= idList:l {: RESULT = lst; :} |
+idListE ::= idList:lst {: RESULT = lst; :} |
             empty {: RESULT = new ArrayList<>();:};
 
 arithExpList ::= arithExpList:lst COMMA arithExp:e {:
@@ -297,26 +364,25 @@ arithExpList ::= arithExpList:lst COMMA arithExp:e {:
 	    	RESULT = lst;
 	    :}|
 	    arithExp:e {:
-	        ArrayList<Exp> lst = new ArrayList<Exp>();
-		lst.add(e);
-	    	RESULT = lst;
+	        RESULT = new ArrayList<>();
+            RESULT.add(e);;
 	    :} |
 	    LIST LPAREN arithExpList:lst RPAREN {:
 	        RESULT = lst;
         :} |
         LBRACKET arithExpList:lst RBRACKET {:
             RESULT = lst;
-            :} |
-		exPair:ep {:
-		    RESULT = ep;
-		    :} |
-		vector:v {:
-		    RESULT = v;
-		    :};
+        :};
+
+arithExpListE ::= arithExpList:lst {: RESULT = lst; :} |
+	      empty {: RESULT = new ArrayList<>(); :};
 
 arithExp ::= arithExp:e PLUS arithTerm:t {: RESULT = new ASTBinaryExp<AIRExp>("+", e, t); :} |
 	     arithExp:e MINUS arithTerm:t {: RESULT = new ASTBinaryExp<AIRExp>("-", e, t); :} |
-	     arithTerm:t {: RESULT = t; :};
+	     arithTerm:t {: RESULT = t; :} |
+	     funCall:f SEMI {:
+            RESULT = f;
+         :};
 
 arithTerm ::= arithTerm:t TIMES arithFactor:f {: RESULT = new ASTBinaryExp<AIRExp>("*", t, f); :}|
 	      arithTerm:t DIV arithFactor:f {: RESULT = new ASTBinaryExp<AIRExp>("/", t, f); :}|
@@ -325,6 +391,8 @@ arithTerm ::= arithTerm:t TIMES arithFactor:f {: RESULT = new ASTBinaryExp<AIREx
 
 arithConstFactor ::= INTEGER:ilit {: RESULT = new AIRExpInt(ilit); :} |
 		     FRACTION:frac {: RESULT = new AIRExpFrac(frac); :} |
+		     HEX:h {: RESULT = new AIRExpInt(h); :} |
+             BIN:b {: RESULT = new AIRExpInt(b); :} |
 		     LPAREN arithExp:e RPAREN {: RESULT = e; :};
 
 arithFactor ::= arithConstFactor:cf {: RESULT = cf; :} |
@@ -332,5 +400,6 @@ arithFactor ::= arithConstFactor:cf {: RESULT = cf; :} |
                 MINUS arithFactor:f {:
 		      RESULT = new ASTUnaryExp<AIRExp>("-", f);
 		:};
+
 
 empty ::= ;

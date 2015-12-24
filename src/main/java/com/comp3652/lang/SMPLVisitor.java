@@ -1,36 +1,40 @@
 package com.comp3652.lang;
 
+import com.comp3652.sys.SMPLContext;
 import com.comp3652.sys.SMPLException;
 
 public interface SMPLVisitor<S, T> extends ASTVisitor<SMPLExp,S,T> {
 
-	public T visitSMPLProgram(SMPLProgram program, S state) throws SMPLException;
+	T visitSMPLProgram(SMPLProgram program, S state) throws SMPLException;
 
-	public T visitSMPLSequence(SMPLSequence seq, S state) throws SMPLException;
+	T visitSMPLStmtSequence(SMPLStmtSequence s, S state) throws SMPLException;
 
-	public T visitSMPLDefinition(SMPLDefinition def, S state) throws SMPLException; 
+	T visitSMPLAssignment(SMPLAssignment smplAssignment, S state) throws SMPLException;
 
-	public T visitSMPLFunctionCall(SMPLFunCall funCall, S state) throws SMPLException;
+	T visitSMPLFunCall(SMPLFunCall smplFunCall, S state);
 
-	public T visitSMPLFunctionDefinition(SMPLFunDef funDef, S state) throws SMPLException;
+	T visitSMPLPrintStmt(SMPLPrintStmt printStmt, S state);
 
-	public T visitSMPLCondition(SMPLCondition condition, S state) throws SMPLException;
+	T visitSMPLReadStmt(SMPLReadStmt smplReadStmt, S state);
 
-	public T visitSMPLLogicJoin(SMPLLogicJoin join, S state) throws SMPLException;
+	T visitSMPLSubStrStmt(SMPLSubStrStmt smplSubStrStmt, S state);
 
-	public T visitSMPLLogicNot(SMPLLogicNot not, S state) throws SMPLException;
+	T visitSMPLCaseStmt(SMPLCaseStmt smplCaseStmt, S state);
 
-	public T visitSMPLAssignment(SMPLAssignment assign, S state) throws SMPLException;
+	T visitRetVctStmt(SMPLRetVctStmt smplRetVctStmt, S state);
 
-	public T visitSMPLMultipleAssignment(SMPLMultipleAssignment mulAssign, S state) throws SMPLException;
+	T visitSMPLFunDef(SMPLFunDef smplFunDef, S state);
 
-	public T visitSMPLLet(SMPLLet let, S state) throws SMPLException;
+	T visitSMPLIfStmt(SMPLIfStmt smplIfStmt, S state);
 
-	public T visitSMPLPair(SMPLPairExp pair, S state) throws SMPLException;
+	T visitSMPLLetStmt(SMPLLetStmt smplLetStmt, S state);
 
-	public T visitSMPLVector(SMPLVectorExp vector, S state) throws SMPLException;
+	T visitSMPLStmtDefinition(SMPLStmtDefinition smplStmtDefinition, S state);
 
-	public T visitSMPLCaseStatement(SMPLCaseStatement case, S state) throws SMPLException;
+	T visitSMPLExpFunCall(SMPLExpFunCall smplExpFunCall, S context);
 
-	public T visitSMPLCaseExpression(SMPLCaseExp exp, S state) throws SMPLException;
+	T visitStringExp(StringExp stringExp, S state)throws SMPLException;
+
+	T visitSMPLisPairStmt(SMPLisPairStmt smpLisPairStmt, S arg);
+
 }

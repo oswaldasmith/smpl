@@ -266,6 +266,13 @@ print(call(g, map(double, [1, 2, 3])));
 println("Should be [2, [4, 6]]");
 println("*** End of Variable Arity Procedures ***");
 
+// Merge Sort
+def mergesort proc(ent):
+    if size(ent) > 1 then
+        m := (size(ent)/2);
+        [L] = merge(mergesort(L1),mergesort(L2));
+    return L
+
 /*
 print("Thread test...")
 def thread-test proc() {
@@ -391,5 +398,6 @@ print("r.perimeter() prints "); println(r.perimeter());
 println("It should have printed: 14");
 print("r.area() prints "); println(r.area());
 println("It should have printed: 12");
+
 
 

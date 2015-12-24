@@ -39,10 +39,10 @@ public class ArithEvaluator implements AIRVisitor<SMPLEnvironment<Double>, Doubl
     }
 
     @Override
-    public Double visitAIRExpVar(AIRExpVar exp, SMPLEnvironment<Double> state) throws SMPLException {
+    public Double visitAIRFunCall(SMPLFunCall smplFunCall, SMPLEnvironment<Double> arg) throws SMPLException {
         return null;
     }
-    
+
 
     @Override
     public Double visitVar(ASTVar<AIRExp> var, SMPLEnvironment<Double> state) throws SMPLException {
@@ -68,5 +68,6 @@ public class ArithEvaluator implements AIRVisitor<SMPLEnvironment<Double>, Doubl
         double rightArg = rightExp.visit(this, env);
         return op.apply(leftArg, rightArg);
     }
-    
+
+
 }
