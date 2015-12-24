@@ -5,7 +5,6 @@ package com.comp3652.lang;
  */
 public class SMPLisPairStmt extends SMPLFunCall {
     public SMPLisPairStmt(SMPLPairExp p) {
-        //#TODO
-        super();
+
     }
 }
