@@ -29,4 +29,8 @@ public class SMPLLetStmt extends SMPLStatement {
     public <S, T> T visit(SMPLVisitor<S, T> v, S state) throws SMPLException {
         return v.visitSMPLLetStmt(this,state);
     }
+
+    public SMPLStmtSequence getBody() {
+        return body;
+    }
 }

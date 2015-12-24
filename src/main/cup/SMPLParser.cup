@@ -208,10 +208,18 @@ smplExpListE ::= smplExpList:lst {:
                  :};
 
 exPair ::= PAIR LPAREN smplExp:e1 COMMA smplExp:e2 RPAREN {:
+                RESULT = new exPair((SMPLExp)e1,(SMPLExp)e2);
+            :} |
+            PAIR LPAREN arithExp:e1 COMMA arithExp:e2 RPAREN {:
                 RESULT = new exPair(e1,e2);
             :};
 
-vector ::= LBRACKET COLON smplExpList:l COLON RBRACKET {: RESULT = new SMPLVectorExp(l); :};
+vector ::= LBRACKET COLON smplExpList:l COLON RBRACKET {:
+                RESULT = new SMPLVectorExp(l);
+            :} |
+            LBRACKET COLON arithExpList:l COLON RBRACKET {:
+                RESULT = new SMPLVectorExp(l);
+            :};
 
 
 car ::= CAR LPAREN exPair:p RPAREN {: RESULT = new SMPLCarStmt(p); :};

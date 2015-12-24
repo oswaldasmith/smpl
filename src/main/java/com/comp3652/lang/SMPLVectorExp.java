@@ -8,14 +8,10 @@ import java.util.ArrayList;
  * Created by carlos on 12/20/15.
  */
 public class SMPLVectorExp extends ASTExp<SMPLExp> {
-    private ArrayList<ASTExp<SMPLExp>> list;
+    private ArrayList<ASTExp> list;
 
-    public SMPLVectorExp(ArrayList<ASTExp<SMPLExp>> l) {
+    public SMPLVectorExp(ArrayList<ASTExp<AIRExp>> l) {
         this.list = l;
-    }
-
-    public ArrayList<ASTExp<SMPLExp>> getList() {
-        return list;
     }
 
 
