@@ -169,7 +169,7 @@ predExp ::= VAR:id CMP:cmp arithExp:e {:
                 RESULT = new CIRExp(id,cmp,e);
             :} |
             VAR:id CMP:cmp smplExp:e {:
-                RESULT = new CIRExp(id,cmp,e);
+                RESULT = new CIRExp(id,cmp,(SMPLExp)e);
             :};
 
 smplExp ::= exPair:p {:
@@ -232,16 +232,22 @@ substr ::= SUBSTRING LPAREN STRING:s COMMA INTEGER:start COMMA INTEGER:end RPARE
 
 proc ::= PROC LPAREN idListE:lst RPAREN LBRACE stmtList:body RBRACE {: RESULT = new SMPLExpProcedure(lst,body); :};
 
-print ::= PRINT LPAREN arithExp:e RPAREN {:
-            RESULT = new SMPLPrintStmt(e);
+print ::= PRINT LPAREN smplExp:e RPAREN {:
+            RESULT = new SMPLPrintStmt((SMPLExp)e,true);
           :} |
-          PRINTLN LPAREN arithExp:e RPAREN {: RESULT = new SMPLPrintStmt(e); :};
+          PRINTLN LPAREN smplExp:e RPAREN {:
+            RESULT = new SMPLPrintStmt((SMPLExp)e,true);
+          :} |
+          PRINT LPAREN arithExp:e RPAREN {:
+            RESULT = new SMPLPrintStmt(e,false);
+          :} |
+          PRINTLN LPAREN arithExp:e RPAREN {: RESULT = new SMPLPrintStmt(e,true); :};
 
 read ::= READ LPAREN RPAREN {:
-                RESULT = new SMPLReadStmt();
+                RESULT = new SMPLReadStmt(false);
          :} |
          READINT LPAREN RPAREN {:
-                RESULT = new SMPLReadStmt();
+                RESULT = new SMPLReadStmt(true);
          :};
 
 if ::=  IF predExp:p THEN stmtList:cons {:
