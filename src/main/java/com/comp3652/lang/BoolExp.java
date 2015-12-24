@@ -11,8 +11,13 @@ public class BoolExp extends ASTExp<SMPLExp> {
 
     private Boolean val;
 
-    public BoolExp(Boolean value) {
-        this.val = value;
+    public BoolExp(String value) {
+        if(value.contains("#t")){
+            val = true;
+        }
+        else {
+            val = false;
+        }
     }
 
 
