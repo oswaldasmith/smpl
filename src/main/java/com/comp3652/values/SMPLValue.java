@@ -9,12 +9,16 @@ public abstract class SMPLValue <T> {
 
     private T value;
 
+    public SMPLValue(){
+        this.value = (T) this.DEFAULT;
+    }
+
     public SMPLValue(T value) {
     	this.value = value;
     }
 
     public T getType() {
-    	return T;
+    	return (T) value.getClass();
     }
 
     public T getValue() {

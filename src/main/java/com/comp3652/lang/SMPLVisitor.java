@@ -5,11 +5,11 @@ import com.comp3652.sys.SMPLException;
 
 public interface SMPLVisitor<S, T> extends ASTVisitor<SMPLExp,S,T> {
 
-	T visitSMPLProgram(SMPLProgram program, S state);
+	T visitSMPLProgram(SMPLProgram program, S state) throws SMPLException;
 
-	T visitSMPLStmtSequence(SMPLStmtSequence s, S state);
+	T visitSMPLStmtSequence(SMPLStmtSequence s, S state) throws SMPLException;
 
-	T visitSMPLAssignment(SMPLAssignment smplAssignment, S state);
+	T visitSMPLAssignment(SMPLAssignment smplAssignment, S state) throws SMPLException;
 
 	T visitSMPLFunCall(SMPLFunCall smplFunCall, S state);
 

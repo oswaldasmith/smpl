@@ -20,20 +20,32 @@ public class SMPLEvaluator implements SMPLVisitor<SMPLContext, SMPLValue<SMPLExp
 		lastResult = SMPLValue.DEFAULT;
 	}
 
-	//#TODO
+
 	@Override
-	public SMPLValue<SMPLExp> visitSMPLProgram(SMPLProgram program, SMPLContext state) {
-		return null;
+	public SMPLValue<SMPLExp> visitSMPLProgram(SMPLProgram program, SMPLContext state) throws SMPLException {
+		SMPLStmtSequence stmts = program.getSeq();
+		SMPLValue tmp = stmts.visit(this, state);
+
+		return lastResult;
 	}
 
 	@Override
-	public SMPLValue<SMPLExp> visitSMPLStmtSequence(SMPLStmtSequence s, SMPLContext state) {
-		return null;
+	public SMPLValue<SMPLExp> visitSMPLStmtSequence(SMPLStmtSequence s, SMPLContext state) throws SMPLException {
+		ArrayList<SMPLStatement> stmts = s.getStatements();
+		SMPLValue result = SMPLValue.DEFAULT;
+
+		for (SMPLStatement stmt : stmts) {
+			result = stmt.visit(this, state);
+		}
+
+		return result;
 	}
 
 	@Override
-	public SMPLValue<SMPLExp> visitSMPLAssignment(SMPLAssignment smplAssignment, SMPLContext state) {
-		return null;
+	public SMPLValue<SMPLExp> visitSMPLAssignment(SMPLAssignment smplAssignment, SMPLContext state) throws SMPLException {
+		SMPLValue result = smplAssignment.getExp().visit(this, state);
+		state.putF(smplAssignment.getVar(), (SMPLFunction) result);
+		return result;
 	}
 
 	@Override
@@ -72,6 +84,36 @@ public class SMPLEvaluator implements SMPLVisitor<SMPLContext, SMPLValue<SMPLExp
 	}
 
 	@Override
+	public SMPLValue<SMPLExp> visitSMPLIfStmt(SMPLIfStmt smplIfStmt, SMPLContext state) {
+		return null;
+	}
+
+	@Override
+	public SMPLValue<SMPLExp> visitSMPLLetStmt(SMPLLetStmt smplLetStmt, SMPLContext state) {
+		return null;
+	}
+
+	@Override
+	public SMPLValue<SMPLExp> visitSMPLStmtDefinition(SMPLStmtDefinition smplStmtDefinition, SMPLContext state) {
+		return null;
+	}
+
+	@Override
+	public SMPLValue<SMPLExp> visitSMPLExpFunCall(SMPLExpFunCall smplExpFunCall, SMPLContext context) {
+		return null;
+	}
+
+	@Override
+	public SMPLValue<SMPLExp> visitStringExp(StringExp stringExp, SMPLContext state) throws SMPLException {
+		return null;
+	}
+
+	@Override
+	public SMPLValue<SMPLExp> visitSMPLisPairStmt(SMPLisPairStmt smpLisPairStmt, SMPLContext arg) {
+		return null;
+	}
+
+	@Override
 	public SMPLValue<SMPLExp> visitVar(ASTVar<SMPLExp> var, SMPLContext state) throws SMPLException, SMPLException {
 		return null;
 	}
@@ -87,7 +129,7 @@ public class SMPLEvaluator implements SMPLVisitor<SMPLContext, SMPLValue<SMPLExp
 	}
 
 	public SMPLContext mkInitialContext() {
-		return new SMPLContextImpl(new SMPLEnvironment<Double>(),new SMPLEnvironment<>());
+		return new SMPLContextImpl();
 	}
 
 	public SMPLValue getResult() {
