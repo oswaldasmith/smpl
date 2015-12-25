@@ -13,7 +13,7 @@ public interface SMPLVisitor<S, T> extends ASTVisitor<SMPLExp,S,T> {
 
 	T visitSMPLFunCall(SMPLFunCall smplFunCall, S state);
 
-	T visitSMPLPrintStmt(SMPLPrintStmt printStmt, S state);
+	T visitSMPLPrintStmt(SMPLPrintStmt printStmt, S state) throws SMPLException;
 
 	T visitSMPLReadStmt(SMPLReadStmt smplReadStmt, S state);
 

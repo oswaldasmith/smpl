@@ -109,6 +109,13 @@ public interface SMPLContext {
 	public void putN(String name, Double n);
 
 	/**
+	 * Store  a binding for the given name to an SMPLValue
+	 * @param name the identifier of the binding
+	 * @param v the identifier of the binding
+	 */
+	public void putV(String name, SMPLValue v);
+
+	/**
 	 *
 	 * Get boolean environment associated with this context
 	 * @return bool this associated boolean environment

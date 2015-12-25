@@ -44,7 +44,7 @@ public class SMPLEvaluator implements SMPLVisitor<SMPLContext, SMPLValue<SMPLExp
 	@Override
 	public SMPLValue<SMPLExp> visitSMPLAssignment(SMPLAssignment smplAssignment, SMPLContext state) throws SMPLException {
 		SMPLValue result = smplAssignment.getExp().visit(this, state);
-		state.putF(smplAssignment.getVar(), (SMPLFunction) result);
+		state.putV(smplAssignment.getVar(), result);
 		return result;
 	}
 
@@ -54,8 +54,13 @@ public class SMPLEvaluator implements SMPLVisitor<SMPLContext, SMPLValue<SMPLExp
 	}
 
 	@Override
-	public SMPLValue<SMPLExp> visitSMPLPrintStmt(SMPLPrintStmt printStmt, SMPLContext state) {
-		return null;
+	public SMPLValue<SMPLExp> visitSMPLPrintStmt(SMPLPrintStmt printStmt, SMPLContext state) throws SMPLException {
+		ASTExp<AIRExp> arithExp = printStmt.getArithExp();
+		ASTExp<SMPLExp> smplExp = printStmt.getExp();
+		SMPLValue v = smplExp.visit(this,state);
+		Double t = arithExp.visit(arithEval,state.getNumEnv());
+		//#TODO implement string evaluator
+		return v;
 	}
 
 	@Override

@@ -184,6 +184,9 @@ smplExp ::= exPair:p {:
             TRUE:t {:
                 RESULT = new BoolExp(t);
             :}|
+            STRING:s {:
+                RESULT = new StringExp(s);
+            :} |
             FALSE:f {:
                 RESULT = new BoolExp(f);
             :}|
