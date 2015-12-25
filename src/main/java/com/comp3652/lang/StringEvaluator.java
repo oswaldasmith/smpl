@@ -18,13 +18,8 @@ public class StringEvaluator implements StringVisitor<SMPLEnvironment<String>, S
     }
 
     private void init() {
-        unOpsMap = new HashMap<>();
-        for (UnOpArith op : UnOpArith.values()) {
-            unOpsMap.put(op.getSymbol(), op);
-        }
-
         binOpsMap = new HashMap<>();
-        for (BinOpArith op: BinOpArith.values()) {
+        for (BinOpString op: BinOpString.values()) {
             binOpsMap.put(op.getSymbol(), op);
         }
     }
@@ -36,6 +31,11 @@ public class StringEvaluator implements StringVisitor<SMPLEnvironment<String>, S
     @Override
     public String visitVar(ASTVar<SMPLExp> var, SMPLEnvironment<String> state) throws SMPLException {
         return state.get(var.getId());
+    }
+
+    @Override
+    public String visitUnaryExp(ASTUnaryExp<SMPLExp> exp, SMPLEnvironment<String> state) throws SMPLException {
+        return null;
     }
 
 

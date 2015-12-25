@@ -3,10 +3,19 @@ package com.comp3652.lang;
 /**
  * Created by carlos on 12/24/15.
  */
-public class BinOpString implements BinaryOp<String,String> {
-    private String symbol;
+public enum BinOpString implements BinaryOp<String,String> {
+    CONCAT("@") {
+        @Override
+        public String apply(String leftArg, String rightArg) {
+            return leftArg.concat(rightArg);
+        }
 
-    public BinOpString(String symbol) {
+        ;
+    };
+
+    String symbol;
+
+    BinOpString(String symbol) {
         this.symbol = symbol;
     }
 
@@ -16,9 +25,6 @@ public class BinOpString implements BinaryOp<String,String> {
         return this.symbol;
     }
 
-    @Override
-    public String apply (String leftArg, String rightArg){
-        return leftArg.concat(rightArg);
-    }
+
 
 }
