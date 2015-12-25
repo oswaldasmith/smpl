@@ -33,7 +33,5 @@ public interface SMPLVisitor<S, T> extends ASTVisitor<SMPLExp,S,T> {
 
 	T visitSMPLExpFunCall(SMPLExpFunCall smplExpFunCall, S context);
 
-	T visitStringExp(StringExp stringExp, S state)throws SMPLException;
-
 	T visitSMPLisPairStmt(SMPLisPairStmt smpLisPairStmt, S arg);
 }

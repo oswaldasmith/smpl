@@ -108,10 +108,6 @@ public class SMPLEvaluator implements SMPLVisitor<SMPLContext, SMPLValue<SMPLExp
 		return null;
 	}
 
-	@Override
-	public SMPLValue<SMPLExp> visitStringExp(StringExp stringExp, SMPLContext state) throws SMPLException {
-		return null;
-	}
 
 	@Override
 	public SMPLValue<SMPLExp> visitSMPLisPairStmt(SMPLisPairStmt smpLisPairStmt, SMPLContext arg) {

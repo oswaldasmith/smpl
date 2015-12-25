@@ -6,6 +6,7 @@ import com.comp3652.sys.SMPLException;
  * Created by carlos on 12/23/15.
  */
 public class StringExp extends ASTExp<SMPLExp> {
+
     String string;
 
     public StringExp(char c) {
@@ -17,12 +18,16 @@ public class StringExp extends ASTExp<SMPLExp> {
         this.string = s;
     }
 
-    @Override
-    public <S, T> T visit(ASTVisitor<SMPLExp, S, T> v, S state) throws SMPLException {
-        return visit((SMPLVisitor<S,T>) v,state);
+    public String getString() {
+        return string;
     }
 
-    public <S, T> T visit(SMPLVisitor<S, T> v, S context) throws SMPLException{
+    @Override
+    public <S, T> T visit(ASTVisitor<SMPLExp, S, T> v, S state) throws SMPLException {
+        return visit((StringVisitor<S,T>) v,state);
+    }
+
+    public <S, T> T visit(StringVisitor<S, T> v, S context) throws SMPLException{
         return v.visitStringExp(this, context);
     }
 }
