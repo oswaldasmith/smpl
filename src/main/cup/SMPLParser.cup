@@ -89,6 +89,7 @@ non terminal SMPLCaseStmt case;
 non terminal SMPLReadStmt read;
 non terminal SMPLFunCall funCall;
 non terminal SMPLExpFunCall smplFunCall;
+non terminal StringExp stringExp;
 
 non terminal ASTExp<SMPLExp> smplExp;
 non terminal ArrayList<ASTExp<SMPLExp>> smplExpList;
@@ -243,16 +244,12 @@ substr ::= SUBSTRING LPAREN STRING:s COMMA INTEGER:start COMMA INTEGER:end RPARE
 
 proc ::= PROC LPAREN idListE:lst RPAREN LBRACE stmtList:body RBRACE {: RESULT = new SMPLExpProcedure(lst,body); :};
 
-print ::= PRINT LPAREN smplExp:e RPAREN {:
-            RESULT = new SMPLPrintStmt((SMPLExp)e,true);
+print ::= PRINT LPAREN stringExp:e RPAREN {:
+            RESULT = new SMPLPrintStmt(e,true);
           :} |
-          PRINTLN LPAREN smplExp:e RPAREN {:
-            RESULT = new SMPLPrintStmt((SMPLExp)e,true);
-          :} |
-          PRINT LPAREN arithExp:e RPAREN {:
-            RESULT = new SMPLPrintStmt(e,false);
-          :} |
-          PRINTLN LPAREN arithExp:e RPAREN {: RESULT = new SMPLPrintStmt(e,true); :};
+          PRINTLN LPAREN stringExp:e RPAREN {:
+            RESULT = new SMPLPrintStmt(e,true);
+          :};
 
 read ::= READ LPAREN RPAREN {:
                 RESULT = new SMPLReadStmt(false);

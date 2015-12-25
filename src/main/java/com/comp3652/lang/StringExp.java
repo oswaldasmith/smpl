@@ -22,12 +22,13 @@ public class StringExp extends ASTExp<SMPLExp> {
         return string;
     }
 
+    public <S, T> T visit(StringVisitor<S, T> v, S context) throws SMPLException{
+        return v.visitStringExp(this, context);
+    }
+
+
     @Override
     public <S, T> T visit(ASTVisitor<SMPLExp, S, T> v, S state) throws SMPLException {
         return visit((StringVisitor<S,T>) v,state);
-    }
-
-    public <S, T> T visit(StringVisitor<S, T> v, S context) throws SMPLException{
-        return v.visitStringExp(this, context);
     }
 }

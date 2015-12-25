@@ -10,6 +10,7 @@ public class SMPLEvaluator implements SMPLVisitor<SMPLContext, SMPLValue<SMPLExp
 	
 	private final ArithEvaluator arithEval;
 	private final CIREvaluator condEval;
+	private final StringEvaluator stringEval;
 	Map<String, SMPLFunction> baseFuncMap;
 	SMPLValue lastResult; // collects results
 
@@ -17,6 +18,7 @@ public class SMPLEvaluator implements SMPLVisitor<SMPLContext, SMPLValue<SMPLExp
 	public SMPLEvaluator() {
 		arithEval = new ArithEvaluator();
 		condEval = new CIREvaluator(arithEval);
+		stringEval = new StringEvaluator();
 		lastResult = SMPLValue.DEFAULT;
 	}
 
@@ -55,11 +57,8 @@ public class SMPLEvaluator implements SMPLVisitor<SMPLContext, SMPLValue<SMPLExp
 
 	@Override
 	public SMPLValue<SMPLExp> visitSMPLPrintStmt(SMPLPrintStmt printStmt, SMPLContext state) throws SMPLException {
-		ASTExp<AIRExp> arithExp = printStmt.getArithExp();
-		ASTExp<SMPLExp> smplExp = printStmt.getExp();
-		SMPLValue v = smplExp.visit(this,state);
-		Double t = arithExp.visit(arithEval,state.getNumEnv());
-		//#TODO implement string evaluator
+		StringExp stringExp = printStmt.getExp();
+		SMPLValue v = stringExp.visit(this,state);
 		return v;
 	}
 
