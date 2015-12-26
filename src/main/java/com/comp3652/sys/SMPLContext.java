@@ -18,6 +18,15 @@ public interface SMPLContext {
 	 */
 	public SMPLContext composeSMPLValue(SMPLValue v);
 
+
+	/**
+	 * Get the smplValue associated with a binding
+	 *
+	 * @param name the identifier associated with it
+	 * @return
+	 */
+	public SMPLValue getSMPLValue(String name);
+
 	/**
 	 * Lookup a reference to a number
 	 *
@@ -121,4 +130,5 @@ public interface SMPLContext {
 	 * @return bool this associated boolean environment
      */
 	public  SMPLEnvironment<Boolean> getBoolEnv();
+
 }

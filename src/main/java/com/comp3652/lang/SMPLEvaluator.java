@@ -52,6 +52,7 @@ public class SMPLEvaluator implements SMPLVisitor<SMPLContext, SMPLValue<SMPLExp
 
 	@Override
 	public SMPLValue<SMPLExp> visitSMPLFunCall(SMPLFunCall smplFunCall, SMPLContext state) {
+		//#TODO
 		return null;
 	}
 
@@ -88,44 +89,65 @@ public class SMPLEvaluator implements SMPLVisitor<SMPLContext, SMPLValue<SMPLExp
 	}
 
 	@Override
-	public SMPLValue<SMPLExp> visitSMPLIfStmt(SMPLIfStmt smplIfStmt, SMPLContext state) {
-		return null;
+	public SMPLValue<SMPLExp> visitSMPLIfStmt(SMPLIfStmt smplIfStmt, SMPLContext state) throws SMPLException {
+		ASTExp<CIRExp> conditionalExpression = smplIfStmt.getCondExp();
+		SMPLStmtSequence alternativeBody = smplIfStmt.getAlternative();
+		Boolean conditionalEval = conditionalExpression.visit(condEval,state);
+		boolean shouldExecute = conditionalEval.booleanValue();
+		if (shouldExecute) {
+			SMPLStmtSequence statements = smplIfStmt.getBody();
+			statements.visit(this, state);
+			return SMPLValue.DEFAULT;
+		} else{
+			if(alternativeBody != null){
+				alternativeBody.visit(this, state);
+				return SMPLValue.DEFAULT;
+			}
+
+		}
+		return SMPLValue.DEFAULT;
 	}
 
 	@Override
 	public SMPLValue<SMPLExp> visitSMPLLetStmt(SMPLLetStmt smplLetStmt, SMPLContext state) {
+		//#TODO
 		return null;
 	}
 
 	@Override
 	public SMPLValue<SMPLExp> visitSMPLStmtDefinition(SMPLStmtDefinition smplStmtDefinition, SMPLContext state) {
+		//#TODO
 		return null;
 	}
 
 	@Override
 	public SMPLValue<SMPLExp> visitSMPLExpFunCall(SMPLExpFunCall smplExpFunCall, SMPLContext context) {
+		//#TODO
 		return null;
 	}
 
 
 	@Override
 	public SMPLValue<SMPLExp> visitSMPLisPairStmt(SMPLisPairStmt smpLisPairStmt, SMPLContext arg) {
+		//#TODO
 		return null;
 	}
 
 	@Override
 	public SMPLValue<SMPLExp> visitVar(ASTVar<SMPLExp> var, SMPLContext state) throws SMPLException, SMPLException {
-		return null;
+		return state.getSMPLValue(var.getId());
 	}
 
 	@Override
 	public SMPLValue<SMPLExp> visitUnaryExp(ASTUnaryExp<SMPLExp> exp, SMPLContext state) throws SMPLException, SMPLException {
-		return null;
+		throw new SMPLException("Unknown unary operation applied to value: " +
+				exp);
 	}
 
 	@Override
 	public SMPLValue<SMPLExp> visitBinaryExp(ASTBinaryExp<SMPLExp> exp, SMPLContext state) throws SMPLException, SMPLException {
-		return null;
+		throw new SMPLException("Unknown binary operation applied to values: " +
+				exp);
 	}
 
 	public SMPLContext mkInitialContext() {

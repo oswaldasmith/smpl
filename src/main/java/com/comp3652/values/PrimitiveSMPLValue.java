@@ -7,6 +7,6 @@ public class PrimitiveSMPLValue extends SMPLValue<Object> {
     protected int default_value;
 
     public PrimitiveSMPLValue(){
-        super("");
+        this.default_value = 0;
     }
 }
