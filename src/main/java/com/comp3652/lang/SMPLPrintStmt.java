@@ -11,6 +11,7 @@ public class SMPLPrintStmt extends SMPLStatement {
 
     public SMPLPrintStmt(StringExp e, boolean b) {
         this.exp = e;
+        this.isPrintln = b;
     }
 
 
@@ -22,5 +23,9 @@ public class SMPLPrintStmt extends SMPLStatement {
 
     public StringExp getExp() {
         return exp;
+    }
+
+    public boolean isPrintln() {
+        return isPrintln;
     }
 }

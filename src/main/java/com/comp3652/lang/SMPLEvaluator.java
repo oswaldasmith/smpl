@@ -60,13 +60,31 @@ public class SMPLEvaluator implements SMPLVisitor<SMPLContext, SMPLValue<SMPLExp
 	public SMPLValue<SMPLExp> visitSMPLPrintStmt(SMPLPrintStmt printStmt, SMPLContext state) throws SMPLException {
 		StringExp stringExp = printStmt.getExp();
 		SMPLValue v = stringExp.visit(this,state);
+		Object output = v.getValue().toString();
+
+		if (printStmt.isPrintln()) {
+			System.out.println(output);
+		} else {
+			System.out.print(output);
+		}
+
 		return v;
 	}
 
 	@Override
 	public SMPLValue<SMPLExp> visitSMPLReadStmt(SMPLReadStmt smplReadStmt, SMPLContext state) {
-		//#TODO
-		return null;
+		Scanner scan = new Scanner(System.in);
+		Object str = scan.next();
+
+		if(smplReadStmt.getReadInt()){
+			SMPLValue v = new PrimitiveSMPLValue(new AIRExpInt((Integer) str));
+			return v;
+
+		} else{
+			SMPLValue v = new PrimitiveSMPLValue(new StringExp((String) str));
+			return v;
+
+		}
 	}
 
 	@Override
