@@ -115,16 +115,39 @@ public class SMPLEvaluator implements SMPLVisitor<SMPLContext, SMPLValue<SMPLExp
 	}
 
 	@Override
-	public SMPLValue<SMPLExp> visitSMPLStmtDefinition(SMPLStmtDefinition smplStmtDefinition, SMPLContext state) {
-		SMPLValue result = smplStmtDefinition.visit(this, state);
-		context.putP(assignment.getVar(), result);
+	public SMPLValue<SMPLExp> visitSMPLStmtDefinition(SMPLStmtDefinition smplStmtDefinition, SMPLContext state) throws SMPLException {
+		SMPLValue result = (SMPLValue) smplStmtDefinition.getExp().visit(this, state);
+		state.putSMPLVal(smplStmtDefinition.getVar(), result);
 		return result;
 	}
 
 	@Override
-	public SMPLValue<SMPLExp> visitSMPLExpFunCall(SMPLExpFunCall smplExpFunCall, SMPLContext context) {
-		//#TODO
-		return null;
+	public SMPLValue<SMPLExp> visitSMPLExpFunCall(SMPLExpFunCall smplExpFunCall, SMPLContext context) throws SMPLException {
+		String funName = smplExpFunCall.getFunName();
+		ArrayList<ASTExp<SMPLExp>> argExps = smplExpFunCall.getArgExps();
+
+		ArrayList<SMPLValue> arguments = new ArrayList<SMPLValue>();
+
+		SMPLFunction function = context.getFunction(funName);
+
+		ArrayList<String> formalParameters = function.getParams();
+
+		SMPLContext closingEnvironment = function.getClosingEnv();
+		for (ASTExp<SMPLExp> arg : argExps) {
+			arguments.add(arg.visit(this, context);
+		}
+
+		// extend the closing environment with bindings for painter parameters
+		SMPLContext newEnvironment = closingEnvironment.extendSMPLValue(formalParameters, arguments)
+				.extendF(new ArrayList<String>(), new ArrayList<SMPLFunction>());
+
+		// also extend with bindings for numerical parameters
+		// newEnvironment = newEnvironment.extendN(numericalFormalParameters, numericalArguments);
+
+		// and we extend with empty function frame to keep local functions local
+		// newEnvironment = newEnvironment.extendF(new ArrayList<String>(), new ArrayList<HPLFunction>());
+		// now return a painter that will execute the body when rendered.
+		return new CompoundSMPLValue(this, function.getBody(), newEnvironment);
 	}
 
 

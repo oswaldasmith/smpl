@@ -43,7 +43,7 @@ public interface SMPLContext {
 	 * @throws SMPLException if the name is not bound to a Function in this
 	 * context
 	 */
-	public SMPLFunction getF(String name) throws SMPLException;
+	public SMPLFunction getFunction(String name) throws SMPLException;
 
 	/**
 	 * Lookup a reference to a SMPL Vector
@@ -51,7 +51,7 @@ public interface SMPLContext {
 	 * @return The vector associated
 	 *@throws SMPLException if the name is unbound in this context
 	 */
-	public SMPLVector getV(String name) throws SMPLException;
+	public SMPLVector getVector(String name) throws SMPLException;
 
 	/**
 	 * Lookup a reference to a SMPL Pair
@@ -59,7 +59,7 @@ public interface SMPLContext {
 	 * @return The pair associated
 	 * @throws SMPLException
 	 */
-	public SMPLPair getP(String name) throws SMPLException;
+	public SMPLPair getPair(String name) throws SMPLException;
 
 
 	/**
@@ -98,6 +98,14 @@ public interface SMPLContext {
 	public SMPLContext extendP(ArrayList<String> pParams, ArrayList<SMPLPair> args);
 
 	/**
+	 *
+	 * @param formalParameters The corresponding names of the values
+	 * @param arguments Corresponding values for the arguments
+	 * @return new created context with pairs extended with new bindings
+	 */
+	public SMPLContext extendSMPLValue(ArrayList<String> formalParameters, ArrayList<SMPLValue> arguments);
+
+	/**
 	 * Get the numerical environment associated with this context
 	 * @return this numerical environment
      */
@@ -115,14 +123,28 @@ public interface SMPLContext {
 	 * @param name The identifier of the binding
 	 * @param n The numerical value to be associated with the name
 	 */
-	public void putN(String name, Double n);
+	public void putNumber(String name, Double n);
 
 	/**
-	 * Store  a binding for the given name to an SMPLValue
+	 * Store  a binding for the given name to an SMPLVector
 	 * @param name the identifier of the binding
 	 * @param v the identifier of the binding
 	 */
-	public void putV(String name, SMPLValue v);
+	public void putVector(String name, SMPLVector v);
+
+	/**
+	 * Store a binding for the given name to an SMPLPair
+	 * @param name the identifier of the pair
+	 * @param v the identifier of the binding
+	 */
+	public void putPair(String name, SMPLVector v);
+
+	/**
+	 *Store a binding for the given name to an SMPLValue
+	 *@param name the identifier of the binding
+	 * @param v the identifier of the binding
+	 */
+	public void putSMPLVal(String name, SMPLValue v);
 
 	/**
 	 *

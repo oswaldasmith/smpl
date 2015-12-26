@@ -19,4 +19,12 @@ public class SMPLStmtDefinition extends SMPLStatement {
     public <S, T> T visit(SMPLVisitor<S, T> v, S state) throws SMPLException {
         return v.visitSMPLStmtDefinition(this,state);
     }
+
+    public ASTExp getExp() {
+        return exp;
+    }
+
+    public String getVar() {
+        return var;
+    }
 }

@@ -21,4 +21,12 @@ public class SMPLExpFunCall extends SMPLExp{
     public <S, T> T visit(SMPLVisitor<S, T> v, S context) throws SMPLException {
         return v.visitSMPLExpFunCall(this,context);
     }
+
+    public String getFunName() {
+        return funName;
+    }
+
+    public ArrayList<ASTExp<SMPLExp>> getArgExps() {
+        return argExps;
+    }
 }
