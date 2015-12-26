@@ -182,7 +182,7 @@ public class SMPLEvaluator implements SMPLVisitor<SMPLContext, SMPLValue<SMPLExp
 			ASTExp curr = contents.get(i);
 			container.add((ASTExp) curr.visit(this, context));
 		}
-		return new SMPLValue<ASTExp>(new SMPLVector(container));
+		return (new SMPLValue(container));
 	}
 
 	@Override
