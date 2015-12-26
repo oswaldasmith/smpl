@@ -7,7 +7,7 @@ import com.sun.xml.internal.bind.v2.TODO;
 import java.util.*;
 
 public class SMPLEvaluator implements SMPLVisitor<SMPLContext, SMPLValue<SMPLExp>> {
-	
+
 	private final ArithEvaluator arithEval;
 	private final CIREvaluator condEval;
 	private final StringEvaluator stringEval;
@@ -46,7 +46,7 @@ public class SMPLEvaluator implements SMPLVisitor<SMPLContext, SMPLValue<SMPLExp
 	@Override
 	public SMPLValue<SMPLExp> visitSMPLAssignment(SMPLAssignment smplAssignment, SMPLContext state) throws SMPLException {
 		SMPLValue result = smplAssignment.getExp().visit(this, state);
-		state.putV(smplAssignment.getVar(), result);
+		state.putSMPLVal(smplAssignment.getVar(), result);
 		return result;
 	}
 
@@ -65,26 +65,25 @@ public class SMPLEvaluator implements SMPLVisitor<SMPLContext, SMPLValue<SMPLExp
 
 	@Override
 	public SMPLValue<SMPLExp> visitSMPLReadStmt(SMPLReadStmt smplReadStmt, SMPLContext state) {
+		//#TODO
 		return null;
 	}
 
 	@Override
 	public SMPLValue<SMPLExp> visitSMPLSubStrStmt(SMPLSubStrStmt smplSubStrStmt, SMPLContext state) {
+		//#TODO
 		return null;
 	}
 
 	@Override
 	public SMPLValue<SMPLExp> visitSMPLCaseStmt(SMPLCaseStmt smplCaseStmt, SMPLContext state) {
+		//#TODO
 		return null;
 	}
 
 	@Override
 	public SMPLValue<SMPLExp> visitRetVctStmt(SMPLRetVctStmt smplRetVctStmt, SMPLContext state) {
-		return null;
-	}
-
-	@Override
-	public SMPLValue<SMPLExp> visitSMPLFunDef(SMPLFunDef smplFunDef, SMPLContext state) {
+		//#TODO
 		return null;
 	}
 
@@ -134,7 +133,7 @@ public class SMPLEvaluator implements SMPLVisitor<SMPLContext, SMPLValue<SMPLExp
 
 		SMPLContext closingEnvironment = function.getClosingEnv();
 		for (ASTExp<SMPLExp> arg : argExps) {
-			arguments.add(arg.visit(this, context);
+			arguments.add(arg.visit(this, context));
 		}
 
 		// extend the closing environment with bindings for painter parameters
