@@ -30,7 +30,7 @@ public class SMPLFunCall extends SMPLExp {
 
 
     public ArrayList<ASTExp<AIRExp>> getArgExps() {
-        return argExps;
+        return arithArgExps;
     }
 
     @Override

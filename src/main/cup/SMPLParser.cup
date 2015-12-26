@@ -193,6 +193,9 @@ smplExp ::= exPair:p {:
             :}|
             smplFunCall:f {:
                 RESULT = f;
+            :} |
+            funCall:f {:
+                RESULT = f;
             :};
 
 smplExpList ::= smplExpList:l COMMA smplExp:e {:
@@ -353,10 +356,7 @@ arithExpListE ::= arithExpList:lst {: RESULT = lst; :} |
 
 arithExp ::= arithExp:e PLUS arithTerm:t {: RESULT = new ASTBinaryExp<AIRExp>("+", e, t); :} |
 	     arithExp:e MINUS arithTerm:t {: RESULT = new ASTBinaryExp<AIRExp>("-", e, t); :} |
-	     arithTerm:t {: RESULT = t; :} |
-	     funCall:f SEMI {:
-            RESULT = f;
-         :};
+	     arithTerm:t {: RESULT = t; :};
 
 arithTerm ::= arithTerm:t TIMES arithFactor:f {: RESULT = new ASTBinaryExp<AIRExp>("*", t, f); :}|
 	      arithTerm:t DIV arithFactor:f {: RESULT = new ASTBinaryExp<AIRExp>("/", t, f); :}|

@@ -116,8 +116,9 @@ public class SMPLEvaluator implements SMPLVisitor<SMPLContext, SMPLValue<SMPLExp
 
 	@Override
 	public SMPLValue<SMPLExp> visitSMPLStmtDefinition(SMPLStmtDefinition smplStmtDefinition, SMPLContext state) {
-		//#TODO
-		return null;
+		SMPLValue result = smplStmtDefinition.visit(this, state);
+		context.putP(assignment.getVar(), result);
+		return result;
 	}
 
 	@Override
