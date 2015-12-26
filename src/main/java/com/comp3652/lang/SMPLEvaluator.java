@@ -175,6 +175,17 @@ public class SMPLEvaluator implements SMPLVisitor<SMPLContext, SMPLValue<SMPLExp
 	}
 
 	@Override
+	public SMPLValue<SMPLExp> visitSMPLVectorExp(SMPLVectorExp smplVectorExp, SMPLContext context) throws SMPLException {
+		ArrayList<ASTExp> contents = smplVectorExp.getExplist();
+		ArrayList<ASTExp> container = new ArrayList<ASTExp>();
+		for (int i = 0; i < contents.size(); i++) {
+			ASTExp curr = contents.get(i);
+			container.add((ASTExp) curr.visit(this, context));
+		}
+		return new SMPLValue<ASTExp>(new SMPLVector(container));
+	}
+
+	@Override
 	public SMPLValue<SMPLExp> visitVar(ASTVar<SMPLExp> var, SMPLContext state) throws SMPLException, SMPLException {
 		return state.getSMPLValue(var.getId());
 	}

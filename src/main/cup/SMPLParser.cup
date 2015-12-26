@@ -92,6 +92,8 @@ non terminal SMPLExpFunCall smplFunCall;
 non terminal StringExp stringExp;
 
 non terminal ASTExp<SMPLExp> smplExp;
+non terminal ASTExp vectorExp;
+non terminal ArrayList<ASTExp> vectorList;
 non terminal ArrayList<ASTExp<SMPLExp>> smplExpList;
 non terminal ArrayList<ASTExp<SMPLExp>> smplExpListE;
 non terminal ASTExp<CIRExp> predExp;
@@ -221,12 +223,13 @@ exPair ::= PAIR LPAREN smplExp:e1 COMMA smplExp:e2 RPAREN {:
                 RESULT = new exPair(e1,e2);
             :};
 
-vector ::= LBRACKET COLON smplExpList:l COLON RBRACKET {:
-                RESULT = new SMPLVectorExp(l);
+vector ::= LBRACKET COLON vectorExp:v COLON RBRACKET {:
+                RESULT = new SMPLVectorExp(v);
             :} |
-            LBRACKET COLON arithExpList:l COLON RBRACKET {:
-                RESULT = new SMPLVectorExp(l);
-            :};
+            LBRACKET COLON vectorList:l COLON RBRACKET {:
+                            RESULT = new SMPLVectorExp(l);
+                        :};
+
 
 
 car ::= CAR LPAREN exPair:p RPAREN {: RESULT = new SMPLCarStmt(p); :};
