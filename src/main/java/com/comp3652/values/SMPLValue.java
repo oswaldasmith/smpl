@@ -7,7 +7,7 @@ import java.util.ArrayList;
 /**
  * Created by carlos on 12/19/15.
  */
-public class SMPLValue <T> extends ArrayList<ASTExp> {
+public abstract class SMPLValue <T> extends ArrayList<ASTExp> {
 
     public static final SMPLValue DEFAULT =  new PrimitiveSMPLValue();
     private ArrayList<T> values;

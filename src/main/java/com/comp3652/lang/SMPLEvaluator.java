@@ -90,13 +90,13 @@ public class SMPLEvaluator implements SMPLVisitor<SMPLContext, SMPLValue<SMPLExp
 	@Override
 	public SMPLValue<SMPLExp> visitSMPLSubStrStmt(SMPLSubStrStmt smplSubStrStmt, SMPLContext state) throws SMPLException {
 		String toRet = smplSubStrStmt.getString();
-		return new SMPLValue(toRet.substring(smplSubStrStmt.getStart(),smplSubStrStmt.getEnd()));
+		return new SMPLString(toRet.substring(smplSubStrStmt.getStart(),smplSubStrStmt.getEnd()));
 	}
 
 	@Override
 	public SMPLValue<SMPLExp> visitSMPLCaseStmt(SMPLCaseStmt smplCaseStmt, SMPLContext state) throws SMPLException {
 		if(smplCaseStmt.getPredicate().visit(this.condEval,state)){
-			return new SMPLValue(smplCaseStmt.getConsequent().visit(this,state));
+			return (smplCaseStmt.getConsequent().visit(this, state));
 		}
 
 		return null;
@@ -105,7 +105,7 @@ public class SMPLEvaluator implements SMPLVisitor<SMPLContext, SMPLValue<SMPLExp
 	@Override
 	public SMPLValue<SMPLExp> visitRetVctStmt(SMPLRetVctStmt smplRetVctStmt, SMPLContext state) throws SMPLException {
 		SMPLValue<SMPLExp> exp = smplRetVctStmt.getVector().visit(this,state);
-		return new SMPLValue (exp.getValues().get(smplRetVctStmt.getIndex()));
+		return new PrimitiveSMPLValue (exp.getValues().get(smplRetVctStmt.getIndex()));
 	}
 
 	@Override
@@ -169,7 +169,7 @@ public class SMPLEvaluator implements SMPLVisitor<SMPLContext, SMPLValue<SMPLExp
 
 	@Override
 	public SMPLValue<SMPLExp> visitSMPLisPairStmt(SMPLisPairStmt smplisPairStmt, SMPLContext arg) throws SMPLException {
-		return new SMPLValue(new Boolean(smplisPairStmt.getPair().visit(this, arg).getType().equals( "Vector")));
+		return new SMPLBoolean(new BoolExp(smplisPairStmt.getPair().visit(this, arg).getType().equals( "Vector")));
 	}
 
 	@Override
@@ -180,34 +180,34 @@ public class SMPLEvaluator implements SMPLVisitor<SMPLContext, SMPLValue<SMPLExp
 			ASTExp curr = contents.get(i);
 			container.add((ASTExp) curr.visit(this, context));
 		}
-		return (new SMPLValue(container));
+		return (new SMPLVector(container));
 	}
 
 	@Override
 	public SMPLValue<SMPLExp> visitSMPLCaseFunction(SMPLCaseFunction smplCaseFunction, SMPLContext state) throws SMPLException {
 		for(SMPLCaseStmt stmt : smplCaseFunction.getCaseStmts()){
 			if(stmt.getPredicate().visit(this.condEval,state)){
-				return new SMPLValue(stmt.getConsequent().visit(this,state));
+				return stmt.getConsequent().visit(this,state);
 			}
 		}
 
-		return new SMPLValue(smplCaseFunction.getFinalCase().visit(this,state));
+		return smplCaseFunction.getFinalCase().visit(this,state);
 	}
 
 	@Override
 	public SMPLValue<SMPLExp> visitSMPLSizeStmt(SMPLSizeStmt sizeStmt, SMPLContext state) throws SMPLException {
-		return new SMPLValue(new SMPLVector(sizeStmt.getVector().visit(this,state)).size());
+		return new PrimitiveSMPLValue(new SMPLVector(sizeStmt.getVector().visit(this,state)).size());
 	}
 
 
 	@Override
 	public SMPLValue<SMPLExp> visitSMPLIsEqualStmt(SMPLIsEqualStmt stmt, SMPLContext state) throws SMPLException {
-		return new SMPLValue(stmt.isEqual());
+		return new SMPLBoolean(stmt.isEqual());
 	}
 
 	@Override
 	public SMPLValue<SMPLExp> visitSMPLIsEqvStmt(SMPLIsEqvStmt stmt, SMPLContext state) throws SMPLException {
-		return  new SMPLValue(stmt.isEquivalent());
+		return  new SMPLBoolean(stmt.isEquivalent());
 	}
 
 	@Override
