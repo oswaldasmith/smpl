@@ -160,7 +160,7 @@ public class SMPLEvaluator implements SMPLVisitor<SMPLContext, SMPLValue<SMPLExp
 
 		// extend the closing environment with bindings for painter parameters
 		SMPLContext newEnvironment = closingEnvironment.extendSMPLValue(formalParameters, arguments)
-				.extendF(new ArrayList<String>(), new ArrayList<SMPLFunction>());
+				.extendFunctionEnvironment(new ArrayList<String>(), new ArrayList<SMPLFunction>());
 
 
 		return new CompoundSMPLValue(this, function.getBody(), newEnvironment);
