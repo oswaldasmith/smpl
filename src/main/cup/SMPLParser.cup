@@ -94,7 +94,7 @@ non terminal SMPLExpFunCall smplFunCall;
 non terminal StringExp stringExp;
 
 non terminal ASTExp<SMPLExp> smplExp;
-non terminal ASTExp vectorExp;
+non terminal ASTExp astExp;
 non terminal ArrayList<ASTExp> vectorList;
 non terminal ArrayList<ASTExp<SMPLExp>> smplExpList;
 non terminal ArrayList<ASTExp<SMPLExp>> smplExpListE;
@@ -198,6 +198,24 @@ smplExp ::= exPair:p {:
             smplFunCall:f {:
                 RESULT = f;
             :} |
+            isPair:p {:
+                 RESULT = p;
+             :} |
+             retVec:r {:
+                 RESULT = r;
+             :} |
+             size:s {:
+                 RESULT = s;
+             :} |
+             isEqual:e {:
+                 RESULT = e;
+             :} |
+             isEqv:e {:
+                 RESULT = e;
+             :} |
+             substr:s {:
+                 RESULT = s;
+             :} |
             funCall:f {:
                 RESULT = f;
             :};
@@ -225,7 +243,7 @@ exPair ::= PAIR LPAREN smplExp:e1 COMMA smplExp:e2 RPAREN {:
                 RESULT = new exPair(e1,e2);
             :};
 
-vector ::= LBRACKET COLON vectorExp:v COLON RBRACKET {:
+vector ::= LBRACKET COLON astExp:v COLON RBRACKET {:
                 RESULT = new SMPLVectorExp(v);
             :} |
             LBRACKET COLON vectorList:l COLON RBRACKET {:
@@ -244,9 +262,9 @@ retVec ::= vector:v LBRACKET INTEGER:i RBRACKET {: RESULT = new SMPLRetVctStmt(v
 
 size ::= SIZE LPAREN vector:v RPAREN {: RESULT = new SMPLSizeStmt(v); :};
 
-isEqual ::= IFEQUAL LPAREN smplExp:e COMMA smplExp:e2 RPAREN {: RESULT = new SMPLIsEqualStmt(e,e2); :};
+isEqual ::= IFEQUAL LPAREN astExp:e COMMA astExp:e2 RPAREN {: RESULT = new SMPLIsEqualStmt(e,e2); :};
 
-isEqv ::= IFEQUIVALENT LPAREN smplExp:e COMMA smplExp:e2 RPAREN {: RESULT = new SMPLIsEqvStmt(e,e2); :};
+isEqv ::= IFEQUIVALENT LPAREN astExp:e COMMA astExp:e2 RPAREN {: RESULT = new SMPLIsEqvStmt(e,e2); :};
 
 substr ::= SUBSTRING LPAREN STRING:s COMMA INTEGER:start COMMA INTEGER:end RPAREN {: RESULT = new SMPLSubStrStmt(s,start,end); :};
 
@@ -311,25 +329,7 @@ funCall ::= VAR:fn LPAREN arithExpListE:args RPAREN {:
         :} |
         cdr:c {:
             RESULT = c;
-        :} |
-        isPair:p {:
-            RESULT = p;
-        :} |
-        retVec:r {:
-            RESULT = r;
-        :} |
-        size:s {:
-            RESULT = s;
-        :} |
-        isEqual:e {:
-            RESULT = e;
-        :} |
-        isEqv:e {:
-            RESULT = e;
-        :} |
-        substr:s {:
-            RESULT = s;
-        :} |
+        :}  |
         proc:p {:
             RESULT = p;
         :} |

@@ -94,22 +94,9 @@ public class SMPLEvaluator implements SMPLVisitor<SMPLContext, SMPLValue<SMPLExp
 	}
 
 	@Override
-	public SMPLValue<SMPLExp> visitSMPLCaseStmt(SMPLCaseStmt smplCaseStmt, SMPLContext state) {
-		ArrayList<ASTExp> caseExps = smplCaseStmt.
-
-		for (ASTNode n : caseExps) {
-
-			SMPLContainer predContainer = caseExp.getPredicate().visit(this, state);
-
-			if (!"Boolean".equals(predContainer.getType())) {
-				System.out.println("TypeError: Expected \"Integer\", got \""+predContainer.getType()+"\".");
-				return null;
-			}
-
-			if (((SMPLBoolean) predContainer.getValue()).isValue()) {
-				SMPLContainer consContainer = caseExp.getConsequent().visit(this, state);
-				return consContainer;
-			}
+	public SMPLValue<SMPLExp> visitSMPLCaseStmt(SMPLCaseStmt smplCaseStmt, SMPLContext state) throws SMPLException {
+		if(smplCaseStmt.getPredicate().visit(this.condEval,state)){
+			return new SMPLValue(smplCaseStmt.getConsequent().visit(this,state));
 		}
 
 		return null;
@@ -182,7 +169,7 @@ public class SMPLEvaluator implements SMPLVisitor<SMPLContext, SMPLValue<SMPLExp
 
 	@Override
 	public SMPLValue<SMPLExp> visitSMPLisPairStmt(SMPLisPairStmt smplisPairStmt, SMPLContext arg) throws SMPLException {
-		return new SMPLValue<SMPLExp>(new Boolean(smplisPairStmt.getPair().visit(this, arg).getType().equals( "Vector")));
+		return new SMPLValue(new Boolean(smplisPairStmt.getPair().visit(this, arg).getType().equals( "Vector")));
 	}
 
 	@Override
@@ -194,6 +181,33 @@ public class SMPLEvaluator implements SMPLVisitor<SMPLContext, SMPLValue<SMPLExp
 			container.add((ASTExp) curr.visit(this, context));
 		}
 		return (new SMPLValue(container));
+	}
+
+	@Override
+	public SMPLValue<SMPLExp> visitSMPLCaseFunction(SMPLCaseFunction smplCaseFunction, SMPLContext state) throws SMPLException {
+		for(SMPLCaseStmt stmt : smplCaseFunction.getCaseStmts()){
+			if(stmt.getPredicate().visit(this.condEval,state)){
+				return new SMPLValue(stmt.getConsequent().visit(this,state));
+			}
+		}
+
+		return new SMPLValue(smplCaseFunction.getFinalCase().visit(this,state));
+	}
+
+	@Override
+	public SMPLValue<SMPLExp> visitSMPLSizeStmt(SMPLSizeStmt sizeStmt, SMPLContext state) throws SMPLException {
+		return new SMPLValue(new SMPLVector(sizeStmt.getVector().visit(this,state)).size());
+	}
+
+
+	@Override
+	public SMPLValue<SMPLExp> visitSMPLIsEqualStmt(SMPLIsEqualStmt stmt, SMPLContext state) throws SMPLException {
+		return new SMPLValue(stmt.isEqual());
+	}
+
+	@Override
+	public SMPLValue<SMPLExp> visitSMPLIsEqvStmt(SMPLIsEqvStmt stmt, SMPLContext state) throws SMPLException {
+		return  new SMPLValue(stmt.isEquivalent());
 	}
 
 	@Override
