@@ -8,14 +8,13 @@ import java.util.*;
 public class SMPLFunDef extends SMPLStatement {
 
 	protected String name;
-
-	protected List<String> numericParams;
-	protected List<String> vectorParams;
 	protected ArrayList<String> params;
 	protected SMPLStmtSequence statements;
 
-	public SMPLFunDef() {
-
+	public SMPLFunDef(String fnName, ArrayList<String> nParams, SMPLStmtSequence sequence) {
+		name = fnName;
+		params = nParams;
+		statements = sequence;
 	}
 
 	public String getFunctionName() {

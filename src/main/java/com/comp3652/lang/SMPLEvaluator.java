@@ -223,6 +223,13 @@ public class SMPLEvaluator implements SMPLVisitor<SMPLContext, SMPLValue<SMPLExp
 	@Override
 	public SMPLValue<SMPLExp> visitSMPLFunDef(SMPLFunDef smplFunDef, SMPLContext state) throws SMPLException {
 		//#TODO
+		
+		String funcName = smplFunDef.getFunctionName();
+		ArrayList<String> parameters = smplFunDef.getParameters();
+		SMPLStmtSequence seq = smplFunDef.getStatements();
+
+		
+
 		return null;
 	}
 
