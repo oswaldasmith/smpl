@@ -36,4 +36,11 @@ public interface SMPLVisitor<S, T> extends ASTVisitor<SMPLExp,S,T> {
 	T visitSMPLVectorExp(SMPLVectorExp smplVectorExp, S context) throws SMPLException;
 
 	T visitSMPLCaseFunction(SMPLCaseFunction smplCaseFunction, S state) throws SMPLException;
+
+	T visitSMPLSizeStmt(SMPLSizeStmt sizeStmt, S state) throws SMPLException;
+
+	T visitSMPLIsEqualStmt(SMPLIsEqualStmt stmt, S state) throws SMPLException;
+
+	T visitSMPLIsEqvStmt(SMPLIsEqvStmt stmt, S state) throws SMPLException;
+
 }

@@ -7,7 +7,7 @@ import java.util.ArrayList;
 /**
  * Created by carlos on 12/19/15.
  */
-public class SMPLValue <T> {
+public class SMPLValue <T> extends ArrayList<ASTExp> {
 
     public static final SMPLValue DEFAULT =  new PrimitiveSMPLValue();
     private ArrayList<T> values;
@@ -40,5 +40,9 @@ public class SMPLValue <T> {
 
     public ArrayList<T> getValues() {
         return values;
+    }
+
+    public void setValue(SMPLValue smplValue){
+        this.value = (T) smplValue;
     }
 }

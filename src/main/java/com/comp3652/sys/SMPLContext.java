@@ -25,7 +25,7 @@ public interface SMPLContext {
 	 * @param name the identifier associated with it
 	 * @return
 	 */
-	public SMPLValue getSMPLValue(String name);
+	public SMPLValue getSMPLValue(String name) throws SMPLException;
 
 	/**
 	 * Lookup a reference to a number
@@ -34,7 +34,7 @@ public interface SMPLContext {
 	 * @return associated double
 	 * @throws SMPLException
 	 */
-	public SMPLEnvironment<Double> getN(String name);
+	public Double getN(String name) throws SMPLException;
 
 	/**
 	 * Lookup a reference to a SMPL function.
@@ -68,7 +68,7 @@ public interface SMPLContext {
 	 * @param  fParams [description]
 	 * @return         [description]
 	 */
-	public SMPLContext extendF(ArrayList<String> fParams, ArrayList<SMPLFunction> args);
+	public SMPLContext extendFunctionEnvironment(ArrayList<String> fParams, ArrayList<SMPLFunction> args);
 
 	/**
 	 * Numbers
@@ -77,7 +77,7 @@ public interface SMPLContext {
 	 * @param  vals    [description]
 	 * @return         [description]
 	 */
-	public SMPLContext extendN(ArrayList<String> nParams, ArrayList<Double> vals);
+	public SMPLContext extendNumericalEnvironment(ArrayList<String> nParams, ArrayList<Double> vals);
 
 	/**
 	 * Vectors
@@ -86,7 +86,7 @@ public interface SMPLContext {
 	 * @param args The corresponding values for the names
 	 * @return new created context with Vectors is extended with new bindings
 	 */
-	public SMPLContext extendV(ArrayList<String> vParams, ArrayList<SMPLVector> args);
+	public SMPLContext extendVectorEnvironment(ArrayList<String> vParams, ArrayList<SMPLVector> args);
 
 	/**
 	 * Pairs
@@ -95,7 +95,7 @@ public interface SMPLContext {
 	 * @param args Corresponding values for the pair
 	 * @return new created context with pairs extended with new bindings
 	 */
-	public SMPLContext extendP(ArrayList<String> pParams, ArrayList<SMPLPair> args);
+	public SMPLContext extendPairEnvironment(ArrayList<String> pParams, ArrayList<SMPLPair> args);
 
 	/**
 	 *
@@ -116,7 +116,7 @@ public interface SMPLContext {
 	 * @param name The identifier of the binding
 	 * @param p The HPL function to be associated with the name
 	 */
-	public void putF(String name, SMPLFunction p);
+	public void putFunction(String name, SMPLFunction p);
 
 	/**
 	 * Store a binding for the given name to the given number.
@@ -137,14 +137,14 @@ public interface SMPLContext {
 	 * @param name the identifier of the pair
 	 * @param v the identifier of the binding
 	 */
-	public void putPair(String name, SMPLVector v);
+	public void putPair(String name, SMPLPair v);
 
 	/**
 	 *Store a binding for the given name to an SMPLValue
 	 *@param name the identifier of the binding
 	 * @param v the identifier of the binding
 	 */
-	public void putSMPLVal(String name, SMPLValue v);
+	public void putSMPLVal(String name,SMPLValue v);
 
 	/**
 	 *
