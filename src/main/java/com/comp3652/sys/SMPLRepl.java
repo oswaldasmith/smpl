@@ -15,6 +15,13 @@ public class SMPLRepl {
 
     public static void main(String args[]){
         setup();
+        for(String arg: args){
+            try {
+                parseEvalShow(new FileReader(new File(arg)), globalEnv);
+            } catch (FileNotFoundException fnfe) {
+                System.out.println("Could not find file " + arg);
+            }
+        }
     }
 
     public static void setup() {

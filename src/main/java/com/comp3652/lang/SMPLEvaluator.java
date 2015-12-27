@@ -207,7 +207,17 @@ public class SMPLEvaluator implements SMPLVisitor<SMPLContext, SMPLValue<SMPLExp
 
 	@Override
 	public SMPLValue<SMPLExp> visitSMPLIsEqvStmt(SMPLIsEqvStmt stmt, SMPLContext state) throws SMPLException {
-		return  new SMPLBoolean(stmt.isEquivalent());
+		return new SMPLBoolean(stmt.isEquivalent());
+	}
+
+	@Override
+	public SMPLValue<SMPLExp> visitSMPLCarStmt(SMPLCarStmt smplCarStmt, SMPLContext context) throws SMPLException {
+		return (SMPLValue<SMPLExp>) smplCarStmt.ret();
+	}
+
+	@Override
+	public SMPLValue<SMPLExp> visitSMPLCdrStmt(SMPLCdrStmt smplCdrStmt, SMPLContext context) throws SMPLException {
+		return (SMPLValue<SMPLExp>) smplCdrStmt.ret();
 	}
 
 	@Override

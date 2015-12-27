@@ -1,5 +1,7 @@
 package com.comp3652.lang;
 
+import com.comp3652.sys.SMPLException;
+
 /**
  * Created by carlos on 12/20/15.
  */
@@ -21,5 +23,10 @@ public class SMPLIsEqualStmt extends SMPLFunCall {
 
     public Boolean isEqual() {
         return object1 == object2;
+    }
+
+    @Override
+    public <S, T> T visit(SMPLVisitor<S, T> v, S context) throws SMPLException {
+        return v.visitSMPLIsEqualStmt(this,context);
     }
 }
