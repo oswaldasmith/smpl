@@ -85,7 +85,9 @@ non terminal SMPLSubStrStmt substr;
 non terminal SMPLLazyStmt lazy;
 non terminal SMPLIfStmt if;
 non terminal SMPLLetStmt let;
-non terminal SMPLCaseStmt case;
+non terminal SMPLCaseStmt casestmt;
+non terminal ArrayList<SMPLCaseStmt> caseList;
+non terminal SMPLCaseFunction caseFunc;
 non terminal SMPLReadStmt read;
 non terminal SMPLFunCall funCall;
 non terminal SMPLExpFunCall smplFunCall;
@@ -140,7 +142,7 @@ stmt ::= binding:b SEMI{:
             let:l SEMI {:
                 RESULT = l;
             :} |
-            case:c SEMI {:
+            caseFunc:c SEMI {:
                 RESULT = c;
             :};
 
@@ -228,7 +230,7 @@ vector ::= LBRACKET COLON vectorExp:v COLON RBRACKET {:
             :} |
             LBRACKET COLON vectorList:l COLON RBRACKET {:
                             RESULT = new SMPLVectorExp(l);
-                        :};
+            :};
 
 
 
@@ -271,7 +273,18 @@ if ::=  IF predExp:p THEN stmtList:cons {:
             RESULT = new SMPLIfStmt(p,cons,alt);
         :};
 
-case ::= CASE LBRACE predExpList:lst RBRACE arithExp:e1 COLON arithExp:e2 {: RESULT = new SMPLCaseStmt(lst,e1,e2); :};
+casestmt ::= predExp:p COLON stmt:s {:
+                RESULT = new SMPLCaseStmt(p,s);
+             :};
+
+caseList ::= caseList:l COMMA casestmt:c {:
+                l.add(c);
+                RESULT = l;
+             :};
+
+caseFunc ::= CASE LBRACE caseList:lst COMMA ELSE stmt:s RBRACE {:
+                RESULT = new SMPLCaseFunction(lst,s);
+             :};
 
 let ::= LET LPAREN bindList:ids RPAREN stmtList:body {:
             RESULT = new SMPLLetStmt(ids,body);

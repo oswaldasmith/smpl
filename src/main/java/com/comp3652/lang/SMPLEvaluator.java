@@ -95,10 +95,9 @@ public class SMPLEvaluator implements SMPLVisitor<SMPLContext, SMPLValue<SMPLExp
 
 	@Override
 	public SMPLValue<SMPLExp> visitSMPLCaseStmt(SMPLCaseStmt smplCaseStmt, SMPLContext state) {
-		ArrayList<ASTExp> caseExps = smplCaseStmt
+		ArrayList<ASTExp> caseExps = smplCaseStmt.
 
 		for (ASTNode n : caseExps) {
-			ASTCaseExp caseExp = (ASTCaseExp) n;
 
 			SMPLContainer predContainer = caseExp.getPredicate().visit(this, state);
 
