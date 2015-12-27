@@ -1,26 +1,37 @@
 package com.comp3652.lang;
 
-import java.util.*;
+
 import com.comp3652.sys.SMPLException;
 
-public class SMPLFunCall extends SMPLStatement {
-	protected final String funName;
-	protected final ArrayList<SMPLExp> argExps;
-    // private  ArrayList<ASTExp<AIRExp>> arithArgExps;
-    // TODO not sure about this chad
+import java.util.ArrayList;
 
-	public SMPLFunCall(String name, ArrayList<SMPLExp> args) {
-		funName = name;
-		argExps = args;
-	}
+public class SMPLFunCall extends SMPLExp {
+    private  String funName;
+    private  ArrayList<ASTExp<AIRExp>> arithArgExps;
 
-	public String getFunctionName() {
-		return funName;
-	}
 
-	public ArrayList<SMPLExp> getArgExps() {
-		return argExps;
-	}
+    public SMPLFunCall() {
+    }
+
+    public SMPLFunCall(String fn, ArrayList<ASTExp<AIRExp>> args) {
+        this.funName = fn;
+        this.arithArgExps = args;
+    }
+
+
+
+    /**
+     *
+     * @return The name of the function in this function application expression
+     */
+    public String getFunName() {
+        return funName;
+    }
+
+
+    public ArrayList<ASTExp<AIRExp>> getArgExps() {
+        return arithArgExps;
+    }
 
     @Override
     public <S, T> T visit(SMPLVisitor<S, T> v, S context) throws SMPLException {

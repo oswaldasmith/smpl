@@ -11,30 +11,36 @@ public interface SMPLVisitor<S, T> extends ASTVisitor<SMPLExp,S,T> {
 
 	T visitSMPLAssignment(SMPLAssignment smplAssignment, S state) throws SMPLException;
 
-	T visitSMPLFunCall(SMPLFunCall smplFunCall, S state);
+	T visitSMPLFunCall(SMPLFunCall smplFunCall, S state)throws SMPLException;
 
-	T visitSMPLPrintStmt(SMPLPrintStmt printStmt, S state);
+	T visitSMPLPrintStmt(SMPLPrintStmt printStmt, S state) throws SMPLException;
 
-	T visitSMPLReadStmt(SMPLReadStmt smplReadStmt, S state);
+	T visitSMPLReadStmt(SMPLReadStmt smplReadStmt, S state) throws SMPLException;
 
-	T visitSMPLSubStrStmt(SMPLSubStrStmt smplSubStrStmt, S state);
+	T visitSMPLSubStrStmt(SMPLSubStrStmt smplSubStrStmt, S state) throws SMPLException;
 
-	T visitSMPLCaseStmt(SMPLCaseStmt smplCaseStmt, S state);
+	T visitSMPLCaseStmt(SMPLCaseStmt smplCaseStmt, S state) throws SMPLException;
 
-	T visitRetVctStmt(SMPLRetVctStmt smplRetVctStmt, S state);
+	T visitRetVctStmt(SMPLRetVctStmt smplRetVctStmt, S state) throws SMPLException;
 
-	T visitSMPLFunDef(SMPLFunDef smplFunDef, S state);
+	T visitSMPLIfStmt(SMPLIfStmt smplIfStmt, S state) throws SMPLException;
 
-	T visitSMPLIfStmt(SMPLIfStmt smplIfStmt, S state);
+	T visitSMPLLetStmt(SMPLLetStmt smplLetStmt, S state) throws SMPLException;
 
-	T visitSMPLLetStmt(SMPLLetStmt smplLetStmt, S state);
+	T visitSMPLStmtDefinition(SMPLStmtDefinition smplStmtDefinition, S state) throws SMPLException;
 
-	T visitSMPLStmtDefinition(SMPLStmtDefinition smplStmtDefinition, S state);
+	T visitSMPLExpFunCall(SMPLExpFunCall smplExpFunCall, S context) throws SMPLException;
 
-	T visitSMPLExpFunCall(SMPLExpFunCall smplExpFunCall, S context);
+	T visitSMPLisPairStmt(SMPLisPairStmt smpLisPairStmt, S arg) throws SMPLException;
 
-	T visitStringExp(StringExp stringExp, S state)throws SMPLException;
+	T visitSMPLVectorExp(SMPLVectorExp smplVectorExp, S context) throws SMPLException;
 
-	T visitSMPLisPairStmt(SMPLisPairStmt smpLisPairStmt, S arg);
+	T visitSMPLCaseFunction(SMPLCaseFunction smplCaseFunction, S state) throws SMPLException;
+
+	T visitSMPLSizeStmt(SMPLSizeStmt sizeStmt, S state) throws SMPLException;
+
+	T visitSMPLIsEqualStmt(SMPLIsEqualStmt stmt, S state) throws SMPLException;
+
+	T visitSMPLIsEqvStmt(SMPLIsEqvStmt stmt, S state) throws SMPLException;
 
 }

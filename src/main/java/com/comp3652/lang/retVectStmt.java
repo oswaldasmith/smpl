@@ -6,6 +6,6 @@ package com.comp3652.lang;
 public class retVectStmt extends SMPLRetVctStmt {
     //#TODO
     public retVectStmt(SMPLVectorExp v, Integer i) {
-        super();
+        super(v, i);
     }
 }

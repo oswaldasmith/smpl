@@ -1,8 +1,9 @@
 package com.comp3652.sys;
 
 import com.comp3652.lang.SMPLEvaluator;
+import com.comp3652.lang.SMPLLexer;
+import com.comp3652.lang.SMPLParser;
 import com.comp3652.lang.SMPLProgram;
-import com.comp3652.smpl.*;
 import com.comp3652.values.SMPLValue;
 
 import java.io.*;
