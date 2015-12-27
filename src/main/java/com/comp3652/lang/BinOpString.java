@@ -9,8 +9,6 @@ public enum BinOpString implements BinaryOp<String,String> {
         public String apply(String leftArg, String rightArg) {
             return leftArg.concat(rightArg);
         }
-
-        ;
     };
 
     String symbol;

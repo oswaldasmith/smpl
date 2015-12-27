@@ -221,6 +221,12 @@ public class SMPLEvaluator implements SMPLVisitor<SMPLContext, SMPLValue<SMPLExp
 	}
 
 	@Override
+	public SMPLValue<SMPLExp> visitSMPLFunDef(SMPLFunDef smplFunDef, SMPLContext state) throws SMPLException {
+		//#TODO
+		return null;
+	}
+
+	@Override
 	public SMPLValue<SMPLExp> visitVar(ASTVar<SMPLExp> var, SMPLContext state) throws SMPLException, SMPLException {
 		return state.getSMPLValue(var.getId());
 	}

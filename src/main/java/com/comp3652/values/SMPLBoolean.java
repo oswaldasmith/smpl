@@ -7,6 +7,7 @@ import com.comp3652.lang.SMPLExp;
  * Created by carlos on 12/27/15.
  */
 public class SMPLBoolean extends SMPLValue<SMPLExp> {
+
     private boolean value;
 
     public SMPLBoolean(BoolExp vector) {
