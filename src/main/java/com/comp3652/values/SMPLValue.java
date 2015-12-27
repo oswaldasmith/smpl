@@ -26,6 +26,10 @@ public class SMPLValue <T> {
         this.values = (ArrayList<T>) container;
     }
 
+    public SMPLValue(Boolean val) {
+        this.value = (T) val;
+    }
+
     public T getType() {
     	return (T) value.getClass();
     }

@@ -88,21 +88,38 @@ public class SMPLEvaluator implements SMPLVisitor<SMPLContext, SMPLValue<SMPLExp
 	}
 
 	@Override
-	public SMPLValue<SMPLExp> visitSMPLSubStrStmt(SMPLSubStrStmt smplSubStrStmt, SMPLContext state) {
-		//#TODO
-		return null;
+	public SMPLValue<SMPLExp> visitSMPLSubStrStmt(SMPLSubStrStmt smplSubStrStmt, SMPLContext state) throws SMPLException {
+		String toRet = smplSubStrStmt.getString();
+		return new SMPLValue(toRet.substring(smplSubStrStmt.getStart(),smplSubStrStmt.getEnd()));
 	}
 
 	@Override
 	public SMPLValue<SMPLExp> visitSMPLCaseStmt(SMPLCaseStmt smplCaseStmt, SMPLContext state) {
-		//#TODO
+		ArrayList<ASTExp> caseExps = smplCaseStmt
+
+		for (ASTNode n : caseExps) {
+			ASTCaseExp caseExp = (ASTCaseExp) n;
+
+			SMPLContainer predContainer = caseExp.getPredicate().visit(this, state);
+
+			if (!"Boolean".equals(predContainer.getType())) {
+				System.out.println("TypeError: Expected \"Integer\", got \""+predContainer.getType()+"\".");
+				return null;
+			}
+
+			if (((SMPLBoolean) predContainer.getValue()).isValue()) {
+				SMPLContainer consContainer = caseExp.getConsequent().visit(this, state);
+				return consContainer;
+			}
+		}
+
 		return null;
 	}
 
 	@Override
-	public SMPLValue<SMPLExp> visitRetVctStmt(SMPLRetVctStmt smplRetVctStmt, SMPLContext state) {
-		//#TODO
-		return null;
+	public SMPLValue<SMPLExp> visitRetVctStmt(SMPLRetVctStmt smplRetVctStmt, SMPLContext state) throws SMPLException {
+		SMPLValue<SMPLExp> exp = smplRetVctStmt.getVector().visit(this,state);
+		return new SMPLValue (exp.getValues().get(smplRetVctStmt.getIndex()));
 	}
 
 	@Override
@@ -126,9 +143,10 @@ public class SMPLEvaluator implements SMPLVisitor<SMPLContext, SMPLValue<SMPLExp
 	}
 
 	@Override
-	public SMPLValue<SMPLExp> visitSMPLLetStmt(SMPLLetStmt smplLetStmt, SMPLContext state) {
-		//#TODO
-		return null;
+	public SMPLValue<SMPLExp> visitSMPLLetStmt(SMPLLetStmt smplLetStmt, SMPLContext state) throws SMPLException {
+		SMPLStmtSequence body = smplLetStmt.getBody();
+
+		return body.visit(this, state);
 	}
 
 	@Override
@@ -158,20 +176,14 @@ public class SMPLEvaluator implements SMPLVisitor<SMPLContext, SMPLValue<SMPLExp
 		SMPLContext newEnvironment = closingEnvironment.extendSMPLValue(formalParameters, arguments)
 				.extendF(new ArrayList<String>(), new ArrayList<SMPLFunction>());
 
-		// also extend with bindings for numerical parameters
-		// newEnvironment = newEnvironment.extendN(numericalFormalParameters, numericalArguments);
 
-		// and we extend with empty function frame to keep local functions local
-		// newEnvironment = newEnvironment.extendF(new ArrayList<String>(), new ArrayList<HPLFunction>());
-		// now return a painter that will execute the body when rendered.
 		return new CompoundSMPLValue(this, function.getBody(), newEnvironment);
 	}
 
 
 	@Override
-	public SMPLValue<SMPLExp> visitSMPLisPairStmt(SMPLisPairStmt smpLisPairStmt, SMPLContext arg) {
-		//#TODO
-		return null;
+	public SMPLValue<SMPLExp> visitSMPLisPairStmt(SMPLisPairStmt smplisPairStmt, SMPLContext arg) throws SMPLException {
+		return new SMPLValue<SMPLExp>(new Boolean(smplisPairStmt.getPair().visit(this, arg).getType().equals( "Vector")));
 	}
 
 	@Override

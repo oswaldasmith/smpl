@@ -6,8 +6,9 @@ import com.comp3652.lang.SMPLExp;
 import java.util.*;
 
 public class SMPLVector {
+    Vector vector;
 
-    public SMPLVector(ArrayList<ASTExp> container) {
+    public SMPLVector(ArrayList<ASTExp> v) {
 
     }
 }
