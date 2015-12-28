@@ -9,6 +9,8 @@ public class SMPLString extends SMPLValue<StringExp> {
     private  String value;
 
     public SMPLString(String string) {
+    	// TODO
+    	// should prolly be formatted
         this.value = string;
     }
 

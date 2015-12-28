@@ -21,22 +21,22 @@ public class SMPLVector extends SMPLValue<SMPLExp> {
         this.ob2 = ob2;
     }
 
-
     public int size() {
         return vector.size();
     }
 
 
     @Override
-    public String toString(){
+    public String toString() {
 
         String strOutput = "";
-        for(ASTExp c : values.getExplist())
+        for (ASTExp c : values.getExplist())
             strOutput += c.toString() + ",";
 
-        if( strOutput.length() > 0 )
+        if (strOutput.length() > 0)
             strOutput = strOutput.substring(0, strOutput.length() - 1);
 
-        return "[" + strOutput + "]";
+        return strOutput;
+
     }
 }

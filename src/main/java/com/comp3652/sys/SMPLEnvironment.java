@@ -2,7 +2,7 @@ package com.comp3652.sys;
 
 import java.util.*;
 
-public class SMPLEnvironment<T> {
+public class  SMPLEnvironment<T> {
 
 	Map<String, T> dictionary;
 	SMPLEnvironment<T> parent;

@@ -5,11 +5,10 @@ import com.comp3652.sys.SMPLContext;
 
 import java.util.*;
 
-public class SMPLFunction extends SMPLValue {
-
+public class SMPLFunction extends SMPLValue<SMPLFunction> {
 	String name;
 	ArrayList<String> params;
-	SMPLStmtSequence body;
+	SMPLSequence body;
 	SMPLContext closingEnv;
 
 	public SMPLFunction(String id, ArrayList<String> params,

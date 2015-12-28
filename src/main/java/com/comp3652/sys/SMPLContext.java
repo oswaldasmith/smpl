@@ -1,14 +1,9 @@
 package com.comp3652.sys;
 
-import com.comp3652.values.SMPLFunction;
-import com.comp3652.values.SMPLPair;
-import com.comp3652.values.SMPLValue;
-import com.comp3652.values.SMPLVector;
-
+import com.comp3652.values.*;
 import java.util.ArrayList;
 
 public interface SMPLContext {
-
 
     /**
 	 *

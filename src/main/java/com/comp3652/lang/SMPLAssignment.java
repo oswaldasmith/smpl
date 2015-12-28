@@ -15,7 +15,7 @@ public class SMPLAssignment extends SMPLStatement {
 	public final String getVar() {
 		return var;
 	}
-
+	
 	public final ASTExp<SMPLExp> getExp() {
 		return exp;
 	}

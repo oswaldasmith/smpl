@@ -6,7 +6,6 @@ import com.comp3652.values.SMPLValue;
 public class SMPLProgram extends SMPLStatement {
 
 	protected SMPLStmtSequence statements;
-
 	/**
 	 * Creates a new <code>SMPLProgram</code> instance, the Painter
 	 * Intermediate Representation of a program.  A program is a sequence
@@ -15,6 +14,7 @@ public class SMPLProgram extends SMPLStatement {
 	 * @param stmts the list of statements making up the program.
 	 */
 	public SMPLProgram (SMPLStmtSequence stmts) {
+
 		statements = stmts;
 	}
 
@@ -56,5 +56,4 @@ public class SMPLProgram extends SMPLStatement {
 			return null;
 		}
 	}
-
 }

@@ -1,6 +1,5 @@
 package com.comp3652.lang;
 
-
 import com.comp3652.sys.SMPLException;
 
 /**

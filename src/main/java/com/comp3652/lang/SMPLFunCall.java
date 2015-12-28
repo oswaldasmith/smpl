@@ -18,7 +18,9 @@ public class SMPLFunCall extends SMPLExp {
         this.arithArgExps = args;
     }
 
-
+	public ArrayList<SMPLExp> getArgExps() {
+		return argExps;
+	}
 
     /**
      *
@@ -28,7 +30,8 @@ public class SMPLFunCall extends SMPLExp {
         return funName;
     }
 
-
+    // TODO
+    // should remove
     public ArrayList<ASTExp<AIRExp>> getArgExps() {
         return arithArgExps;
     }
