@@ -2,25 +2,40 @@ package com.comp3652.values;
 
 import com.comp3652.lang.*;
 
-public class SMPLPair extends SMPLValue<SMPLPair>{
+// TODO
 
-	protected ASTNode leftValue, rightValue;
+// public class SMPLPair extends SMPLValue<SMPLPair>{
 
-	public SMPLPair(ASTNode leftExp, rightExp) {
-		leftValue = leftExp;
-		rightValue = rightExp;
-	}
+// 	protected ASTNode leftValue, rightValue;
 
-	public ASTNode getLeft() {
-		return left;
-	}
+// 	public SMPLPair(ASTNode leftExp, rightExp) {
+// 		leftValue = leftExp;
+// 		rightValue = rightExp;
+// 	}
 
-	public ASTNode getRight() {
-		return right;
-	}
+// 	public ASTNode getLeft() {
+// 		return left;
+// 	}
 
-	@Override
-	public String toString() {
-		return "(" + leftValue.toString + ", " + rightValue.toString() + ")";
-	}
-} 
+// 	public ASTNode getRight() {
+// 		return right;
+// 	}
+
+// 	@Override
+// 	public String toString() {
+// 		return "(" + leftValue.toString + ", " + rightValue.toString() + ")";
+// 	}
+// } 
+import com.comp3652.lang.ASTExp;
+import com.comp3652.lang.SMPLVectorExp;
+
+import java.util.ArrayList;
+
+public class SMPLPair extends SMPLVector{
+    private Object v1,v2;
+
+    public SMPLPair(ASTExp v, ASTExp v2) {
+        super(v,v2);
+
+    }
+}

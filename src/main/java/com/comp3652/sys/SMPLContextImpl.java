@@ -1,11 +1,13 @@
 package com.comp3652.sys;
 
 import java.util.*;
-import com.comp3652.lang.*;
+
 import com.comp3652.values.*;
 
 public class SMPLContextImpl implements SMPLContext {
 	protected SMPLValue value;
+	protected SMPLEnvironment<SMPLValue> valueEnv;
+	protected SMPLEnvironment<Boolean> boolEnv;
 	protected SMPLEnvironment<Double> nEnv;
 	protected SMPLEnvironment<SMPLFunction> fEnv;
 	protected SMPLEnvironment<SMPLVector> vEnv;
@@ -14,6 +16,16 @@ public class SMPLContextImpl implements SMPLContext {
 
 	public SMPLContextImpl(SMPLValue v,SMPLEnvironment<Double> nEnv, SMPLEnvironment<SMPLFunction> fEnv, SMPLEnvironment<SMPLVector> vEnv, SMPLEnvironment<String> sEnv, SMPLEnvironment<SMPLPair> pEnv) {
 		this.value = v;
+		this.nEnv = nEnv;
+		this.fEnv = fEnv;
+		this.vEnv = vEnv;
+		this.sEnv = sEnv;
+		this.pEnv = pEnv;
+	}
+
+	public SMPLContextImpl(SMPLValue v,SMPLEnvironment<SMPLValue> valueEnv,SMPLEnvironment<Double> nEnv, SMPLEnvironment<SMPLFunction> fEnv, SMPLEnvironment<SMPLVector> vEnv, SMPLEnvironment<String> sEnv, SMPLEnvironment<SMPLPair> pEnv) {
+		this.value = v;
+		this.valueEnv = valueEnv;
 		this.nEnv = nEnv;
 		this.fEnv = fEnv;
 		this.vEnv = vEnv;
@@ -36,57 +48,98 @@ public class SMPLContextImpl implements SMPLContext {
 	}
 
 	@Override
-	public SMPLEnvironment<Double> getN(String name) {
-		return null;
+	public SMPLValue getSMPLValue(String name) throws SMPLException {
+		return valueEnv.get(name);
 	}
 
 	@Override
-	public SMPLFunction getF(String name) throws SMPLException {
-		return null;
+	public Double getN(String name) throws SMPLException {
+		return nEnv.get(name);
 	}
 
 	@Override
-	public SMPLVector getV(String name) throws SMPLException {
-		return null;
+	public SMPLFunction getFunction(String name) throws SMPLException {
+		return fEnv.get(name);
 	}
 
 	@Override
-	public SMPLPair getP(String name) throws SMPLException {
-		return null;
+	public SMPLVector getVector(String name) throws SMPLException {
+		return vEnv.get(name);
 	}
 
 	@Override
-	public SMPLContext extendF(ArrayList<String> fParams, ArrayList<SMPLFunction> args) {
-		return null;
+	public SMPLPair getPair(String name) throws SMPLException {
+		return pEnv.get(name);
 	}
 
 	@Override
-	public SMPLContext extendN(ArrayList<String> nParams, ArrayList<Double> vals) {
-		return null;
+	public SMPLContext extendFunctionEnvironment(ArrayList<String> fParams, ArrayList<SMPLFunction> args) {
+		SMPLEnvironment<SMPLFunction> newFunEnv = new SMPLEnvironment<>();
+		return new SMPLContextImpl(value,valueEnv,nEnv,newFunEnv,vEnv,sEnv,pEnv);
 	}
 
 	@Override
-	public SMPLContext extendV(ArrayList<String> vParams, ArrayList<SMPLVector> args) {
-		return null;
+	public SMPLContext extendNumericalEnvironment(ArrayList<String> nParams, ArrayList<Double> vals) {
+		SMPLEnvironment<Double> newNumEnv = new SMPLEnvironment<>();
+		return new SMPLContextImpl(value,valueEnv,newNumEnv,fEnv,vEnv,sEnv,pEnv);
 	}
 
 	@Override
-	public SMPLContext extendP(ArrayList<String> pParams, ArrayList<SMPLPair> args) {
-		return null;
+	public SMPLContext extendVectorEnvironment(ArrayList<String> vParams, ArrayList<SMPLVector> args) {
+		SMPLEnvironment<SMPLVector> newVectorEnv = new SMPLEnvironment<>();
+		return new SMPLContextImpl(value,valueEnv,nEnv,fEnv,newVectorEnv,sEnv,pEnv);
 	}
+
+	@Override
+	public SMPLContext extendPairEnvironment(ArrayList<String> pParams, ArrayList<SMPLPair> args) {
+		SMPLEnvironment<SMPLPair> newPair = new SMPLEnvironment<>();
+		return new SMPLContextImpl(value,valueEnv,nEnv,fEnv,vEnv,sEnv,newPair);
+	}
+
+	@Override
+	public SMPLContext extendSMPLValue(ArrayList<String> formalParameters, ArrayList<SMPLValue> arguments) {
+		SMPLEnvironment<SMPLValue> valEnv = new SMPLEnvironment<SMPLValue>();
+		return new SMPLContextImpl(this.value,valEnv,this.nEnv,this.fEnv,this.vEnv,this.sEnv,this.pEnv);
+	}
+
 
 	@Override
 	public SMPLEnvironment<Double> getNumEnv() {
-		return null;
+		return this.nEnv;
 	}
 
 	@Override
-	public void putF(String name, SMPLFunction p) {
+	public void putFunction(String name, SMPLFunction p) {
+		fEnv.put(name,p);
+
+	}
+
+
+	@Override
+	public void putNumber(String name, Double n) {
+		nEnv.put(name,n);
+	}
+
+	@Override
+	public void putVector(String name, SMPLVector v) {
+		vEnv.put(name,v);
+	}
+
+	@Override
+	public void putPair(String name, SMPLPair p) {
+		pEnv.put(name,p);
 
 	}
 
 	@Override
-	public void putN(String name, Double n) {
-
+	public void putSMPLVal(String name, SMPLValue v) {
+		this.valueEnv.put(name,v);
 	}
+
+	@Override
+	public SMPLEnvironment<Boolean> getBoolEnv() {
+		return this.boolEnv;
+	}
+
+
 }

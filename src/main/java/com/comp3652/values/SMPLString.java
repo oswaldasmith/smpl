@@ -1,18 +1,21 @@
 package com.comp3652.values;
 
+import com.comp3652.lang.SMPLExp;
 
-public class SMPLString extends SMPLPrimitive<SMPLString> {
+/**
+ * Created by carlos on 12/27/15.
+ */
+public class SMPLString extends SMPLValue<SMPLExp> {
+    private  String value;
 
-	protected String value;
+    public SMPLString(String string) {
+    	// TODO
+    	// should prolly be formatted
+        this.value = string;
+    }
 
-	public SMPLString(String string) {
-		// TODO
-		// should probably format
-		value = string;
-	}
-
-	@Override
-	public String toString() {
-		return value;
-	}
+    @Override
+    public String toString(){
+        return value;
+    }
 }

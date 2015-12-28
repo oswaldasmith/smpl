@@ -8,9 +8,6 @@ import java.util.*;
 public class SMPLFunDef extends SMPLStatement {
 
 	protected String name;
-
-	protected List<String> numericParams;
-	protected List<String> vectorParams;
 	protected ArrayList<String> params;
 	protected SMPLSequence statements;
 

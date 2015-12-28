@@ -7,16 +7,30 @@ import java.util.ArrayList;
 /**
  * Created by carlos on 12/20/15.
  */
-public class SMPLVectorExp extends ASTExp<SMPLExp> {
-    private ArrayList<ASTExp> list;
 
-    public SMPLVectorExp(ArrayList<ASTExp<AIRExp>> l) {
-        this.list = l;
+public class SMPLVectorExp extends SMPLExp {
+    private ArrayList<ASTExp> alist;
+    private ASTExp v;
+
+
+    public SMPLVectorExp(ArrayList<ASTExp> l) {
+        this.alist = l;
     }
 
+    public SMPLVectorExp(ASTExp v) {
+        this.v = v;
+    }
 
     @Override
-    public <S, T> T visit(ASTVisitor<SMPLExp, S, T> v, S state) throws SMPLException {
-        return null;
+    public <S, T> T visit(SMPLVisitor<S, T> v, S context) throws SMPLException {
+        return v.visitSMPLVectorExp(this,context);
+    }
+
+    public ArrayList<ASTExp> getExplist() {
+        return alist;
+    }
+
+    public ASTExp getV() {
+        return v;
     }
 }

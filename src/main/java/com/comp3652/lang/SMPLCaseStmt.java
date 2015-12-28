@@ -8,13 +8,25 @@ import java.util.ArrayList;
  * Created by carlos on 12/20/15.
  */
 public class SMPLCaseStmt extends SMPLStatement {
-    //#TODO
-    public SMPLCaseStmt(ArrayList<ASTExp<AIRExp>> lst, ASTExp<AIRExp> e1, ASTExp<AIRExp> e2) {
 
+    private ASTExp<CIRExp> predicate;
+    private SMPLStatement cons;
+
+    public SMPLCaseStmt(ASTExp<CIRExp> p, SMPLStatement s) {
+        this.predicate = p;
+        this.cons = s;
     }
 
     @Override
     public <S, T> T visit(SMPLVisitor<S, T> v, S state) throws SMPLException {
         return v.visitSMPLCaseStmt(this,state);
+    }
+
+    public ASTExp<CIRExp> getPredicate() {
+        return predicate;
+    }
+
+    public SMPLStatement getConsequent() {
+        return cons;
     }
 }

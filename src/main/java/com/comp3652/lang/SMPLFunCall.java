@@ -22,6 +22,20 @@ public class SMPLFunCall extends SMPLStatement {
 		return argExps;
 	}
 
+    /**
+     *
+     * @return The name of the function in this function application expression
+     */
+    public String getFunName() {
+        return funName;
+    }
+
+    // TODO
+    // should remove
+    public ArrayList<ASTExp<AIRExp>> getArgExps() {
+        return arithArgExps;
+    }
+
     @Override
     public <S, T> T visit(SMPLVisitor<S, T> v, S context) throws SMPLException {
         return v.visitSMPLFunCall(this,context);

@@ -15,7 +15,7 @@ public abstract class SMPLExp extends ASTExp<SMPLExp>{
 
     @Override
     public <S, T> T visit(ASTVisitor<SMPLExp, S, T> v, S state) throws SMPLException {
-        return null;
+        return visit((SMPLVisitor<S, T>) v, state);
     }
 
 }
