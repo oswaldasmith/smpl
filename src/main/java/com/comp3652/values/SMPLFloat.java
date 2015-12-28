@@ -1,15 +1,21 @@
 package com.comp3652.values;
 
-import com.comp3652.lang.AIRExp;
+import com.comp3652.lang.AIRExpFrac;
 
 /**
  * Created by carlos on 12/27/15.
  */
-public class SMPLFloat extends SMPLValue<AIRExp> {
+public class SMPLFloat extends SMPLValue<AIRExpFrac> {
     private Double value;
 
-    public SMPLFloat(SMPLValue<AIRExp> exps) {
-        this.value = new Double(exps.toString());
+    public SMPLFloat(AIRExpFrac exps) {
+        super(exps);
+        this.value = exps.getVal();
+    }
+
+    @Override
+    public String toString(){
+        return "" + value;
     }
 
 }

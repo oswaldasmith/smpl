@@ -5,15 +5,13 @@ import com.comp3652.sys.SMPLContext;
 
 import java.util.*;
 
-public class SMPLFunction extends SMPLValue<SMPLFunction> {
+public class SMPLFunction {
 	String name;
 	ArrayList<String> params;
-	SMPLSequence body;
+	SMPLStmtSequence body;
 	SMPLContext closingEnv;
 
-	public SMPLFunction(String id, ArrayList<String> params,
-						SMPLStmtSequence body, SMPLContext env) {
-        super();
+	public SMPLFunction(String id, ArrayList<String> params,SMPLStmtSequence body, SMPLContext env) {
         this.name = id;
         this.params = params;
         this.body = body;

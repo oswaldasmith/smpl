@@ -1,21 +1,19 @@
 package com.comp3652.values;
 
+
 import com.comp3652.lang.StringExp;
 
-/**
- * Created by carlos on 12/27/15.
- */
 public class SMPLString extends SMPLValue<StringExp> {
-    private  String value;
 
-    public SMPLString(String string) {
-    	// TODO
-    	// should prolly be formatted
-        this.value = string;
-    }
+	public String value;
 
-    @Override
-    public String toString(){
-        return value;
-    }
+	public SMPLString(StringExp newValue) {
+		super(newValue);
+		value = newValue.getString();
+	}
+
+	@Override
+	public String toString() {
+		return "" + value;
+	}
 }
