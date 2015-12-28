@@ -34,8 +34,4 @@ public class PrimitiveSMPLValue extends SMPLValue<PrimitiveSMPLValue> {
         this.default_value =  new Integer(smplExp.toString()).intValue();
     }
 
-    @Override
-    public String toString(){
-        return new String (String.valueOf(default_value));
-    }
 }
