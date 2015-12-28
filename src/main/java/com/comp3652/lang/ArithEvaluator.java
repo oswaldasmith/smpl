@@ -3,7 +3,7 @@ package com.comp3652.lang;
 import com.comp3652.sys.SMPLEnvironment;
 import com.comp3652.sys.SMPLException;
 import java.util.Map;
-import java.util.HashMap
+import java.util.HashMap;
 
 public class ArithEvaluator implements AIRVisitor<SMPLEnvironment<Double>, Double> {
     

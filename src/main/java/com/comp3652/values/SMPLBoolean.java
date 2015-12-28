@@ -15,6 +15,10 @@ public class SMPLBoolean extends SMPLValue<BoolExp> {
 
     }
 
+    public SMPLBoolean(Boolean equal) {
+        super();
+    }
+
 
     @Override
 	public String toString() {

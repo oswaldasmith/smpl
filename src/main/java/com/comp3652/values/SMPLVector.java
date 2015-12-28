@@ -5,14 +5,13 @@ import com.comp3652.lang.SMPLExp;
 import com.comp3652.lang.SMPLVectorExp;
 
 import java.util.*;
-import java.util.stream.Stream;
 
 public class SMPLVector extends SMPLValue<SMPLExp> {
     private Vector vector;
     private SMPLVectorExp values;
     private ASTExp ob1,ob2;
 
-    public SMPLVector(ArrayList<ASTExp> v) {
+    public SMPLVector(SMPLValue v) {
         this.vector = new Vector(v);
     }
 

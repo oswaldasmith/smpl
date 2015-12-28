@@ -15,7 +15,7 @@ public class SMPLCaseStatement extends SMPLStatement {
 	}
 
 	@Override
-	public <S, T> T visit(SMPVisitor<S, T> v, S state) {
+	public <S, T> T visit(SMPLVisitor<S, T> v, S state) {
 		return v.visitSMPLCaseStatement(this, state);
 	}
 }

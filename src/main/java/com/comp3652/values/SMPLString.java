@@ -12,6 +12,10 @@ public class SMPLString extends SMPLValue<StringExp> {
 		value = newValue.getString();
 	}
 
+	public SMPLString(String s) {
+		value = s;
+	}
+
 	@Override
 	public String toString() {
 		return "" + value;
