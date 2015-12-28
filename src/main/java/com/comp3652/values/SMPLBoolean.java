@@ -36,4 +36,9 @@ public class SMPLBoolean extends SMPLValue<SMPLExp> {
     public SMPLBoolean(Boolean equal) {
         this.value = equal.booleanValue();
     }
+
+    @Override
+	public String toString() {
+		return (value) ? "true" : "false";
+	}
 }
