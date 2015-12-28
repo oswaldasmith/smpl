@@ -6,11 +6,8 @@ import com.comp3652.values.*;
 import java.util.*;
 
 public class SMPLFunDef extends SMPLStatement {
-
+	//#TODO
 	protected String name;
-
-	protected List<String> numericParams;
-	protected List<String> vectorParams;
 	protected ArrayList<String> params;
 	protected SMPLStmtSequence statements;
 

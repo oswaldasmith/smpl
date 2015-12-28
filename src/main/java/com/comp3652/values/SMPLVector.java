@@ -26,10 +26,6 @@ public class SMPLVector extends SMPLValue<SMPLExp> {
         return vector.size();
     }
 
-    @Override
-    public Stream<ASTExp> stream() {
-        return null;
-    }
 
     @Override
     public String toString(){

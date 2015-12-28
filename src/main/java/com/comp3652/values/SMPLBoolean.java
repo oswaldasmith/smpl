@@ -6,7 +6,7 @@ import com.comp3652.lang.SMPLExp;
 /**
  * Created by carlos on 12/27/15.
  */
-public class SMPLBoolean extends SMPLValue<SMPLExp> {
+public class SMPLBoolean extends SMPLValue<BoolExp> {
 
     private boolean value;
 

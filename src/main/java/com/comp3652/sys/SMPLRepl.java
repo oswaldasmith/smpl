@@ -14,7 +14,6 @@ public class SMPLRepl {
 
 
     public static void main(String args[]){
-        setup();
         for(String arg: args){
             try {
                 parseEvalShow(new FileReader(new File(arg)), globalEnv);
@@ -24,9 +23,6 @@ public class SMPLRepl {
         }
     }
 
-    public static void setup() {
-        
-    }
 
     public static void reader(String name, SMPLContext genv) throws FileNotFoundException {
         FileReader file = new FileReader(name);
