@@ -25,50 +25,18 @@ public class SMPLVector extends SMPLValue<SMPLExp> {
         return vector.size();
     }
 
-    @Override
-    public Stream<ASTExp> stream() {
-        return null;
-    }
 
     @Override
-    public String toString(){
+    public String toString() {
 
         String strOutput = "";
-        for(ASTExp c : values.getExplist())
+        for (ASTExp c : values.getExplist())
             strOutput += c.toString() + ",";
 
-        if( strOutput.length() > 0 )
+        if (strOutput.length() > 0)
             strOutput = strOutput.substring(0, strOutput.length() - 1);
 
-// public class SMPLVector extends SMPLValue<SMPLVector>{
-	
-// 	// need to rep empty lists
-// 	public static final List<SMPLValue> EMPTY = Collections.emptyList();
+        return strOutput;
 
-// 	List<SMPLValue> values = new ArrayList<>();
-
-// 	public SMPLVector(SMPLValue.. newValues) {
-// 		values = new ArrayList(Arrays.asList(newValues));
-// 	}
-
-// 	public SMPLVector(ArrayList<SMPLValue> newValues) {
-// 		values.addAll(newValues);
-// 	}
-
-// 	public ArrayList<SMPLValue> getValues() {
-// 		return values;
-// 	}
-
-	// @Override
-	// public String toString() {
-	// 	String output = "";
-
-	// 	for (int i = 0; i < values.size() - 1; i++)
-	// 		output += values[i].getValue.toString() + ", ";
-
-	// 	if (values.size() > 0)
-	// 		output += values[values.size() - 1] + " "
-
-	// 	return "[: " + output + "]";
-	// }
+    }
 }
