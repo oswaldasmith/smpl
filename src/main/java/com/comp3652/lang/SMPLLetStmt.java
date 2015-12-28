@@ -13,24 +13,26 @@ public class SMPLLetStmt extends SMPLStatement {
     private SMPLStmtSequence body;
 
     public SMPLLetStmt(ArrayList<SMPLStmtDefinition> ids, SMPLStmtSequence body) {
-
         this.ids = ids;
         this.body = body;
     }
 
-    public SMPLLetStmt(SMPLStmtDefinition ids, SMPLStmtSequence body) {
-        this.body = body;
-        this.ids.add(ids);
-
+    public SMPLLetStmt(SMPLStmtDefinition id, SMPLStmtSequence seq) {
+        this.ids = new ArrayList<SMPLStmtDefinition>();
+        this.ids.add(id);
+        this.body = seq;
     }
 
-
-    @Override
-    public <S, T> T visit(SMPLVisitor<S, T> v, S state) throws SMPLException {
-        return v.visitSMPLLetStmt(this,state);
+    public ArrayList<SMPLStmtDefinition> getIds() {
+        return ids;
     }
 
     public SMPLStmtSequence getBody() {
         return body;
+    }
+
+    @Override
+    public <S, T> T visit(SMPLVisitor<S, T> v, S state) throws SMPLException {
+        return v.visitSMPLLetStmt(this,state);
     }
 }
