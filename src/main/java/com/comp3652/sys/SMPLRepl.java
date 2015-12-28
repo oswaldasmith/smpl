@@ -14,10 +14,12 @@ public class SMPLRepl {
 
 
     public static void main(String args[]){
+        // set up global variables
         setup();
+
         for(String arg: args){
             try {
-                parseEvalShow(new FileReader(new File(arg)), globalEnv);
+                reader(new FileReader(new File(arg)), globalEnv);
             } catch (FileNotFoundException fnfe) {
                 System.out.println("Could not find file " + arg);
             }
@@ -25,7 +27,8 @@ public class SMPLRepl {
     }
 
     public static void setup() {
-        
+        interp = new SMPLEvaluator();
+        globalEnv = interp.mkInitialContext();
     }
 
     public static void reader(String name, SMPLContext genv) throws FileNotFoundException {
@@ -62,7 +65,8 @@ public class SMPLRepl {
             System.out.println("Syntax Error:" + e.getMessage());
         }
 
-        SMPLValue result;
+        SMPLValue<SMPLExp> result;
+
         if (commands != null)
             try {
                 result = commands.visit(interp, env);

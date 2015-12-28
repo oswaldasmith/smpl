@@ -9,6 +9,7 @@ import com.comp3652.sys.SMPLContext;
  * Created by carlos on 12/26/15.
  */
 public class CompoundSMPLValue extends SMPLValue<SMPLExp> {
+    
     public CompoundSMPLValue(SMPLEvaluator smplEvaluator, SMPLStmtSequence body, SMPLContext newEnvironment) {
     }
 }

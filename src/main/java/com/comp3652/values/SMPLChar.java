@@ -9,6 +9,10 @@ public class SMPLChar extends SMPLValue<SMPLChar> {
 		value = newValue;
 	}
 
+	public SMPLChar(int intValue) {
+		value = Character.toChars(intValue);
+	}
+
 	public char getValue() {
 		return value;
 	}
