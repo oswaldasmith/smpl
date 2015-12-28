@@ -21,7 +21,6 @@ public class SMPLVector extends SMPLValue<SMPLExp> {
         this.ob2 = ob2;
     }
 
-
     public int size() {
         return vector.size();
     }

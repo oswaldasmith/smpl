@@ -5,6 +5,7 @@ import com.comp3652.values.*;
 import com.sun.xml.internal.bind.v2.TODO;
 
 import java.util.*;
+
 public class SMPLEvaluator implements SMPLVisitor<SMPLContext, SMPLValue<SMPLExp>> {
 
 	private final ArithEvaluator arithEval;
@@ -12,7 +13,8 @@ public class SMPLEvaluator implements SMPLVisitor<SMPLContext, SMPLValue<SMPLExp
 	private final StringEvaluator stringEval;
 
 	Map<String, SMPLFunction> baseFuncMap;
-	SMPLValue<SMPLExp> lastResult; // collects results
+	SMPLValue lastResult; // collects results
+
 
 	public SMPLEvaluator() {
 		arithEval = new ArithEvaluator();
@@ -20,6 +22,7 @@ public class SMPLEvaluator implements SMPLVisitor<SMPLContext, SMPLValue<SMPLExp
 		stringEval = new StringEvaluator();
 		lastResult = SMPLValue.DEFAULT;
 	}
+
 
 	@Override
 	public SMPLValue<SMPLExp> visitSMPLProgram(SMPLProgram program, SMPLContext state) throws SMPLException {

@@ -1,22 +1,22 @@
 package com.comp3652.lang;
 
-import java.util.*;
+
 import com.comp3652.sys.SMPLException;
 
-public class SMPLFunCall extends SMPLStatement {
-	protected final String funName;
-	protected final ArrayList<SMPLExp> argExps;
-    // private  ArrayList<ASTExp<AIRExp>> arithArgExps;
-    // TODO not sure about this chad
+import java.util.ArrayList;
 
-	public SMPLFunCall(String name, ArrayList<SMPLExp> args) {
-		funName = name;
-		argExps = args;
-	}
+public class SMPLFunCall extends SMPLExp {
+    private  String funName;
+    private  ArrayList<ASTExp<AIRExp>> arithArgExps;
 
-	public String getFunctionName() {
-		return funName;
-	}
+
+    public SMPLFunCall() {
+    }
+
+    public SMPLFunCall(String fn, ArrayList<ASTExp<AIRExp>> args) {
+        this.funName = fn;
+        this.arithArgExps = args;
+    }
 
 	public ArrayList<SMPLExp> getArgExps() {
 		return argExps;
