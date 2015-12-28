@@ -61,7 +61,7 @@ public class SMPLEvaluator implements SMPLVisitor<SMPLContext, SMPLValue> {
 	public SMPLValue visitSMPLPrintStmt(SMPLPrintStmt printStmt, SMPLContext state) throws SMPLException {
 		StringExp stringExp = printStmt.getExp();
 		SMPLValue v = stringExp.visit(this,state);
-		Object output = v.getValue().toString();
+		Object output = v.toString();
 
 		if (printStmt.isPrintln()) {
 			System.out.println(output);
@@ -105,8 +105,9 @@ public class SMPLEvaluator implements SMPLVisitor<SMPLContext, SMPLValue> {
 
 	@Override
 	public SMPLValue visitRetVctStmt(SMPLRetVctStmt smplRetVctStmt, SMPLContext state) throws SMPLException {
-		SMPLValue exp = smplRetVctStmt.getVector().visit(this,state);
-		return new SMPLValue(exp.getValues().get(smplRetVctStmt.getIndex());
+		SMPLVector exp = smplRetVctStmt.getVector();
+		int index = smplRetVctStmt.getIndex();
+		return exp.get(index);
 	}
 
 	@Override
@@ -170,16 +171,16 @@ public class SMPLEvaluator implements SMPLVisitor<SMPLContext, SMPLValue> {
 
 	@Override
 	public SMPLValue visitSMPLisPairStmt(SMPLisPairStmt smplisPairStmt, SMPLContext arg) throws SMPLException {
-		return new SMPLBoolean(new BoolExp(smplisPairStmt.getPair().visit(this, arg).equals( "Vector")));
+		return new SMPLBoolean(smplisPairStmt.getPair().equals("Vector"));
 	}
 
 	@Override
 	public SMPLValue visitSMPLVectorExp(SMPLVectorExp smplVectorExp, SMPLContext context) throws SMPLException {
 		ArrayList<ASTExp> contents = smplVectorExp.getExplist();
-		ArrayList<ASTExp> container = new ArrayList<ASTExp>();
+		ArrayList<SMPLValue> container = new ArrayList<SMPLValue>();
 		for (int i = 0; i < contents.size(); i++) {
 			ASTExp curr = contents.get(i);
-			container.add((ASTExp) curr.visit(this, context));
+			container.add((SMPLValue) curr.visit(this, context));
 		}
 		return (new SMPLVector(container));
 	}
@@ -197,7 +198,7 @@ public class SMPLEvaluator implements SMPLVisitor<SMPLContext, SMPLValue> {
 
 	@Override
 	public SMPLValue visitSMPLSizeStmt(SMPLSizeStmt sizeStmt, SMPLContext state) throws SMPLException {
-		return new SMPLInteger(new SMPLVector(sizeStmt.getVector().visit(this,state)).size());
+		return new SMPLInteger(sizeStmt.getVector().size());
 	}
 
 
@@ -224,7 +225,7 @@ public class SMPLEvaluator implements SMPLVisitor<SMPLContext, SMPLValue> {
 	@Override
 	public SMPLValue visitSMPLFunDef(SMPLFunDef smplFunDef, SMPLContext state) throws SMPLException {
 		//#TODO
-		
+		/**
 		String funcName = smplFunDef.getFunctionName();
 		ArrayList<String> parameters = smplFunDef.getParameters();
 		SMPLStmtSequence seq = smplFunDef.getStatements();
@@ -232,6 +233,7 @@ public class SMPLEvaluator implements SMPLVisitor<SMPLContext, SMPLValue> {
 		
 
 		return null;
+		 **/
 	}
 
 	@Override

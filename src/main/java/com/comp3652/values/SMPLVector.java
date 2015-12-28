@@ -7,12 +7,11 @@ import com.comp3652.lang.SMPLVectorExp;
 import java.util.*;
 
 public class SMPLVector extends SMPLValue<SMPLExp> {
-    private Vector vector;
-    private SMPLVectorExp values;
+    private ArrayList<SMPLValue> vector;
     private ASTExp ob1,ob2;
 
-    public SMPLVector(SMPLValue v) {
-        this.vector = new Vector(v);
+    public SMPLVector(ArrayList<SMPLValue> v) {
+        this.vector = v;
     }
 
     public SMPLVector(ASTExp ob1,ASTExp ob2) {
@@ -29,7 +28,7 @@ public class SMPLVector extends SMPLValue<SMPLExp> {
     public String toString() {
 
         String strOutput = "";
-        for (ASTExp c : values.getExplist())
+        for (SMPLValue c : vector)
             strOutput += c.toString() + ",";
 
         if (strOutput.length() > 0)
@@ -37,5 +36,9 @@ public class SMPLVector extends SMPLValue<SMPLExp> {
 
         return strOutput;
 
+    }
+
+    public SMPLValue get(int index) {
+        return vector.get(index);
     }
 }
