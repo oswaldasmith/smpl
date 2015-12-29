@@ -192,7 +192,7 @@ binding ::= DEF VAR:v smplExp:e {:
                         RESULT = new SMPLStmtDefinition(null,e);
                     :};
 
-bindList ::= bindList:l COMMA binding:b {:Srti
+bindList ::= bindList:l COMMA binding:b {:
                 l.add(b);
                 RESULT = l;
              :};

@@ -49,7 +49,11 @@ LineTerminator = \r|\n|\r\n
 
 InputCharacter = [^\r\n]
 
-WhiteSpace = {LineTerminator} | ([\t" "]|[\b\f])
+nl = [\n\r]
+
+cc = [\b\f]|{nl}
+
+WhiteSpace = ({cc}|[\t" "])
 
 TraditionalComment = "/*" [^*] ~"*/" | "/*" "*"+ "/"
 
@@ -73,7 +77,7 @@ specialchars = ["#""+""-""*"".""!"]
 
 allchars={alphanum}|{specialchars}
 
-variable = {alphanum}+{WhiteSpace}*{allchars}*
+variable = {alphanum}+{allchars}*
 
 string = \"(.+|"\t"|"\n"|"\f"|\\\\)\"
 
@@ -86,6 +90,10 @@ hex = [0-9A-Fa-f]
 
 
 <YYINITIAL>	{WhiteSpace}	{/* ignore whitespace */}
+<YYINITIAL>    {LineTerminator} {
+                        //skip newline, but reset char counter
+                        yychar = 0;
+                      }
 <YYINITIAL> {comment} { /* comments */ }
 
 <YYINITIAL>	"+"		{ return new Symbol(sym.PLUS); }
