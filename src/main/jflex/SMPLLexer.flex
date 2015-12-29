@@ -45,13 +45,21 @@ import java.io.IOException;
 %}
 
 
-nl = [\n\r]
+LineTerminator = \r|\n|\r\n
 
-comment = = [^\r\n]
+InputCharacter = [^\r\n]
 
-cc = ([\b\f]|{nl})
+WhiteSpace     = {LineTerminator} | [ \t\f]
 
-ws = {cc}|[\t ]
+TraditionalComment = "/*" [^*] ~"*/" | "/*" "*"+ "/"
+
+EndOfLineComment = "//" {InputCharacter}* {LineTerminator}?
+
+CommentContent = ( [^*] | \*+ [^/*] )*
+
+DocumentationComment = "/**" {CommentContent} "*"+ "/"
+
+comment = {TraditionalComment} | {EndOfLineComment} | {DocumentationComment}
 
 hex = [0-9a-fA-F]
 
@@ -60,7 +68,6 @@ alpha = [a-zA-Z]
 num = [0-9]
 
 alphanum = {alpha}|{num}
-
 
 specialchars = ["#""+""-""*"".""!"]
 
@@ -74,12 +81,13 @@ char = \'(.|"\t"|"\n"|\\\\|"\f"|"\'")\'
 
 hex = [0-9A-Fa-f]
 
+
 %%
 
 
-<YYINITIAL>	{ws}	{/* ignore whitespace */}
-<YYINITIAL> "//"    {comment}* {nl} { /* ignore comments */ }
-<YYINITIAL> \/\*([^*]|\*[^/])*\*+\/ { /* comments */ }
+<YYINITIAL>	{WhiteSpace}	{/* ignore whitespace */}
+<YYINITIAL> "//"    { /* ignore comments */ }
+<YYINITIAL> {comment} { /* comments */ }
 
 <YYINITIAL>	"+"		{ return new Symbol(sym.PLUS); }
 <YYINITIAL>	"-"		{ return new Symbol(sym.MINUS); }
@@ -165,11 +173,6 @@ hex = [0-9A-Fa-f]
 			// FRACTION
 			return new Symbol(sym.FRACTION, new Double(yytext()));
 		    }
-
-<YYINITIAL>	{num}*"."{num}+ | {num}+"."{num}* {
-			// REAL no. used for defining frames
-			return new Symbol(sym.FLOAT, new Double(yytext()));
-		}
 
 <YYINITIAL> {char} { return new Symbol(sym.CHAR, yytext().substring(1, yylength() - 1));}
 
