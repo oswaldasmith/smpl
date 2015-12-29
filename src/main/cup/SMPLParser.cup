@@ -249,7 +249,7 @@ smplExpListE ::= smplExpList:lst {:
                  :};
 
 exPair ::= PAIR LPAREN smplExp:e1 COMMA smplExp:e2 RPAREN {:
-                RESULT = new exPair((SMPLExp)e1,(SMPLExp)e2);
+                RESULT = new SMPLPairExp(e1,e2);
             :};
 
 vector ::= LBRACKET COLON smplExpList:l COLON RBRACKET {:
@@ -346,10 +346,7 @@ funCall ::= CALL LPAREN VAR:fn COMMA smplExpList:args RPAREN {:
                :} |
                VAR:fn LPAREN smplExpList:args RPAREN {:
                    RESULT = new SMPLFunCall(fn, args);
-               :} |
-                lazy:l {:
-                    RESULT = l;
-                :};
+               :};
 
 
 lazy ::= LAZY LPAREN smplExp:e RPAREN {: RESULT = new SMPLLazyStmt(e); :};

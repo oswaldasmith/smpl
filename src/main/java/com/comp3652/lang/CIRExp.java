@@ -36,4 +36,8 @@ public class CIRExp extends ASTExp<CIRExp> {
     public <S, T> T visit(CIRVisitor<S, T> v, S context) throws SMPLException{
     	return v.visitCIRExp(this, context);
     }
+
+	public ASTExp<SMPLExp> getArithExp() {
+		return smplExp;
+	}
 }

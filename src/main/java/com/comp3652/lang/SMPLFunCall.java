@@ -5,7 +5,8 @@ import com.comp3652.sys.SMPLException;
 
 import java.util.ArrayList;
 
-public class SMPLFunCall extends AIRExp {
+public class SMPLFunCall extends SMPLExp {
+
     private final String funName;
     private final ArrayList<ASTExp<SMPLExp>> argExps;
 
@@ -13,6 +14,7 @@ public class SMPLFunCall extends AIRExp {
         this.funName = fn;
         this.argExps = args;
     }
+
 
     public <S, T> T visit(SMPLVisitor<S, T> v, S context) throws SMPLException {
         return v.visitSMPLFunCall(this, context);
