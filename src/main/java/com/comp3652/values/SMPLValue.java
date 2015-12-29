@@ -6,7 +6,7 @@ package com.comp3652.values;
  */
 public abstract class SMPLValue <T> {
 
-    public static final SMPLValue DEFAULT = null;
+    public static final SMPLValue DEFAULT = new PrimitiveSMPLValue();
     private T value;
 
     public SMPLValue(T value) {

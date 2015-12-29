@@ -6,44 +6,29 @@ import com.comp3652.lang.SMPLParser;
 import com.comp3652.lang.SMPLProgram;
 import com.comp3652.values.SMPLValue;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.Reader;
 
 public class SMPLRepl {
     static SMPLEvaluator interp;
     static SMPLContext globalEnv;
 
 
-    public static void main(String args[]){
-        for(String arg: args){
+    public static void main(String args[]) throws FileNotFoundException {
+        String file = "/Users/carlos/Desktop/smpl-oswald/smpl/smpl-tests.smpl";
             try {
-                parseEvalShow(new FileReader(new File(arg)), globalEnv);
+                parseEvalShow(new FileReader(new File(file)), globalEnv);
             } catch (FileNotFoundException fnfe) {
-                System.out.println("Could not find file " + arg);
+                System.out.println("Could not find file " + file);
             }
-        }
     }
 
-
-    public static void reader(String name, SMPLContext genv) throws FileNotFoundException {
-        FileReader file = new FileReader(name);
-        BufferedReader bufRead = new BufferedReader(file);
-        StringBuffer input = new StringBuffer();
-        String myLine = null;
-        try {
-            while (true) {
-                while ((myLine = bufRead.readLine()) != null && !bufRead.readLine().equals("EOF")) {
-                    input.append(myLine);
-                    myLine = bufRead.readLine();
-                }
-                StringReader r = new StringReader(new String(input));
-                parseEvalShow(r, genv);
-            }
-        }
-        catch (IOException ex){
-            System.out.println("Bye");
-        }
-    }
-
+    /**
+     * @param r   The reader containing the program fragment to be interpreted
+     * @param env The environment w.r.t. which the fragment should be evaluated
+     */
     public static void parseEvalShow(Reader r, SMPLContext env) {
         SMPLLexer lexer;
         SMPLParser parser;
