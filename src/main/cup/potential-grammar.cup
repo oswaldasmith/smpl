@@ -49,10 +49,13 @@ scan with {:
 /* Terminals */
 
 // special symbols
-terminal LBRACKET,RBRACKET,LPAREN, RPAREN,COMMA, LBRACE, RBRACE, SEMI, COLON;
+terminal LBRACKET, RBRACKET, LPAREN, RPAREN,COMMA, LBRACE, RBRACE, SEMI, COLON, LPARAM, RPARAM;
 
 // functions
 terminal DEF, PROC, LAZY;
+
+// bindings
+terminal BE;
 
 // aithmetic
 terminal PLUS, MINUS, DIV, MOD, TIMES;
@@ -69,6 +72,8 @@ terminal CMP, IF, THEN, ELSE, LET;
 
 terminal HEX, BIN;
 
+terminal PAIR, LIST, CALL;
+
 // terminals with values
 terminal Integer INTEGER;
 terminal Double FLOAT;
@@ -83,10 +88,14 @@ terminal String STRING;
 
 // basic expressions
 non terminal ASTExp<SMPLExp> expression;
+non terminal ArrayList<ASTExp<SMPLExp>> expressionList;
+non terminal ArrayList<ASTExp<SMPLExp>> expressionListE;
 
+// general expressions
 non terminal SMPLProgram program;
 non terminal SMPLSequence stmtList;
 non terminal SMPLStatement stmt;
+non terminal SMPLStatement body;
 
 // assignment
 non terminal SMPLAssignment assign;
@@ -118,17 +127,29 @@ non terminal SMPLStatement caseStmts;
 non terminal SMPLStatement caseExp;
 
 // if
-non terminal SMPLStatement condition;
+non terminal SMPLStatement if;
 
+// compound struct
+non terminal SMPLStatement vectorExp;
+non terminal SMPLStatement pairExp;
+non terminal SMPLStatement listExp;
+
+// arith
 non terminal ASTExp<AIRExp> arithExp;
 non terminal ASTExp<AIRExp> arithTerm;
 non terminal ASTExp<AIRExp> arithConstFactor;
 non terminal ASTExp<AIRExp> arithFactor;
 
+non terminal ASTExp<SMPLExp> factor;
+
 // TODO
 // not used, delete
 non terminal ArrayList<ASTExp<AIRExp>> aExpList;   /* non-empty arith exp list */
 non terminal ArrayList<ASTExp<AIRExp>> aExpListE;  /* potentially empty arith exp list */
+
+// bitwise operations
+non terminal SMPLStatement bitExp;
+non terminal SMPLStatement negationFactor;
 
 non terminal ArrayList<String> varList;
 non terminal ArrayList<String> remainingVarList;
@@ -146,23 +167,22 @@ stmtList ::= stmtList:seq stmt:s {:
 				RESULT = new SMPLSequence();
 			:};
 
-stmt ::= expression:e {: RESULT = e; :} |
-		assign:a {: RESULT = a; :} |
-		multipleAssign:m {: RESULT = m; :};
+stmt ::= assign:a {: RESULT = a; :} |
+		multipleAssign:m {: RESULT = m; :} |
+		expression:e {: RESULT = e; :} |
+		case:c {: RESULT = c; :} |;
+
+
+expression ::= expression:e OR:o conditionalAnd:c {: RESULT = new SMPLLogicJoin(e, c, o); :} |
+			body:b {: RESULT = b; :} |
+			conditionalAnd:c {: RESULT = c; :};
 
 // single assign
-
 assign ::= DEF VAR:v expression:e {: RESULT = new SMPLAssign(v, e); } |
 		VAR:v ASSIGN expression:e {: RESULT = new SMPLAssign(v, e); };
 
 // multiple assign
-
 multipleAssign := varList:lst ASSIGN expression:e {: RESULT = new SMPLMulAssign(lst, e); };
-
-
-expression ::= expression:e OR:o conditionAnd:c {: RESULT = new SMPLLogicJoin(e, c, o); :} |
-			body:b {: RESULT = b; :} |
-			conditionalAnd:c {: RESULT = c; :};
 
 // conditionals
 conditionalAnd ::= conditionalAnd:ca AND:a conditionalNot:cn {:
@@ -171,17 +191,19 @@ conditionalAnd ::= conditionalAnd:ca AND:a conditionalNot:cn {:
 			conditionalNot:c {: RESULT = c; :};
 
 conditionalNot ::= NOT:n predExp:p {: RESULT = new SMPLLogicNot(p, n) :} |
-				predExp:b {: RESULT = p; :};
+			predExp:b {: RESULT = p; :};
 
 predExp ::= predExp:p CMP:c bitExp:e {: RESULT = new CIRExp(p, e, c); :} |
 			bitExp:b {: RESULT = b; :};
 
-bitExp ::= bitExp:b BITOR:op EXPRESSION
+bitExp ::= bitExp:b BITOR:op arithExp:a {: RESULT = new SMPLBitJoin(b, a, op); :} |
+		bitExp:b BITAND:op arithExp:a {: RESULT = new SMPLBitJoin(b, a, op); :} |
+		arithExp:e {: RESULT = e; :};
 
 
 // not sure about this
 // the body of the func can be a { stmts } or stmt
-body := LBRACE stmtList:seq RBRACE {: RESULT = seq; :} |
+body ::= LBRACE stmtList:seq RBRACE {: RESULT = seq; :} |
 		stmt:s {: RESULT = s; :};
 
 varList ::= varList:lst COMMA VAR:v {: 
@@ -194,17 +216,10 @@ varList ::= varList:lst COMMA VAR:v {:
 			RESULT = v;
 		:};
 
-// not sure about this
-// need to make it generic
-predExp ::= predExp:pex CMP:cmp arithExp:exp
-
-
-funDef ::= DEF VAR:v PROC LPAREN expressionListE:elist RPAREN stmtList:body
-
-
-funCall ::= VAR:id LPAREN paramListE RPAREN {:
-				
+funDef ::= PROC LPAREN expressionListE:elist RPAREN stmtList:body {: 
+				RESULT = new SMPLExpProcedure(elst, body);
 			:};
+
 
 paramListE ::= paramList:lst {: RESULT = lst :} |
 			empty {: RESULT = new ArrayList<>(); :};
@@ -229,11 +244,11 @@ arithTerm ::= arithTerm:t TIMES arithFactor:f {: RESULT = new ASTBinaryExp<AIREx
 	      arithTerm:t MOD arithFactor:f {: RESULT = new ASTBinaryExp<AIRExp>("%", t, f); :}|
 	      negationFactor:n {: RESULT = n; :};
 
-negationFactor ::= BITNOT:b factor:f {: RESULT = new BITExp(b, f); :} |
-				factor:f {: RESULT = f; :};
-
 arithConstFactor ::= INTEGER:ilit {: RESULT = new AIRExpInt(ilit); :} |
 		     FRACTION:frac {: RESULT = new AIRExpFrac(frac); :};
+
+negationFactor ::= BITNOT factor:f {: RESULT = new BITNotExp(f); :} |
+				factor:f {: RESULT = f; :};
 
 // changed arithFactor to be more general, everything here returns something
 
@@ -252,8 +267,8 @@ factor ::=  VAR:var {: RESULT = new ASTVar(var); :} |
             TRUE {: RESULT = new SMPLBooleanExp(true); :} |
             FALSE {: RESULT = new SMPLBooleanExp(false); :} |
 
-            condition:c {: RESULT = c; :} |
-            case:c {: RESULT = c; :} |
+            if:c {: RESULT = c; :} |
+            // case:c {: RESULT = c; :} |
             let:l {: RESULT = l; :} |
 
             funDef:f {: RESULT = f; :} |
@@ -263,6 +278,12 @@ factor ::=  VAR:var {: RESULT = new ASTVar(var); :} |
             pairExp:p {: RESULT = p; :} |
             listExp:l {: RESULT = l; :};
 
+if ::= IF expression:exp THEN stmtList:cons {:
+		RESULT = new SMPLCondition(exp, cons);
+	:} |
+	IF expression:exp THEN stmtList:cons ELSE stmtList:alt {:
+		RESULT = new SMPLCondition(exp, cons, alt);
+	:};
 
 vectorExp ::= LBRACKET COLON expressionListE:lst COLON RBRACKET {:
 				RESULT = new SMPLVectorExp(lst);
@@ -318,7 +339,7 @@ paramList ::= paramList:lst COMMA VAR:id {:
 			VAR:id {:
 				RESULT = new ArrayList<>();
 				RESULT.add(id);
-			:}
+			:};
 
 // let expressions
 
@@ -328,6 +349,8 @@ let ::= LET LPAREN bindList:lst RPAREN body:b {:
 		LET LPAREN bindList:lst RPAREN expression:e {:
 			RESULT = new SMPLet(lst, e);
 		:};
+
+binding ::= VAR:v BE expression:e {: RESULT = new SMPLAssignment(v, e); :};
 
 bindList ::= bindList:lst COMMA binding:b {: 
 			lst.add(b);
@@ -339,8 +362,6 @@ bindList ::= bindList:lst COMMA binding:b {:
 			lst.add(b);
 			RESULT = lst;
 		:};
-
-binding ::= VAR:v BE expression:e {: RESULT = new SMPLAssignment(v, e); :};
 
 // case statements
 
@@ -363,11 +384,5 @@ caseExp ::= expression:exp1 COLON expression:exp2 {: RESULT = new SMPLCaseExp(ex
 		ELSE COLON expression:e {: RESULT = new SMPLCaseExp(e); :};
 
 
-condition ::= IF expression:exp THEN stmtList:cons {:
-				RESULT = new SMPLCondition(exp, cons);
-			:} |
-			IF expression:exp THEN stmtList:cons ELSE stmtList:alt {:
-				RESULT = new SMPLCondition(exp, cons, alt);
-			:};
 
 empty ::= ;
