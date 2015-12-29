@@ -123,9 +123,6 @@ non terminal ASTExp<AIRExp> arithTerm;
 non terminal ASTExp<AIRExp> arithConstFactor;
 non terminal ASTExp<AIRExp> arithFactor;
 
-/* Generic Expressions */
-non terminal ASTNode expression;
-
 
 non terminal empty;
 /* Grammar rules */
@@ -155,28 +152,28 @@ stmt ::= binding:b SEMI{:
             let:l SEMI {:
                 RESULT = l;
             :} |
-             isPair:p {:
+             isPair:p SEMI {:
                   RESULT = p;
               :} |
-              retVec:r {:
+              retVec:r SEMI {:
                   RESULT = r;
               :} |
-              size:s {:
+              size:s SEMI {:
                   RESULT = s;
               :} |
-              isEqual:e {:
+              isEqual:e SEMI {:
                   RESULT = e;
               :} |
-              isEqv:e {:
+              isEqv:e SEMI {:
                   RESULT = e;
               :} |
-              substr:s {:
+              substr:s SEMI{:
                   RESULT = s;
               :} |
-              car:c {:
+              car:c SEMI {:
                   RESULT = c;
               :} |
-              cdr:c {:
+              cdr:c SEMI {:
                   RESULT = c;
               :}  |
             caseFunc:c SEMI {:
@@ -389,9 +386,11 @@ arithExpListE ::= arithExpList:lst {: RESULT = lst; :} |
 arithExp ::= arithExp:e PLUS arithTerm:t {: RESULT = new ASTBinaryExp<AIRExp>("+", e, t); :} |
 	     arithExp:e MINUS arithTerm:t {: RESULT = new ASTBinaryExp<AIRExp>("-", e, t); :} |
 	     arithTerm:t {: RESULT = t; :} |
-	     funCall:f {:
+	     funCall:f SEMI{:
             RESULT = f;
          :};
+
+
 
 arithTerm ::= arithTerm:t TIMES arithFactor:f {: RESULT = new ASTBinaryExp<AIRExp>("*", t, f); :}|
 	      arithTerm:t DIV arithFactor:f {: RESULT = new ASTBinaryExp<AIRExp>("/", t, f); :}|

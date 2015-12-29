@@ -49,7 +49,7 @@ LineTerminator = \r|\n|\r\n
 
 InputCharacter = [^\r\n]
 
-WhiteSpace     = {LineTerminator} | [ \t\f]
+WhiteSpace = {LineTerminator} | ([\t" "] | [\b\f])
 
 TraditionalComment = "/*" [^*] ~"*/" | "/*" "*"+ "/"
 
@@ -73,7 +73,7 @@ specialchars = ["#""+""-""*"".""!"]
 
 allchars={alphanum}|{specialchars}
 
-variable = {alphanum}+{allchars}*
+variable = {alphanum}+{WhiteSpace}*{allchars}*
 
 string = \"(.+|"\t"|"\n"|"\f"|\\\\)\"
 
