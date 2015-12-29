@@ -6,33 +6,23 @@ import com.comp3652.sys.SMPLException;
 import java.util.ArrayList;
 
 public class SMPLFunCall extends AIRExp {
-    private  String funName;
-    private  ArrayList<ASTExp<AIRExp>> arithArgExps;
+    private final String funName;
+    private final ArrayList<ASTExp<SMPLExp>> argExps;
 
-
-    public SMPLFunCall() {
-    }
-
-    public SMPLFunCall(String fn, ArrayList<ASTExp<AIRExp>> args) {
+    public SMPLFunCall(String fn, ArrayList<ASTExp<SMPLExp>> args) {
         this.funName = fn;
-        this.arithArgExps = args;
+        this.argExps = args;
     }
 
-    public ArrayList<ASTExp<AIRExp>> getArgExps() {
-        return arithArgExps;
-	}
+    public <S, T> T visit(SMPLVisitor<S, T> v, S context) throws SMPLException {
+        return v.visitSMPLFunCall(this, context);
+    }
 
-    /**
-     *
-     * @return The name of the function in this function application expression
-     */
     public String getFunName() {
         return funName;
     }
 
-
-
-    public <S, T> T visit(AIRVisitor<S, T> v, S arg) throws SMPLException {
-        return v.visitAIRFunCall(this,arg);
+    public ArrayList<ASTExp<SMPLExp>> getArgExps() {
+        return argExps;
     }
 }

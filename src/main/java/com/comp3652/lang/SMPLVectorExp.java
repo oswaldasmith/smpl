@@ -17,7 +17,7 @@ public class SMPLVectorExp extends SMPLExp {
         this.alist = l;
     }
 
-    public SMPLVectorExp(ASTExp v) {
+    public SMPLVectorExp(ArrayList<ASTExp<SMPLExp>> v) {
         this.v = v;
     }
 

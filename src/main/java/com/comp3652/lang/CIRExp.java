@@ -6,20 +6,15 @@ public class CIRExp extends ASTExp<CIRExp> {
 
 	protected String id;
 	protected String comparator;
-	protected ASTExp<AIRExp> arithExp;
-	protected SMPLExp smplExp;
+	protected ASTExp<SMPLExp> smplExp;
 
-	public CIRExp(String var, String cmp, ASTExp<AIRExp> exp) {
-		this.id = var;
-		this.comparator = cmp;
-		this.arithExp = exp;
-	}
 
-	public CIRExp (String var, String cmp, SMPLExp exp) {
+	public CIRExp(String var, String cmp, ASTExp<SMPLExp> exp) {
 		this.id = var;
 		this.comparator = cmp;
 		this.smplExp = exp;
 	}
+
 
 	public String getId() {
 		return id;
@@ -29,11 +24,9 @@ public class CIRExp extends ASTExp<CIRExp> {
 		return comparator;
 	}
 
-	public ASTExp<AIRExp> getArithExp() {
-		return arithExp;
+	public ASTExp<SMPLExp> getBoolExp() {
+		return smplExp;
 	}
-
-	public SMPLExp getBoolExp() { return smplExp; }
 
 	@Override
     public <S, T> T visit(ASTVisitor<CIRExp, S, T> v, S state) throws SMPLException {
