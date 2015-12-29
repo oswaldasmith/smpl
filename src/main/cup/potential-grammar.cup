@@ -90,7 +90,7 @@ non terminal SMPLStatement stmt;
 
 // assignment
 non terminal SMPLAssignment assign;
-non terminal SMPLMultipleAssignment mulAssign;
+non terminal SMPLMultipleAssignment multipleAssign;
 
 // function
 non terminal SMPLFuncDef funDef;
@@ -144,7 +144,7 @@ stmtList ::= stmtList:seq stmt:s {:
 			:} |
 			empty {:
 				RESULT = new SMPLSequence();
-			:}
+			:};
 
 stmt ::= expression:e {: RESULT = e; :} |
 		assign:a {: RESULT = a; :} |
@@ -157,7 +157,7 @@ assign ::= DEF VAR:v expression:e {: RESULT = new SMPLAssign(v, e); } |
 
 // multiple assign
 
-mulAssign := varList:lst ASSIGN expression:e {: RESULT = new SMPLMulAssign(lst, e); };
+multipleAssign := varList:lst ASSIGN expression:e {: RESULT = new SMPLMulAssign(lst, e); };
 
 
 expression ::= expression:e OR:o conditionAnd:c {: RESULT = new SMPLLogicJoin(e, c, o); :} |
