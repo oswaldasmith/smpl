@@ -54,11 +54,6 @@ public class SMPLEvaluator implements SMPLVisitor<SMPLContext, SMPLValue> {
 		return result;
 	}
 
-	@Override
-	public SMPLValue visitSMPLFunCall(SMPLFunCall smplFunCall, SMPLContext state) {
-		//#TODO
-		return null;
-	}
 
 	@Override
 	public SMPLValue visitSMPLPrintStmt(SMPLPrintStmt printStmt, SMPLContext state) throws SMPLException {
@@ -148,9 +143,9 @@ public class SMPLEvaluator implements SMPLVisitor<SMPLContext, SMPLValue> {
 	}
 
 	@Override
-	public SMPLValue visitSMPLExpFunCall(SMPLExpFunCall smplExpFunCall, SMPLContext context) throws SMPLException {
-		String funName = smplExpFunCall.getFunName();
-		ArrayList<ASTExp<SMPLExp>> argExps = smplExpFunCall.getArgExps();
+	public SMPLValue visitSMPLFunCall(SMPLFunCall smplFunCall, SMPLContext context) throws SMPLException {
+		String funName = smplFunCall.getFunName();
+		ArrayList<ASTExp<SMPLExp>> argExps = smplFunCall.getArgExps();
 
 		ArrayList<SMPLValue> arguments = new ArrayList<SMPLValue>();
 

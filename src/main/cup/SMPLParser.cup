@@ -99,6 +99,7 @@ non terminal ArrayList<SMPLCaseStmt> caseList;
 non terminal SMPLCaseFunction caseFunc;
 non terminal SMPLReadStmt read;
 non terminal SMPLFunCall funCall;
+non terminal SMPLFunDef funcDef;
 non terminal SMPLVector existingVector;
 non terminal SMPLPair existingPair;
 
@@ -108,7 +109,7 @@ non terminal ArrayList<ASTExp<SMPLExp>> smplExpListE;
 non terminal ASTExp<CIRExp> predExp;
 non terminal SMPLPairExp exPair;
 non terminal SMPLVectorExp vector;
-non terminal SMPLExpProcedure proc;
+non terminal SMPLFunCall proc;
 non terminal ArrayList<String> idList;
 non terminal ArrayList<String> idListE;
 
@@ -173,6 +174,9 @@ stmt ::= binding:b SEMI{:
               :}  |
             caseFunc:c SEMI {:
                 RESULT = c;
+            :} |
+            funcDef:f {:
+                RESULT = f;
             :};
 
 binding ::= DEF VAR:v smplExp:e {:
@@ -232,7 +236,10 @@ smplExpList ::= smplExpList:l COMMA smplExp:e {:
                 smplExp:e {:
                   RESULT = new ArrayList<>();
                   RESULT.add(e);
-                :};
+                :} |
+                 PROC LPAREN smplExpListE:args RPAREN {:
+                                    RESULT = args;
+                 :};
 
 smplExpListE ::= smplExpList:lst {:
                     RESULT = lst;
@@ -273,6 +280,9 @@ arithFactor ::= arithConstFactor:cf {: RESULT = cf; :} |
 		:};
 
 
+funcDef ::= DEF VAR:id PROC LPAREN idListE:lst RPAREN LBRACE stmtList:body RBRACE {:
+                                     RESULT = new SMPLFunDef(id,lst,body);
+            :};
 
 car ::= CAR LPAREN existingPair:p RPAREN {: RESULT = new SMPLCarStmt(p); :};
 
@@ -289,8 +299,6 @@ isEqual ::= IFEQUAL LPAREN smplExp:e COMMA smplExp:e2 RPAREN {: RESULT = new SMP
 isEqv ::= IFEQUIVALENT LPAREN smplExp:e COMMA smplExp:e2 RPAREN {: RESULT = new SMPLIsEqvStmt(e,e2); :};
 
 substr ::= SUBSTRING LPAREN STRING_LITERAL:s COMMA INTEGER:start COMMA INTEGER:end RPAREN {: RESULT = new SMPLSubStrStmt(s,start,end); :};
-
-proc ::= PROC LPAREN idListE:lst RPAREN LBRACE stmtList:body RBRACE {: RESULT = new SMPLExpProcedure(lst,body); :};
 
 print ::= PRINT LPAREN smplExp:e RPAREN {:
             RESULT = new SMPLPrintStmt(e,false);
@@ -339,9 +347,6 @@ funCall ::= CALL LPAREN VAR:fn COMMA smplExpList:args RPAREN {:
                VAR:fn LPAREN smplExpList:args RPAREN {:
                    RESULT = new SMPLFunCall(fn, args);
                :} |
-                proc:p {:
-                    RESULT = p;
-                :} |
                 lazy:l {:
                     RESULT = l;
                 :};
