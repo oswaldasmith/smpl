@@ -1,6 +1,7 @@
 package com.comp3652.lang;
 
 import com.comp3652.sys.SMPLException;
+import com.comp3652.values.SMPLPair;
 
 /**
  * Created by carlos on 12/20/15.
@@ -8,7 +9,7 @@ import com.comp3652.sys.SMPLException;
 public class SMPLisPairStmt extends SMPLFunCall {
     private SMPLPairExp pair;
 
-    public SMPLisPairStmt(SMPLPairExp p) {
+    public SMPLisPairStmt(SMPLPair p) {
         pair = p;
     }
 

@@ -3,6 +3,8 @@ package com.comp3652.lang;
 import java_cup.runtime.*;
 import java.io.*;
 import java.util.*;
+import com.comp3652.values.*;
+
 
 /* Preliminaries to set up and use the scanner.  */
 parser code {:
@@ -63,12 +65,10 @@ terminal SIZE,IFEQUIVALENT,IFEQUAL,LIST,SUBSTRING,CAR,CDR;
 terminal PRINT,PRINTLN,READ,READINT,CASE;
 
 //unary operators and Logic Extensions
-terminal AND, OR, NOT;
 terminal String CMP,IF,THEN,ELSE,LET;
 
 // terminals with values
 terminal Integer INTEGER,BIN,HEX;
-terminal Double FLOAT;
 terminal Double FRACTION;
 terminal char CHAR;
 terminal Boolean TRUE;
@@ -78,16 +78,10 @@ terminal String STRING;
 
 /* Non terminals */
 non terminal SMPLProgram program;
-non terminal SMPLSequence stmtList;
+non terminal SMPLStmtSequence stmtList;
 non terminal SMPLStatement stmt;
-
-non terminal SMPLFun
-
-
-// not sure about this
-non terminal SMPLDefinition binding; 
-non terminal ArrayList<SMPLDefinition> bindList;
-
+non terminal SMPLStmtDefinition binding;
+non terminal ArrayList<SMPLStmtDefinition> bindList;
 non terminal SMPLCarStmt car;
 non terminal SMPLCdrStmt cdr;
 non terminal SMPLisPairStmt isPair;
@@ -107,6 +101,8 @@ non terminal SMPLReadStmt read;
 non terminal SMPLFunCall funCall;
 non terminal SMPLExpFunCall smplFunCall;
 non terminal StringExp stringExp;
+non terminal SMPLVector existingVector;
+non terminal SMPLPair existingPair;
 
 non terminal ASTExp<SMPLExp> smplExp;
 non terminal ASTExp astExp;
@@ -143,7 +139,7 @@ stmtList ::= stmtList:seq stmt:s {:
                 seq.addStatement(s);
                 RESULT = seq; :} |
              empty {:
-              RESULT = new SMPLSequence(); :};
+              RESULT = new SMPLStmtSequence(); :};
 
 stmt ::= binding:b SEMI{:
                 RESULT = b;
@@ -165,13 +161,13 @@ stmt ::= binding:b SEMI{:
             :};
 
 binding ::= DEF VAR:v arithExp:e {:
-            		   RESULT = new SMPLDefinition(v, e);
+            		   RESULT = new SMPLStmtDefinition(v, e);
             		:} |
             		DEF VAR:v smplExp:e {:
-            		    RESULT = new SMPLDefinition(v,e);
+            		    RESULT = new SMPLStmtDefinition(v,e);
                     :} |
                     VAR:v BE smplExp:e  {:
-                        RESULT = new SMPLDefinition(v,e);
+                        RESULT = new SMPLStmtDefinition(v,e);
                     :} |
                     VAR:v BE arithExp:e  {:
                         RESULT = new SMPLStmtDefinition(v,e);
@@ -270,15 +266,15 @@ vector ::= LBRACKET COLON astExp:v COLON RBRACKET {:
 
 
 
-car ::= CAR LPAREN exPair:p RPAREN {: RESULT = new SMPLCarStmt(p); :};
+car ::= CAR LPAREN existingPair:p RPAREN {: RESULT = new SMPLCarStmt(p); :};
 
-cdr ::= CDR LPAREN exPair:p RPAREN {: RESULT = new SMPLCdrStmt(p); :};
+cdr ::= CDR LPAREN existingPair:p RPAREN {: RESULT = new SMPLCdrStmt(p); :};
 
-isPair ::= IFPAIR LPAREN exPair:p RPAREN {: RESULT = new SMPLisPairStmt(p); :};
+isPair ::= IFPAIR LPAREN existingPair:p RPAREN {: RESULT = new SMPLisPairStmt(p); :};
 
-retVec ::= vector:v LBRACKET INTEGER:i RBRACKET {: RESULT = new SMPLRetVctStmt(v,i); :};
+retVec ::= existingVector:v LBRACKET INTEGER:i RBRACKET {: RESULT = new SMPLRetVctStmt(v,i); :};
 
-size ::= SIZE LPAREN vector:v RPAREN {: RESULT = new SMPLSizeStmt(v); :};
+size ::= SIZE LPAREN existingVector:v RPAREN {: RESULT = new SMPLSizeStmt(v); :};
 
 isEqual ::= IFEQUAL LPAREN astExp:e COMMA astExp:e2 RPAREN {: RESULT = new SMPLIsEqualStmt(e,e2); :};
 

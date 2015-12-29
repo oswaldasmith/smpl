@@ -2,7 +2,6 @@ package com.comp3652.lang;
 
 import com.comp3652.sys.*;
 import com.comp3652.values.*;
-import com.sun.xml.internal.bind.v2.TODO;
 
 import java.util.*;
 
@@ -177,7 +176,7 @@ public class SMPLEvaluator implements SMPLVisitor<SMPLContext, SMPLValue> {
 	@Override
 	public SMPLValue visitSMPLVectorExp(SMPLVectorExp smplVectorExp, SMPLContext context) throws SMPLException {
 		ArrayList<ASTExp> contents = smplVectorExp.getExplist();
-		ArrayList<SMPLValue> container = new ArrayList<SMPLValue>();
+		ArrayList<SMPLValue> container = new ArrayList<>();
 		for (int i = 0; i < contents.size(); i++) {
 			ASTExp curr = contents.get(i);
 			container.add((SMPLValue) curr.visit(this, context));

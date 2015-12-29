@@ -91,7 +91,7 @@ hex = [0-9A-Fa-f]
 <YYINITIAL>	"%"		{ return new Symbol(sym.MOD); }
 <YYINITIAL> ":=" 	{ return new Symbol(sym.ASSIGN); }
 
-<YYINITIAL> "<"|">"|"<="|">="|"="|"!=" { return new Symbol(sym.CMP, yytext()); }
+<YYINITIAL> "<"|">"|"<="|">="|"="|"!="|"and"|"or"|"not" { return new Symbol(sym.CMP, yytext()); }
 
 <YYINITIAL>	"("		{ return new Symbol(sym.LPAREN); }
 <YYINITIAL>	")"		{ return new Symbol(sym.RPAREN); }
@@ -116,13 +116,6 @@ hex = [0-9A-Fa-f]
 <YYINITIAL> "proc" 	{ return new Symbol(sym.PROC); }
 <YYINITIAL> "lazy" 	{ return new Symbol(sym.LAZY); }
 
-<YYINITIAL> "&"		{ return new Symbol(sym.BITAND); }
-<YYINITIAL> "|"		{ return new Symbol(sym.BITOR); }
-<YYINITIAL> "~"		{ return new Symbol(sym.BITNOT); }
-
-<YYINITIAL> "and" 	{ return new Symbol(sym.AND); }
-<YYINITIAL> "or" 	{ return new Symbol(sym.OR); }
-<YYINITIAL> "not" 	{ return new Symbol(sym.NOT); }
 
 <YYINITIAL> "pair" 	{ return new Symbol(sym.PAIR); }
 <YYINITIAL> "pair?" { return new Symbol(sym.IFPAIR); }
@@ -148,14 +141,12 @@ hex = [0-9A-Fa-f]
 <YYINITIAL> "#t" 	{ return new Symbol(sym.TRUE, yytext()); }
 <YYINITIAL> "#f" 	{ return new Symbol(sym.FALSE, yytext()); }
 
-=======
 <YYINITIAL>	"+"	{return new Symbol(sym.PLUS);}
 <YYINITIAL>	"-"	{return new Symbol(sym.MINUS);}
 <YYINITIAL>	"*"	{return new Symbol(sym.TIMES);}
 <YYINITIAL>	"/"	{return new Symbol(sym.DIV);}
 <YYINITIAL>	"%"	{return new Symbol(sym.MOD);}
 <YYINITIAL>	":="	{return new Symbol(sym.ASSIGN);}
-<YYINITIAL> "<"|">"|"<="|">="|"=="|"!="|"and"|"or"|"not" { return new Symbol(sym.CMP, yytext()); }
 
 <YYINITIAL>    [0-9]+ {
 	       // INTEGER
@@ -167,8 +158,6 @@ hex = [0-9A-Fa-f]
 
 <YYINITIAL> #x{hex}+ { return new Symbol(sym.HEX, Integer.parseInt(yytext().substring(2), 16)); }
 
-<YYINITIAL>    {alpha}+{alphanum}* | {alphanum}+{alpha}* {
-						return new Symbol(sym.VAR, yytext());
 
 <YYINITIAL>    {variable} {
 	       // VARIABLE
