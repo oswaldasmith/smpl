@@ -165,23 +165,23 @@ stmt ::= binding:b SEMI{:
             :};
 
 binding ::= DEF VAR:v arithExp:e {:
-            		   RESULT = new SMPLDefinition(v, e);
-            		:} |
-            		DEF VAR:v smplExp:e {:
-            		    RESULT = new SMPLDefinition(v,e);
-                    :} |
-                    VAR:v BE smplExp:e  {:
-                        RESULT = new SMPLDefinition(v,e);
-                    :} |
-                    VAR:v BE arithExp:e  {:
-                        RESULT = new SMPLStmtDefinition(v,e);
-                    :} |
-                    VAR:v ASSIGN smplExp:e {:
-                        RESULT = new SMPLStmtDefinition(v,e);
-                    :}|
-                    VAR:v ASSIGN arithExp:e {:
-                        RESULT = new SMPLStmtDefinition(v,e);
-                    :};
+              RESULT = new SMPLDefinition(v, e);
+            :} |
+            DEF VAR:v smplExp:e {:
+    		      RESULT = new SMPLDefinition(v,e);
+            :} |
+            VAR:v BE smplExp:e  {:
+              RESULT = new SMPLDefinition(v,e);
+            :} |
+            VAR:v BE arithExp:e  {:
+              RESULT = new SMPLStmtDefinition(v,e);
+            :} |
+            VAR:v ASSIGN smplExp:e {:
+              RESULT = new SMPLStmtDefinition(v,e);
+            :}|
+            VAR:v ASSIGN arithExp:e {:
+              RESULT = new SMPLStmtDefinition(v,e);
+            :};
 
 bindList ::= bindList:l COMMA binding:b {:
                 l.add(b);

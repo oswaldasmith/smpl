@@ -29,6 +29,9 @@ public class SMPLEvaluator implements SMPLVisitor<SMPLContext, SMPLValue<SMPLExp
 		SMPLStmtSequence stmts = program.getSeq();
 		SMPLValue tmp = stmts.visit(this, state);
 
+		if (tmp != SMPLValue.DEFAULT)
+			lastResult = tmp;
+
 		return lastResult;
 	}
 
