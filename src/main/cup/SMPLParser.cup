@@ -74,7 +74,7 @@ terminal char CHAR;
 terminal Boolean TRUE;
 terminal Boolean FALSE;
 terminal String VAR;
-terminal String STRING;
+terminal String STRING_LITERAL;
 
 /* Non terminals */
 non terminal SMPLProgram program;
@@ -197,6 +197,9 @@ binding ::= DEF VAR:v arithExp:e {:
                     :}|
                     VAR:v ASSIGN arithExp:e {:
                         RESULT = new SMPLStmtDefinition(v,e);
+                    :}|
+                    VAR:v {:
+                        RESULT = new SMPLStmtDefinition(v,null);
                     :};
 
 bindList ::= bindList:l COMMA binding:b {:
@@ -223,7 +226,7 @@ smplExp ::= exPair:p {:
             TRUE:t {:
                 RESULT = new BoolExp(t);
             :}|
-            STRING:s {:
+            STRING_LITERAL:s {:
                 RESULT = new StringExp(s);
             :} |
             FALSE:f {:
@@ -279,20 +282,20 @@ isEqual ::= IFEQUAL LPAREN astExp:e COMMA astExp:e2 RPAREN {: RESULT = new SMPLI
 
 isEqv ::= IFEQUIVALENT LPAREN astExp:e COMMA astExp:e2 RPAREN {: RESULT = new SMPLIsEqvStmt(e,e2); :};
 
-substr ::= SUBSTRING LPAREN STRING:s COMMA INTEGER:start COMMA INTEGER:end RPAREN {: RESULT = new SMPLSubStrStmt(s,start,end); :};
+substr ::= SUBSTRING LPAREN STRING_LITERAL:s COMMA INTEGER:start COMMA INTEGER:end RPAREN {: RESULT = new SMPLSubStrStmt(s,start,end); :};
 
 proc ::= PROC LPAREN idListE:lst RPAREN LBRACE stmtList:body RBRACE {: RESULT = new SMPLExpProcedure(lst,body); :};
 
 print ::= PRINT LPAREN astExp:e RPAREN {:
             RESULT = new SMPLPrintStmt(e,false);
           :} |
-          PRINT LPAREN STRING:s RPAREN {:
+          PRINT LPAREN STRING_LITERAL:s RPAREN {:
               RESULT = new SMPLPrintStmt(s,false);
           :} |
           PRINTLN LPAREN astExp:e RPAREN {:
             RESULT = new SMPLPrintStmt(e,true);
           :}|
-          PRINTLN LPAREN STRING:s RPAREN {:
+          PRINTLN LPAREN STRING_LITERAL:s RPAREN {:
             RESULT = new SMPLPrintStmt(s,true);
           :};
 

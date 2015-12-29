@@ -49,7 +49,7 @@ LineTerminator = \r|\n|\r\n
 
 InputCharacter = [^\r\n]
 
-WhiteSpace = {LineTerminator} | ([\t" "] | [\b\f])
+WhiteSpace = {LineTerminator} | ([\t" "]|[\b\f])
 
 TraditionalComment = "/*" [^*] ~"*/" | "/*" "*"+ "/"
 
@@ -86,7 +86,6 @@ hex = [0-9A-Fa-f]
 
 
 <YYINITIAL>	{WhiteSpace}	{/* ignore whitespace */}
-<YYINITIAL> "//"    { /* ignore comments */ }
 <YYINITIAL> {comment} { /* comments */ }
 
 <YYINITIAL>	"+"		{ return new Symbol(sym.PLUS); }
@@ -176,5 +175,5 @@ hex = [0-9A-Fa-f]
 
 <YYINITIAL> {char} { return new Symbol(sym.CHAR, yytext().substring(1, yylength() - 1));}
 
-<YYINITIAL> {string} { return new Symbol(sym.STRING, yytext().substring(1, yylength() - 1));}
+<YYINITIAL> {string} { return new Symbol(sym.STRING_LITERAL, yytext().substring(1, yylength() - 1));}
 
