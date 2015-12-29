@@ -1,7 +1,7 @@
 package com.comp3652.lang;
 
 
-public class SMPLCaseExp extends SMPLStatement {
+public class SMPLCaseExp {
 
 	protected CIRExp pred;
 	protected SMPLStmtSequence body;
@@ -21,8 +21,4 @@ public class SMPLCaseExp extends SMPLStatement {
 		return body;
 	}
 
-	@Override
-	public <S, T> T visit(SMPLVisitor<S, T> v, S state) {
-		v.visitSMPLCaseStmt(this, state);
-	}
 }

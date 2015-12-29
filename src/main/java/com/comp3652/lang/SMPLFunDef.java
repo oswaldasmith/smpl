@@ -1,9 +1,8 @@
 package com.comp3652.lang;
 
-import com.comp3652.sys.*;
-import com.comp3652.values.*;
+import com.comp3652.sys.SMPLException;
 
-import java.util.*;
+import java.util.ArrayList;
 
 public class SMPLFunDef extends SMPLStatement {
 	protected String name;
@@ -31,6 +30,6 @@ public class SMPLFunDef extends SMPLStatement {
 
 	@Override
 	public <S, T> T visit(SMPLVisitor<S, T> v, S state) throws SMPLException {
-		return v.visitSMPLStmtDefinition(this, state);
+		return v.visitSMPLFunDef(this, state);
 	}
 }

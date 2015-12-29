@@ -5,7 +5,7 @@ import com.comp3652.sys.SMPLException;
 /**
  * Created by carlos on 12/20/15.
  */
-public class SMPLIsEqvStmt extends SMPLFunCall {
+public class SMPLIsEqvStmt extends SMPLStatement {
     private ASTExp object1, object2;
 
     public SMPLIsEqvStmt(ASTExp e, ASTExp  e2) {

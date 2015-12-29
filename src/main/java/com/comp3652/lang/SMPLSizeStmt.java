@@ -6,7 +6,7 @@ import com.comp3652.values.SMPLVector;
 /**
  * Created by carlos on 12/20/15.
  */
-public class SMPLSizeStmt extends SMPLExp {
+public class SMPLSizeStmt extends SMPLStatement {
     private SMPLVector vector;
 
     public SMPLSizeStmt(SMPLVector v) {

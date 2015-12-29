@@ -6,7 +6,7 @@ import com.comp3652.values.SMPLPair;
 /**
  * Created by carlos on 12/20/15.
  */
-public class SMPLisPairStmt extends SMPLFunCall {
+public class SMPLisPairStmt extends SMPLStatement {
     private SMPLPair pair;
 
     public SMPLisPairStmt(SMPLPair p) {

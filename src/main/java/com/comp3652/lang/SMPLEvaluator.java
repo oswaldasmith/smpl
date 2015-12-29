@@ -1,9 +1,13 @@
 package com.comp3652.lang;
 
-import com.comp3652.sys.*;
+import com.comp3652.sys.SMPLContext;
+import com.comp3652.sys.SMPLContextImpl;
+import com.comp3652.sys.SMPLException;
 import com.comp3652.values.*;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.Scanner;
 
 public class SMPLEvaluator implements SMPLVisitor<SMPLContext, SMPLValue> {
 
@@ -223,16 +227,9 @@ public class SMPLEvaluator implements SMPLVisitor<SMPLContext, SMPLValue> {
 
 	@Override
 	public SMPLValue visitSMPLFunDef(SMPLFunDef smplFunDef, SMPLContext state) throws SMPLException {
-		//#TODO
-		/**
-		String funcName = smplFunDef.getFunctionName();
-		ArrayList<String> parameters = smplFunDef.getParameters();
-		SMPLStmtSequence seq = smplFunDef.getStatements();
-
-		
+		SMPLFunction function = new SMPLFunction(smplFunDef.getFunctionName(), smplFunDef.getParameters(), smplFunDef.getStatements(), state);
 
 		return null;
-		 **/
 	}
 
 	@Override

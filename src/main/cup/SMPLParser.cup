@@ -156,6 +156,30 @@ stmt ::= binding:b SEMI{:
             let:l SEMI {:
                 RESULT = l;
             :} |
+             isPair:p {:
+                  RESULT = p;
+              :} |
+              retVec:r {:
+                  RESULT = r;
+              :} |
+              size:s {:
+                  RESULT = s;
+              :} |
+              isEqual:e {:
+                  RESULT = e;
+              :} |
+              isEqv:e {:
+                  RESULT = e;
+              :} |
+              substr:s {:
+                  RESULT = s;
+              :} |
+              car:c {:
+                  RESULT = c;
+              :} |
+              cdr:c {:
+                  RESULT = c;
+              :}  |
             caseFunc:c SEMI {:
                 RESULT = c;
             :};
@@ -210,27 +234,6 @@ smplExp ::= exPair:p {:
                 RESULT = new BoolExp(f);
             :}|
             smplFunCall:f {:
-                RESULT = f;
-            :} |
-            isPair:p {:
-                 RESULT = p;
-             :} |
-             retVec:r {:
-                 RESULT = r;
-             :} |
-             size:s {:
-                 RESULT = s;
-             :} |
-             isEqual:e {:
-                 RESULT = e;
-             :} |
-             isEqv:e {:
-                 RESULT = e;
-             :} |
-             substr:s {:
-                 RESULT = s;
-             :} |
-            funCall:f {:
                 RESULT = f;
             :};
 
@@ -338,12 +341,6 @@ funCall ::= VAR:fn LPAREN arithExpListE:args RPAREN {:
 	    CALL LPAREN VAR:fn  COMMA arithExpList:args RPAREN {:
 	        RESULT = new SMPLFunCall(fn, args);
         :} |
-        car:c {:
-            RESULT = c;
-        :} |
-        cdr:c {:
-            RESULT = c;
-        :}  |
         proc:p {:
             RESULT = p;
         :} |
@@ -386,7 +383,10 @@ arithExpListE ::= arithExpList:lst {: RESULT = lst; :} |
 
 arithExp ::= arithExp:e PLUS arithTerm:t {: RESULT = new ASTBinaryExp<AIRExp>("+", e, t); :} |
 	     arithExp:e MINUS arithTerm:t {: RESULT = new ASTBinaryExp<AIRExp>("-", e, t); :} |
-	     arithTerm:t {: RESULT = t; :};
+	     arithTerm:t {: RESULT = t; :} |
+	     funCall:f {:
+            RESULT = f;
+         :};
 
 arithTerm ::= arithTerm:t TIMES arithFactor:f {: RESULT = new ASTBinaryExp<AIRExp>("*", t, f); :}|
 	      arithTerm:t DIV arithFactor:f {: RESULT = new ASTBinaryExp<AIRExp>("/", t, f); :}|

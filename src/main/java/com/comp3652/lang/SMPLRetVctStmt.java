@@ -1,13 +1,12 @@
 package com.comp3652.lang;
 
 import com.comp3652.sys.SMPLException;
-import com.comp3652.values.SMPLValue;
 import com.comp3652.values.SMPLVector;
 
 /**
  * Created by carlos on 12/20/15.
  */
-public class SMPLRetVctStmt extends SMPLFunCall {
+public class SMPLRetVctStmt extends SMPLStatement {
     private int index;
     private SMPLVector vector;
 

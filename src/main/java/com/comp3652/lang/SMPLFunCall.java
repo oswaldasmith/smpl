@@ -5,7 +5,7 @@ import com.comp3652.sys.SMPLException;
 
 import java.util.ArrayList;
 
-public class SMPLFunCall extends SMPLExp {
+public class SMPLFunCall extends AIRExp {
     private  String funName;
     private  ArrayList<ASTExp<AIRExp>> arithArgExps;
 
@@ -18,8 +18,8 @@ public class SMPLFunCall extends SMPLExp {
         this.arithArgExps = args;
     }
 
-	public ArrayList<SMPLExp> getArgExps() {
-		return arithArgExps;
+    public ArrayList<ASTExp<AIRExp>> getArgExps() {
+        return arithArgExps;
 	}
 
     /**
@@ -31,10 +31,6 @@ public class SMPLFunCall extends SMPLExp {
     }
 
 
-    @Override
-    public <S, T> T visit(SMPLVisitor<S, T> v, S context) throws SMPLException {
-        return v.visitSMPLFunCall(this,context);
-    }
 
     public <S, T> T visit(AIRVisitor<S, T> v, S arg) throws SMPLException {
         return v.visitAIRFunCall(this,arg);
