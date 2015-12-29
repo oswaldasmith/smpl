@@ -409,5 +409,4 @@ arithFactor ::= arithConstFactor:cf {: RESULT = cf; :} |
 		      RESULT = new ASTUnaryExp<AIRExp>("-", f);
 		:};
 
-
 empty ::= ;

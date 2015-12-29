@@ -5,8 +5,6 @@ import com.comp3652.sys.SMPLException;
 /**
  * Created by carlos on 12/23/15.
  */
-
-
 public class BoolExp extends ASTExp<SMPLExp> {
 
     private Boolean val;

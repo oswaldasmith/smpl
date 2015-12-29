@@ -5,7 +5,8 @@ import com.comp3652.lang.SMPLExp;
 /**
  * Created by carlos on 12/27/15.
  */
-public class SMPLString extends SMPLValue<SMPLExp> {
+public class SMPLString extends SMPLValue<SMPLString> {
+    
     private  String value;
 
     public SMPLString(String string) {
@@ -13,6 +14,8 @@ public class SMPLString extends SMPLValue<SMPLExp> {
     	// should prolly be formatted
         this.value = string;
     }
+
+    
 
     @Override
     public String toString(){

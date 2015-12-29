@@ -18,18 +18,8 @@ public class SMPLPairExp extends ASTExp<SMPLExp> {
         this.e2 = e2;
     }
 
-
-
     @Override
     public <S, T> T visit(ASTVisitor<SMPLExp, S, T> v, S state) throws SMPLException {
         return null;
-    }
-
-    public ASTExp getFirst() {
-        return e1;
-    }
-
-    public ASTExp getSecond() {
-        return e2;
     }
 }

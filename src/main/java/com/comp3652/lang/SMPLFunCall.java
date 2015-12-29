@@ -6,12 +6,10 @@ import com.comp3652.sys.SMPLException;
 import java.util.ArrayList;
 
 public class SMPLFunCall extends SMPLExp {
-    private  String funName;
-    private  ArrayList<ASTExp<AIRExp>> arithArgExps;
+    private String funName;
+    private ArrayList<ASTNode> arithArgExps;
 
-
-    public SMPLFunCall() {
-    }
+    public SMPLFunCall() {}
 
     public SMPLFunCall(String fn, ArrayList<ASTExp<AIRExp>> args) {
         this.funName = fn;
