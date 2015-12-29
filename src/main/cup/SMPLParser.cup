@@ -188,11 +188,11 @@ binding ::= DEF VAR:v smplExp:e {:
                     VAR:v ASSIGN smplExp:e {:
                         RESULT = new SMPLStmtDefinition(v,e);
                     :}|
-                    VAR:v {:
-                        RESULT = new SMPLStmtDefinition(v,null);
+                    smplExp:e SEMI {:
+                        RESULT = new SMPLStmtDefinition(null,e);
                     :};
 
-bindList ::= bindList:l COMMA binding:b {:
+bindList ::= bindList:l COMMA binding:b {:Srti
                 l.add(b);
                 RESULT = l;
              :};
@@ -274,7 +274,7 @@ arithConstFactor ::= INTEGER:ilit {: RESULT = new AIRExpInt(ilit); :} |
 		     LPAREN arithExp:e RPAREN {: RESULT = e; :};
 
 arithFactor ::= arithConstFactor:cf {: RESULT = cf; :} |
-		VAR:var SEMI {: RESULT = new ASTVar(var); :} |
+		VAR:var {: RESULT = new ASTVar(var); :} |
                 MINUS arithFactor:f {:
 		      RESULT = new ASTUnaryExp<SMPLExp>("-", f);
 		:};
