@@ -1,7 +1,6 @@
 package com.comp3652.lang;
 
-import com.comp3652.sys.*;
-import com.comp3652.values.*;
+import com.comp3652.sys.SMPLException;
 
 public class AIRExpInt extends AIRExp {
 
@@ -19,7 +18,6 @@ public class AIRExpInt extends AIRExp {
         return value;
     }
 
-    @Override
     public <S, T> T visit(AIRVisitor<S, T> v, S arg) throws SMPLException {
         return v.visitAIRExpInt(this, arg);
     }

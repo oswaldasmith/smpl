@@ -1,6 +1,6 @@
 package com.comp3652.lang;
 
-import com.comp3652.sys.*;
+import com.comp3652.sys.SMPLException;
 
 public class AIRExpFrac extends AIRExp {
 
@@ -18,7 +18,6 @@ public class AIRExpFrac extends AIRExp {
         return value;
     }
 
-    @Override
     public <S, T> T visit(AIRVisitor<S, T> v, S arg) throws SMPLException {
         return v.visitAIRExpFrac(this, arg);
     }

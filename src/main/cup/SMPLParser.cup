@@ -407,7 +407,7 @@ arithConstFactor ::= INTEGER:ilit {: RESULT = new AIRExpInt(ilit); :} |
 		     LPAREN arithExp:e RPAREN {: RESULT = e; :};
 
 arithFactor ::= arithConstFactor:cf {: RESULT = cf; :} |
-		VAR:var {: RESULT = new ASTVar(var); :} |
+		VAR:var SEMI {: RESULT = new ASTVar(var); :} |
                 MINUS arithFactor:f {:
 		      RESULT = new ASTUnaryExp<AIRExp>("-", f);
 		:};

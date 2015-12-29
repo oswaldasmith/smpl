@@ -2,8 +2,9 @@ package com.comp3652.lang;
 
 import com.comp3652.sys.SMPLEnvironment;
 import com.comp3652.sys.SMPLException;
-import java.util.Map;
+
 import java.util.HashMap;
+import java.util.Map;
 
 public class ArithEvaluator implements AIRVisitor<SMPLEnvironment<Double>, Double> {
     
@@ -45,25 +46,25 @@ public class ArithEvaluator implements AIRVisitor<SMPLEnvironment<Double>, Doubl
 
 
     @Override
-    public Double visitVar(ASTVar<AIRExp> var, SMPLEnvironment<Double> state) throws SMPLException {
+    public Double visitVar(ASTVar<SMPLExp> var, SMPLEnvironment<Double> state) throws SMPLException {
         return state.get(var.getId());        
     }
 
     @Override
-    public Double visitUnaryExp(ASTUnaryExp<AIRExp> exp, SMPLEnvironment<Double> env) throws SMPLException {
+    public Double visitUnaryExp(ASTUnaryExp<SMPLExp> exp, SMPLEnvironment<Double> env) throws SMPLException {
         String opName = exp.getOperator();
         UnOpArith op = unOpsMap.get(opName);
-        ASTExp<AIRExp> argExp = exp.getExp();
+        ASTExp<SMPLExp> argExp = exp.getExp();
         double arg = argExp.visit(this, env);
         return op.apply(arg);
     }
 
     @Override
-    public Double visitBinaryExp(ASTBinaryExp<AIRExp> exp, SMPLEnvironment<Double> env) throws SMPLException {
+    public Double visitBinaryExp(ASTBinaryExp<SMPLExp> exp, SMPLEnvironment<Double> env) throws SMPLException {
         String opName = exp.getOperator();
         BinOpArith op = binOpsMap.get(opName);
-        ASTExp<AIRExp> leftExp = exp.getExp1();
-        ASTExp<AIRExp> rightExp = exp.getExp2();
+        ASTExp<SMPLExp> leftExp = exp.getExp1();
+        ASTExp<SMPLExp> rightExp = exp.getExp2();
         double leftArg = leftExp.visit(this, env);
         double rightArg = rightExp.visit(this, env);
         return op.apply(leftArg, rightArg);
