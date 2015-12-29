@@ -8,15 +8,19 @@ public class SMPLSequence extends PIRExp {
 
 	protected List<SMPLStatement> sequence;
 
+    // empty body 
 	public SMPLSequence() {
         sequence = new ArrayList<>();
     }
 
+    // multiline body
     public SMPLSequence(ArrayList<SMPLExp> seq) {
         sequence = seq;
     }
 
+    // one line body
     public void addStatement(SMPLStatement stmt) {
+        sequence = new ArrayList<>();
         sequence.add(stmt);
     }
 

@@ -81,7 +81,7 @@ non terminal SMPLProgram program;
 non terminal SMPLSequence stmtList;
 non terminal SMPLStatement stmt;
 
-non terminal SMPLFun
+// non terminal SMPLFun
 
 
 // not sure about this
@@ -140,10 +140,11 @@ start with program;
 program ::= stmtList:s {: RESULT = new SMPLProgram(s); :};
 
 stmtList ::= stmtList:seq stmt:s {:
-                seq.addStatement(s);
-                RESULT = seq; :} |
-             empty {:
-              RESULT = new SMPLSequence(); :};
+              seq.addStatement(s);
+              RESULT = seq; :} |
+            empty {:
+              RESULT = new SMPLSequence(); 
+            :};
 
 stmt ::= binding:b SEMI{:
                 RESULT = b;
