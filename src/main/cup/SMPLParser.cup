@@ -100,7 +100,6 @@ non terminal SMPLCaseFunction caseFunc;
 non terminal SMPLReadStmt read;
 non terminal SMPLFunCall funCall;
 non terminal SMPLExpFunCall smplFunCall;
-non terminal StringExp stringExp;
 non terminal SMPLVector existingVector;
 non terminal SMPLPair existingPair;
 
@@ -287,11 +286,17 @@ substr ::= SUBSTRING LPAREN STRING:s COMMA INTEGER:start COMMA INTEGER:end RPARE
 
 proc ::= PROC LPAREN idListE:lst RPAREN LBRACE stmtList:body RBRACE {: RESULT = new SMPLExpProcedure(lst,body); :};
 
-print ::= PRINT LPAREN stringExp:e RPAREN {:
-            RESULT = new SMPLPrintStmt(e,true);
+print ::= PRINT LPAREN astExp:e RPAREN {:
+            RESULT = new SMPLPrintStmt(e,false);
           :} |
-          PRINTLN LPAREN stringExp:e RPAREN {:
+          PRINT LPAREN STRING:s RPAREN {:
+              RESULT = new SMPLPrintStmt(s,false);
+          :} |
+          PRINTLN LPAREN astExp:e RPAREN {:
             RESULT = new SMPLPrintStmt(e,true);
+          :}|
+          PRINTLN LPAREN STRING:s RPAREN {:
+            RESULT = new SMPLPrintStmt(s,true);
           :};
 
 read ::= READ LPAREN RPAREN {:
