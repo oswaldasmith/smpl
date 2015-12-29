@@ -7,13 +7,13 @@ import com.comp3652.values.SMPLPair;
  * Created by carlos on 12/20/15.
  */
 public class SMPLisPairStmt extends SMPLFunCall {
-    private SMPLPairExp pair;
+    private SMPLPair pair;
 
     public SMPLisPairStmt(SMPLPair p) {
         pair = p;
     }
 
-    public SMPLPairExp getPair() {
+    public SMPLPair getPair() {
         return pair;
     }
 

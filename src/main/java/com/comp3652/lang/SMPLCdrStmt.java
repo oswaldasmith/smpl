@@ -7,7 +7,8 @@ import com.comp3652.values.SMPLPair;
  * Created by carlos on 12/20/15.
  */
 public class SMPLCdrStmt extends SMPLFunCall {
-    SMPLPairExp pair;
+    SMPLPair pair;
+
     public SMPLCdrStmt(SMPLPair p) {
         super();
         this.pair = p;

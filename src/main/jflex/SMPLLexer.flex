@@ -53,8 +53,6 @@ cc = ([\b\f]|{nl})
 
 ws = {cc}|[\t ]
 
-//special = [_"$""#""?""~"]
-
 hex = [0-9a-fA-F]
 
 alpha = [a-zA-Z]
@@ -63,7 +61,6 @@ num = [0-9]
 
 alphanum = {alpha}|{num}
 
-//all = {alphanum}|{special}
 
 specialchars = ["#""+""-""*"".""!"]
 

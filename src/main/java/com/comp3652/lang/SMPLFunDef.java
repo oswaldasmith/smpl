@@ -6,13 +6,12 @@ import com.comp3652.values.*;
 import java.util.*;
 
 public class SMPLFunDef extends SMPLStatement {
-	//#TODO
 	protected String name;
 	protected ArrayList<String> params;
-	protected SMPLSequence statements;
+	protected SMPLStmtSequence statements;
 
 	public SMPLFunDef(String functionName, ArrayList args,
-		SMPLSequence body) {
+		SMPLStmtSequence body) {
 		name = functionName;
 		params = args;
 		statements = body;
@@ -26,12 +25,12 @@ public class SMPLFunDef extends SMPLStatement {
 		return params;
 	}
 
-	public SMPLSequence getStatements() {
+	public SMPLStmtSequence getStatements() {
 		return statements;
 	}
 
 	@Override
 	public <S, T> T visit(SMPLVisitor<S, T> v, S state) throws SMPLException {
-		return v.visitSMPLFunctionDefinition(this, state);
+		return v.visitSMPLStmtDefinition(this, state);
 	}
 }

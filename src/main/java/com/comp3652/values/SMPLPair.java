@@ -14,4 +14,12 @@ public class SMPLPair extends SMPLVector{
  	public String toString() {
 		return "(" + v1.toString() + ", " + v2.toString() + ")";
 	}
+
+    public Object getSecond() {
+        return v2;
+    }
+
+    public Object getFirst() {
+        return v1;
+    }
 }

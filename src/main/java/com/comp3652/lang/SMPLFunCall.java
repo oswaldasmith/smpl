@@ -19,7 +19,7 @@ public class SMPLFunCall extends SMPLExp {
     }
 
 	public ArrayList<SMPLExp> getArgExps() {
-		return argExps;
+		return arithArgExps;
 	}
 
     /**
@@ -30,11 +30,6 @@ public class SMPLFunCall extends SMPLExp {
         return funName;
     }
 
-    // TODO
-    // should remove
-    public ArrayList<ASTExp<AIRExp>> getArgExps() {
-        return arithArgExps;
-    }
 
     @Override
     public <S, T> T visit(SMPLVisitor<S, T> v, S context) throws SMPLException {

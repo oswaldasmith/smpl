@@ -20,7 +20,7 @@ parser code {:
             this(new SMPLLexer(new FileReader(file)));
         }
 
-        public SMPLParser(InputStream is) {
+        public SMPLParser(Reader is) {
             this(new SMPLLexer(is));
         }
 

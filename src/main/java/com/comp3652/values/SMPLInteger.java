@@ -14,16 +14,13 @@ public class SMPLInteger extends SMPLValue<AIRExpInt> {
 		value = newValue.getVal();
 	}
 
-	@Override
 	public AIRExpInt getValue() {
 		return null;
 	}
 
-	@Override
 	public ArrayList<AIRExpInt> getValues() {
 		return null;
 	}
-
 
 	public SMPLInteger(int val) {
 		value = val;
