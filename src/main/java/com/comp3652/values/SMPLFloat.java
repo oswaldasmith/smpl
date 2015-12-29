@@ -5,7 +5,7 @@ import com.comp3652.lang.SMPLExp;
 /**
  * Created by carlos on 12/27/15.
  */
-public class SMPLFloat extends SMPLValue<SMPLExp> {
+public class SMPLFloat extends SMPLValue<Float> {
     private Double value;
 
     public SMPLFloat(SMPLValue<SMPLExp> exps) {

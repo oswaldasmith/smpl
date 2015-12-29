@@ -5,9 +5,7 @@ import com.comp3652.lang.SMPLExp;
 /**
  * Created by carlos on 12/27/15.
  */
-public class SMPLString extends SMPLValue<SMPLString> {
-    
-    private  String value;
+public class SMPLString extends SMPLValue<String> {
 
     public SMPLString(String string) {
     	// TODO

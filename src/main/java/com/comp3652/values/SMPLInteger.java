@@ -1,16 +1,14 @@
 package com.comp3652.values;
 
 
-public class SMPLInteger extends SMPLValue<SMPLInteger> {
-
-	protected int value;
+public class SMPLInteger extends SMPLValue<Integer> {
 
 	public SMPLInteger(int newValue) {
-		value = newValue;
+		value = Integer.valueOf(newValue);
 	}
 
-	public int getValue() {
-		return value;
+	public SMPLInteger(Integer newValue) {
+		value = newValue;
 	}
 
 	@Override

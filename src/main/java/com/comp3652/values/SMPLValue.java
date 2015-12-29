@@ -12,7 +12,7 @@ public abstract class SMPLValue<T> {
 
     public static final SMPLValue DEFAULT =  new PrimitiveSMPLValue();
 
-    private T value;
+    protected T value;
 
     public T getValue() {
         return value;

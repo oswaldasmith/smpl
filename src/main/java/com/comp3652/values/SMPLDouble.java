@@ -1,11 +1,13 @@
 package com.comp3652.values;
 
 
-public class SMPLDouble extends SMPLValue<SMPLDouble> {
+public class SMPLDouble extends SMPLValue<Double> {
 	
-	protected double value;
-
 	public SMPLDouble(double newValue) {
+		value = Double.valueOf(newValue);
+	}
+
+	public SMPLDouble(Double newValue) {
 		value = newValue;
 	}
 

@@ -1,9 +1,9 @@
 package com.comp3652.values;
 
 
-public class SMPLChar extends SMPLValue<SMPLChar> {
+public class SMPLCharacter extends SMPLValue<Character> {
 
-	public char value;
+	public Character value;
 
 	public SMPLChar(char newValue) {
 		value = newValue;
@@ -13,7 +13,7 @@ public class SMPLChar extends SMPLValue<SMPLChar> {
 		value = Character.toChars(intValue);
 	}
 
-	public char getValue() {
+	public Character getValue() {
 		return value;
 	}
 
