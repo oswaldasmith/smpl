@@ -1,6 +1,5 @@
 package com.comp3652.lang;
 
-import com.comp3652.sys.SMPLContext;
 import com.comp3652.sys.SMPLException;
 
 public interface SMPLVisitor<S, T> extends ASTVisitor<SMPLExp,S,T> {
@@ -28,8 +27,6 @@ public interface SMPLVisitor<S, T> extends ASTVisitor<SMPLExp,S,T> {
 	T visitSMPLLetStmt(SMPLLetStmt smplLetStmt, S state) throws SMPLException;
 
 	T visitSMPLStmtDefinition(SMPLStmtDefinition smplStmtDefinition, S state) throws SMPLException;
-
-	T visitSMPLExpFunCall(SMPLExpFunCall smplExpFunCall, S context) throws SMPLException;
 
 	T visitSMPLisPairStmt(SMPLisPairStmt smpLisPairStmt, S arg) throws SMPLException;
 

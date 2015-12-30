@@ -7,11 +7,15 @@ import com.comp3652.sys.SMPLException;
  */
 public class SMPLStmtDefinition extends SMPLStatement {
     private String var;
-    private ASTExp exp;
+    private ASTExp<SMPLExp> exp;
 
-    public SMPLStmtDefinition(String v, ASTExp e) {
+    public SMPLStmtDefinition(String v, ASTExp<SMPLExp> e) {
         this.var = v;
         this.exp = e;
+    }
+
+    public SMPLStmtDefinition() {
+
     }
 
 

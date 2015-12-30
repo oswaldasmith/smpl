@@ -9,15 +9,10 @@ import java.util.ArrayList;
  */
 
 public class SMPLVectorExp extends SMPLExp {
-    private ArrayList<ASTExp> alist;
-    private ASTExp v;
+    private ArrayList<ASTExp<SMPLExp>> v;
 
 
-    public SMPLVectorExp(ArrayList<ASTExp> l) {
-        this.alist = l;
-    }
-
-    public SMPLVectorExp(ASTExp v) {
+    public SMPLVectorExp(ArrayList<ASTExp<SMPLExp>> v) {
         this.v = v;
     }
 
@@ -26,11 +21,8 @@ public class SMPLVectorExp extends SMPLExp {
         return v.visitSMPLVectorExp(this,context);
     }
 
-    public ArrayList<ASTExp> getExplist() {
-        return alist;
-    }
-
-    public ASTExp getV() {
+    public ArrayList<ASTExp<SMPLExp>> getExplist() {
         return v;
     }
+
 }

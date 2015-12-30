@@ -5,7 +5,6 @@ import com.comp3652.lang.SMPLExp;
 import com.comp3652.lang.SMPLVectorExp;
 
 import java.util.*;
-import java.util.stream.Stream;
 
 public class SMPLVector extends SMPLValue<ArrayList<SMPLValue>> {
 
@@ -40,5 +39,9 @@ public class SMPLVector extends SMPLValue<ArrayList<SMPLValue>> {
          output += values[values.size() - 1] + " "
 
         return "[: " + output + "]";
+    }
+
+    public SMPLValue get(int index) {
+        return vector.get(index);
     }
 }

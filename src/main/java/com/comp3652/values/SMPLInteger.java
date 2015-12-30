@@ -10,7 +10,7 @@ public class SMPLInteger extends SMPLValue<Integer> {
 	public SMPLInteger(Integer newValue) {
 		value = newValue;
 	}
-
+	
 	@Override
 	public String toString() {
 		return "" + value;

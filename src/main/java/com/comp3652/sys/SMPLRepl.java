@@ -6,13 +6,17 @@ import com.comp3652.lang.SMPLParser;
 import com.comp3652.lang.SMPLProgram;
 import com.comp3652.values.SMPLValue;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.Reader;
 
 public class SMPLRepl {
     static SMPLEvaluator interp;
     static SMPLContext globalEnv;
 
 
+<<<<<<< HEAD
     public static void main(String args[]){
         // set up global variables
         setup();
@@ -20,9 +24,16 @@ public class SMPLRepl {
         for(String arg: args){
             try {
                 reader(new FileReader(new File(arg)), globalEnv);
+=======
+    public static void main(String args[]) throws FileNotFoundException {
+        String file = "/Users/carlos/Desktop/smpl-oswald/smpl/smpl-tests.smpl";
+            try {
+                parseEvalShow(new FileReader(new File(file)), globalEnv);
+>>>>>>> master
             } catch (FileNotFoundException fnfe) {
-                System.out.println("Could not find file " + arg);
+                System.out.println("Could not find file " + file);
             }
+<<<<<<< HEAD
         }
     }
 
@@ -49,8 +60,14 @@ public class SMPLRepl {
         catch (IOException ex){
             System.out.println("Bye");
         }
+=======
+>>>>>>> master
     }
 
+    /**
+     * @param r   The reader containing the program fragment to be interpreted
+     * @param env The environment w.r.t. which the fragment should be evaluated
+     */
     public static void parseEvalShow(Reader r, SMPLContext env) {
         SMPLLexer lexer;
         SMPLParser parser;

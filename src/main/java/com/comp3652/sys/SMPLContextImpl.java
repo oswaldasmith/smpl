@@ -1,10 +1,11 @@
 package com.comp3652.sys;
 
-import java.util.*;
-
 import com.comp3652.values.*;
 
+import java.util.ArrayList;
+
 public class SMPLContextImpl implements SMPLContext {
+
 	protected SMPLValue value;
 	protected SMPLEnvironment<SMPLValue> valueEnv;
 	protected SMPLEnvironment<Boolean> boolEnv;
@@ -41,11 +42,6 @@ public class SMPLContextImpl implements SMPLContext {
 		return this.nEnv;
 	}
 
-	@Override
-	public SMPLContext composeSMPLValue(SMPLValue v) {
-		SMPLValue toRet = (SMPLValue) v.getValue();
-		return new SMPLContextImpl(toRet,new SMPLEnvironment<Double>(),new SMPLEnvironment<SMPLFunction>(),new SMPLEnvironment<SMPLVector>(), new SMPLEnvironment<String>(),new SMPLEnvironment<SMPLPair>()) ;
-	}
 
 	@Override
 	public SMPLValue getSMPLValue(String name) throws SMPLException {
@@ -95,6 +91,7 @@ public class SMPLContextImpl implements SMPLContext {
 		SMPLEnvironment<SMPLPair> newPair = new SMPLEnvironment<>();
 		return new SMPLContextImpl(value,valueEnv,nEnv,fEnv,vEnv,sEnv,newPair);
 	}
+
 
 	@Override
 	public SMPLContext extendSMPLValue(ArrayList<String> formalParameters, ArrayList<SMPLValue> arguments) {

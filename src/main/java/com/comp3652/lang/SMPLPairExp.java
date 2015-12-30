@@ -13,7 +13,7 @@ public class SMPLPairExp extends ASTExp<SMPLExp> {
         this.e2 = e2;
     }
 
-    public SMPLPairExp(ASTExp<AIRExp> e1, ASTExp<AIRExp> e2) {
+    public SMPLPairExp(ASTExp<SMPLExp> e1, ASTExp<SMPLExp> e2) {
         this.e1 = e1;
         this.e2 = e2;
     }

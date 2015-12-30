@@ -1,28 +1,24 @@
 package com.comp3652.lang;
 
 
-public class SMPLCaseExp extends SMPLStatement {
+public class SMPLCaseExp {
 
-	protected SMPLExp pred;
-	protected SMPLExp body;
+	protected CIRExp pred;
+	protected SMPLStmtSequence body;
 
-	protected SMPLCaseExp(SMPLExp predicate,
-		SMPLExp body) {
+	protected SMPLCaseExp(CIRExp predicate,
+		SMPLStmtSequence body) {
 
 		this.pred = predicate;
 		this.body = body;
 	}
 
-	public SMPLStatement getPredicate() {
+	public CIRExp getPredicate() {
 		return pred;
 	}
 
-	public SMPLStatement getBody() {
+	public SMPLStmtSequence getBody() {
 		return body;
 	}
 
-	@Override
-	public <S, T> T visit(SMPLVisitor<S, T> v, S state) {
-		v.visitSMPLCaseExp(this, state);
-	}
 }

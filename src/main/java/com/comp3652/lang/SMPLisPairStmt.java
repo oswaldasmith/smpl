@@ -1,18 +1,19 @@
 package com.comp3652.lang;
 
 import com.comp3652.sys.SMPLException;
+import com.comp3652.values.SMPLPair;
 
 /**
  * Created by carlos on 12/20/15.
  */
-public class SMPLisPairStmt extends SMPLFunCall {
-    private SMPLPairExp pair;
+public class SMPLisPairStmt extends SMPLStatement {
+    private SMPLPair pair;
 
-    public SMPLisPairStmt(SMPLPairExp p) {
+    public SMPLisPairStmt(SMPLPair p) {
         pair = p;
     }
 
-    public SMPLPairExp getPair() {
+    public SMPLPair getPair() {
         return pair;
     }
 

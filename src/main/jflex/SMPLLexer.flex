@@ -45,15 +45,25 @@ import java.io.IOException;
 %}
 
 
+LineTerminator = \r|\n|\r\n
+
+InputCharacter = [^\r\n]
+
 nl = [\n\r]
 
-comment = = [^\r\n]
+cc = [\b\f]|{nl}
 
-cc = ([\b\f]|{nl})
+WhiteSpace = ({cc}|[\t" "])
 
-ws = {cc}|[\t ]
+TraditionalComment = "/*" [^*] ~"*/" | "/*" "*"+ "/"
 
-//special = [_"$""#""?""~"]
+EndOfLineComment = "//" {InputCharacter}* {LineTerminator}?
+
+CommentContent = ( [^*] | \*+ [^/*] )*
+
+DocumentationComment = "/**" {CommentContent} "*"+ "/"
+
+comment = {TraditionalComment} | {EndOfLineComment} | {DocumentationComment}
 
 hex = [0-9a-fA-F]
 
@@ -62,8 +72,6 @@ alpha = [a-zA-Z]
 num = [0-9]
 
 alphanum = {alpha}|{num}
-
-//all = {alphanum}|{special}
 
 specialchars = ["#""+""-""*"".""!"]
 
@@ -77,12 +85,16 @@ char = \'(.|"\t"|"\n"|\\\\|"\f"|"\'")\'
 
 hex = [0-9A-Fa-f]
 
+
 %%
 
 
-<YYINITIAL>	{ws}	{/* ignore whitespace */}
-<YYINITIAL> "//"    {comment}* {nl} { /* ignore comments */ }
-<YYINITIAL> \/\*([^*]|\*[^/])*\*+\/ { /* comments */ }
+<YYINITIAL>	{WhiteSpace}	{/* ignore whitespace */}
+<YYINITIAL>    {LineTerminator} {
+                        //skip newline, but reset char counter
+                        yychar = 0;
+                      }
+<YYINITIAL> {comment} { /* comments */ }
 
 <YYINITIAL>	"+"		{ return new Symbol(sym.PLUS); }
 <YYINITIAL>	"-"		{ return new Symbol(sym.MINUS); }
@@ -91,7 +103,7 @@ hex = [0-9A-Fa-f]
 <YYINITIAL>	"%"		{ return new Symbol(sym.MOD); }
 <YYINITIAL> ":=" 	{ return new Symbol(sym.ASSIGN); }
 
-<YYINITIAL> "<"|">"|"<="|">="|"="|"!=" { return new Symbol(sym.CMP, yytext()); }
+<YYINITIAL> "<"|">"|"<="|">="|"="|"!="|"and"|"or"|"not" { return new Symbol(sym.CMP, yytext()); }
 
 <YYINITIAL>	"("		{ return new Symbol(sym.LPAREN); }
 <YYINITIAL>	")"		{ return new Symbol(sym.RPAREN); }
@@ -116,13 +128,6 @@ hex = [0-9A-Fa-f]
 <YYINITIAL> "proc" 	{ return new Symbol(sym.PROC); }
 <YYINITIAL> "lazy" 	{ return new Symbol(sym.LAZY); }
 
-<YYINITIAL> "&"		{ return new Symbol(sym.BITAND); }
-<YYINITIAL> "|"		{ return new Symbol(sym.BITOR); }
-<YYINITIAL> "~"		{ return new Symbol(sym.BITNOT); }
-
-<YYINITIAL> "and" 	{ return new Symbol(sym.AND); }
-<YYINITIAL> "or" 	{ return new Symbol(sym.OR); }
-<YYINITIAL> "not" 	{ return new Symbol(sym.NOT); }
 
 <YYINITIAL> "pair" 	{ return new Symbol(sym.PAIR); }
 <YYINITIAL> "pair?" { return new Symbol(sym.IFPAIR); }
@@ -148,14 +153,12 @@ hex = [0-9A-Fa-f]
 <YYINITIAL> "#t" 	{ return new Symbol(sym.TRUE, yytext()); }
 <YYINITIAL> "#f" 	{ return new Symbol(sym.FALSE, yytext()); }
 
-=======
 <YYINITIAL>	"+"	{return new Symbol(sym.PLUS);}
 <YYINITIAL>	"-"	{return new Symbol(sym.MINUS);}
 <YYINITIAL>	"*"	{return new Symbol(sym.TIMES);}
 <YYINITIAL>	"/"	{return new Symbol(sym.DIV);}
 <YYINITIAL>	"%"	{return new Symbol(sym.MOD);}
 <YYINITIAL>	":="	{return new Symbol(sym.ASSIGN);}
-<YYINITIAL> "<"|">"|"<="|">="|"=="|"!="|"and"|"or"|"not" { return new Symbol(sym.CMP, yytext()); }
 
 <YYINITIAL>    [0-9]+ {
 	       // INTEGER
@@ -167,8 +170,6 @@ hex = [0-9A-Fa-f]
 
 <YYINITIAL> #x{hex}+ { return new Symbol(sym.HEX, Integer.parseInt(yytext().substring(2), 16)); }
 
-<YYINITIAL>    {alpha}+{alphanum}* | {alphanum}+{alpha}* {
-						return new Symbol(sym.VAR, yytext());
 
 <YYINITIAL>    {variable} {
 	       // VARIABLE
@@ -180,12 +181,7 @@ hex = [0-9A-Fa-f]
 			return new Symbol(sym.FRACTION, new Double(yytext()));
 		    }
 
-<YYINITIAL>	{num}*"."{num}+ | {num}+"."{num}* {
-			// REAL no. used for defining frames
-			return new Symbol(sym.FLOAT, new Double(yytext()));
-		}
-
 <YYINITIAL> {char} { return new Symbol(sym.CHAR, yytext().substring(1, yylength() - 1));}
 
-<YYINITIAL> {string} { return new Symbol(sym.STRING, yytext().substring(1, yylength() - 1));}
+<YYINITIAL> {string} { return new Symbol(sym.STRING_LITERAL, yytext().substring(1, yylength() - 1));}
 

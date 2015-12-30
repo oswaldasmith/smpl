@@ -1,7 +1,6 @@
 package com.comp3652.lang;
 
-import com.comp3652.sys.*;
-import com.comp3652.values.*;
+import com.comp3652.sys.SMPLException;
 
 /**
  * <code>AIRExp</code> is the parent class for all arithmetic
@@ -11,17 +10,15 @@ import com.comp3652.values.*;
  * @author <a href="mailto:newts@uwimona.edu.jm">Daniel Coore</a>
  * @version 1.0
  */
-public abstract class AIRExp extends ASTExp<AIRExp> {
+public class AIRExp extends ASTExp<SMPLExp> {
 
 	public AIRExp() {
 		super();
 	}
 
-	public abstract <S, T> T visit(AIRVisitor<S, T> v, S arg) throws SMPLException;
-
 	@Override
-	public <S, T> T visit(ASTVisitor<AIRExp, S, T> v, S state) throws SMPLException {
-		// We have to delegate to the more specific visit method from here.
-		return visit((AIRVisitor<S, T>) v, state);
+	public <S, T> T visit(ASTVisitor<SMPLExp, S, T> v, S state) throws SMPLException {
+		return visit(v, state);
 	}
+
 }

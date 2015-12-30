@@ -5,7 +5,7 @@ import com.comp3652.sys.SMPLException;
 /**
  * Created by carlos on 12/20/15.
  */
-public class SMPLSubStrStmt extends SMPLFunCall {
+public class SMPLSubStrStmt extends SMPLStatement {
 
     private String string;
     private int start,end;
@@ -27,6 +27,7 @@ public class SMPLSubStrStmt extends SMPLFunCall {
     public int getEnd() {
         return end;
     }
+
     @Override
     public <S, T> T visit(SMPLVisitor<S, T> v, S state) throws SMPLException {
         return v.visitSMPLSubStrStmt(this,state);

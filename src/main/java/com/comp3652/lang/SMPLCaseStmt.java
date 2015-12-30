@@ -22,6 +22,7 @@ public class SMPLCaseStmt extends SMPLStatement {
         return v.visitSMPLCaseStmt(this,state);
     }
 
+
     public ASTExp<CIRExp> getPredicate() {
         return predicate;
     }

@@ -1,15 +1,16 @@
 package com.comp3652.lang;
 
 import com.comp3652.sys.SMPLException;
+import com.comp3652.values.SMPLVector;
 
 /**
  * Created by carlos on 12/20/15.
  */
-public class SMPLRetVctStmt extends SMPLFunCall {
+public class SMPLRetVctStmt extends SMPLStatement {
     private int index;
-    private SMPLVectorExp vector;
+    private SMPLVector vector;
 
-    public SMPLRetVctStmt(SMPLVectorExp v, Integer i) {
+    public SMPLRetVctStmt(SMPLVector v, Integer i) {
         this.index = i.intValue();
         this.vector = v;
     }
@@ -23,7 +24,7 @@ public class SMPLRetVctStmt extends SMPLFunCall {
         return index;
     }
 
-    public SMPLVectorExp getVector() {
+    public SMPLVector getVector() {
         return vector;
     }
 }

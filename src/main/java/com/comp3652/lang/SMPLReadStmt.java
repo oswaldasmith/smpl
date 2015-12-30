@@ -21,4 +21,5 @@ public class SMPLReadStmt extends SMPLStatement {
     public Boolean getReadInt() {
         return readInt;
     }
+
 }
