@@ -14,11 +14,16 @@ public class AIRExpInt extends AIRExp {
         value = v.intValue();
     }
 
-    public int getVal() {
-        return value;
+    public Double getVal() {
+        return new Double(value);
     }
 
     public <S, T> T visit(AIRVisitor<S, T> v, S arg) throws SMPLException {
         return v.visitAIRExpInt(this, arg);
+    }
+
+    @Override
+    public String toString() {
+        return String.valueOf(value);
     }
 }

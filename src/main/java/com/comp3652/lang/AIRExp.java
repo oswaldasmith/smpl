@@ -12,13 +12,22 @@ import com.comp3652.sys.SMPLException;
  */
 public class AIRExp extends ASTExp<SMPLExp> {
 
+	private double val;
+
 	public AIRExp() {
 		super();
 	}
 
 	@Override
 	public <S, T> T visit(ASTVisitor<SMPLExp, S, T> v, S state) throws SMPLException {
-		return visit(v, state);
+		return visit((AIRVisitor<S, T>) v, state);
 	}
 
+	public <S, T> T visit(AIRVisitor<S, T> v, S context) throws SMPLException {
+		return v.visitAIRExp(this, context);
+	}
+
+	public Double getVal() {
+		return val;
+	}
 }

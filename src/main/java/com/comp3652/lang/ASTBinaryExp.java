@@ -31,4 +31,5 @@ public class ASTBinaryExp<E extends ASTExp<E>> extends ASTExp<E> {
     public <S, T> T visit(ASTVisitor<E, S, T> v, S state) throws SMPLException {
         return v.visitBinaryExp(this, state);
     }
+
 }

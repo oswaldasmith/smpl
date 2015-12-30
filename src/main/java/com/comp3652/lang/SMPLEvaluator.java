@@ -14,6 +14,8 @@ public class SMPLEvaluator implements SMPLVisitor<SMPLContext, SMPLValue> {
 	private final ArithEvaluator arithEval;
 	private final CIREvaluator condEval;
 	private final StringEvaluator stringEval;
+	private final BooleanEvaluator boolEval;
+
 
 	Map<String, SMPLFunction> baseFuncMap;
 	SMPLValue lastResult; // collects results
@@ -24,6 +26,7 @@ public class SMPLEvaluator implements SMPLVisitor<SMPLContext, SMPLValue> {
 		condEval = new CIREvaluator(arithEval);
 		stringEval = new StringEvaluator();
 		lastResult = SMPLValue.DEFAULT;
+		boolEval = new BooleanEvaluator();
 	}
 
 
@@ -59,11 +62,14 @@ public class SMPLEvaluator implements SMPLVisitor<SMPLContext, SMPLValue> {
 	public SMPLValue visitSMPLPrintStmt(SMPLPrintStmt printStmt, SMPLContext state) throws SMPLException {
 		SMPLValue exp = null;
 
-		if (printStmt.getExp() instanceof StringExp) {
+		if (printStmt.getExp().getClass().isAssignableFrom(StringExp.class)) {
 			exp = new SMPLString(printStmt.getExp().visit(this.stringEval, state.getStringEnv()));
 		}
-		if (printStmt.getExp() instanceof AIRExp) {
+		if (printStmt.getExp().getClass().isAssignableFrom(AIRExp.class)) {
 			exp = new SMPLFloat(printStmt.getExp().visit(this.arithEval, state.getNumEnv()));
+		}
+		if (printStmt.getExp().getClass().isAssignableFrom(BoolExp.class)) {
+			exp = new SMPLBoolean(printStmt.getExp().visit(this.boolEval, state.getBoolEnv()));
 		}
 		if (printStmt.isPrintln()) {
 			System.out.println(exp);

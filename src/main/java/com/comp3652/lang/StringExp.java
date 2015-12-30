@@ -18,10 +18,6 @@ public class StringExp extends ASTExp<SMPLExp> {
         this.string = s;
     }
 
-    public String getString() {
-        return string;
-    }
-
     public <S, T> T visit(StringVisitor<S, T> v, S context) throws SMPLException{
         return v.visitStringExp(this, context);
     }
@@ -32,5 +28,13 @@ public class StringExp extends ASTExp<SMPLExp> {
         return visit((StringVisitor<S,T>) v,state);
     }
 
+    public String getString() {
+        return string;
+    }
+
+    @Override
+    public String toString() {
+        return string;
+    }
 
 }

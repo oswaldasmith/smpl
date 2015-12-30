@@ -10,4 +10,5 @@ public interface AIRVisitor<S, T> extends ASTVisitor<SMPLExp, S, T> {
 
     T visitAIRFunCall(SMPLFunCall smplFunCall, S arg) throws SMPLException;
 
+    T visitAIRExp(AIRExp airExp, S context) throws SMPLException;
 }

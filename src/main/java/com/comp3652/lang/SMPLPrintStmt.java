@@ -35,4 +35,9 @@ public class SMPLPrintStmt extends SMPLStatement {
     public boolean isPrintln() {
         return isPrintln;
     }
+
+    @Override
+    public String toString() {
+        return exp.toString();
+    }
 }
