@@ -188,7 +188,7 @@ binding ::= DEF VAR:v smplExp:e {:
                     VAR:v ASSIGN smplExp:e {:
                         RESULT = new SMPLStmtDefinition(v,e);
                     :}|
-                    smplExp:e SEMI {:
+                    smplExp:e {:
                         RESULT = new SMPLStmtDefinition(null,e);
                     :};
 
