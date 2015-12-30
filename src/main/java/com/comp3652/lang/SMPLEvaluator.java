@@ -61,14 +61,15 @@ public class SMPLEvaluator implements SMPLVisitor<SMPLContext, SMPLValue> {
 	@Override
 	public SMPLValue visitSMPLPrintStmt(SMPLPrintStmt printStmt, SMPLContext state) throws SMPLException {
 		SMPLValue exp = null;
+		Class check = printStmt.getExp().getClass();
 
-		if (printStmt.getExp().getClass().isAssignableFrom(StringExp.class)) {
+		if (check.isAssignableFrom(StringExp.class)) {
 			exp = new SMPLString(printStmt.getExp().visit(this.stringEval, state.getStringEnv()));
 		}
-		if (printStmt.getExp().getClass().isAssignableFrom(AIRExp.class)) {
+		if (check.isAssignableFrom(AIRExp.class)) {
 			exp = new SMPLFloat(printStmt.getExp().visit(this.arithEval, state.getNumEnv()));
 		}
-		if (printStmt.getExp().getClass().isAssignableFrom(BoolExp.class)) {
+		if (check.isAssignableFrom(BoolExp.class)) {
 			exp = new SMPLBoolean(printStmt.getExp().visit(this.boolEval, state.getBoolEnv()));
 		}
 		if (printStmt.isPrintln()) {
