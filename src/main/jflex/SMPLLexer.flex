@@ -27,6 +27,8 @@ import java.io.IOException;
 %line
 
 %{
+    public StringBuilder newLines;
+
     public int getChar() {
 	return yychar + 1;
     }
@@ -42,19 +44,20 @@ import java.io.IOException;
     public String getText() {
 	return yytext();
     }
+
 %}
 
 nl = [\n\r]
 
 cc = [\b\f]|{nl}
 
-WhiteSpace = ({cc}|[\t" "])
+// WhiteSpace = ({cc}|[\t" "])
 
-EndOfLineComment = "//".*[\n\r]
+// EndOfLineComment = "//".*[\n\r]
 
-BlockComment = "/*"(.|\n\r|\n)*"*/"
+// BlockComment = "/*"(.|\n\r|\n)*"*/"
 
-comment = {BlockComment}|{EndOfLineComment}
+// comment = {BlockComment}|{EndOfLineComment}
 
 hex = [0-9a-fA-F]
 
@@ -77,7 +80,36 @@ char = \'(.|"\t"|"\n"|\\\\|"\f"|"\'")\'
 hex = [0-9A-Fa-f]
 
 
+LineTerminator = \r|\n|\r\n
+InputCharacter = [^\r\n]
+WhiteSpace     = {LineTerminator} | [ \t\f]
+
+/* comments */
+Comment = {TraditionalComment} | {EndOfLineComment} | {DocumentationComment}
+
+TraditionalComment   = "/*" [^*] ~"*/" | "/*" "*"+ "/"
+EndOfLineComment     = "//" {InputCharacter}* {LineTerminator}
+DocumentationComment = "/**" {CommentContent} "*"+ "/"
+CommentContent       = ( [^*] | \*+ [^/*] )*
+
+{Comment}           { /* Ignore comments */ }
+{LineTerminator}    { return LexerToken.PASS; }
+
 %%
+
+<YYINITIAL> {Comment} {
+    char[] ch;
+                            ch = yytext().toCharArray();
+                            newLines = new StringBuilder();
+                            for (char c : ch)
+                            {
+                                if (c == '\n')
+                                {
+                                    newLines.append(c);
+                                }
+                            }
+                            return LexerToken.NEW_LINES;
+    }
 
 
 <YYINITIAL>	{WhiteSpace}	{/* ignore whitespace */}
@@ -86,6 +118,8 @@ hex = [0-9A-Fa-f]
                         yychar = 0;
                       }
 <YYINITIAL> {comment} { /* comments */ }
+
+<YYINITIAL> "//"[^\r\n]*        {}
 
 <YYINITIAL>	"+"		{ return new Symbol(sym.PLUS); }
 <YYINITIAL>	"-"		{ return new Symbol(sym.MINUS); }
@@ -168,4 +202,3 @@ hex = [0-9A-Fa-f]
 <YYINITIAL> {char} { return new Symbol(sym.CHAR, yytext().substring(1, yylength() - 1));}
 
 <YYINITIAL> {string} { return new Symbol(sym.STRING_LITERAL, yytext().substring(1, yylength() - 1));}
-
