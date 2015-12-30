@@ -1,0 +1,367 @@
+package com.comp3652.lang;
+
+import java_cup.runtime.*;
+import java.io.*;
+import java.util.*;
+import com.comp3652.values.*;
+
+
+/* Preliminaries to set up and use the scanner.  */
+parser code {:
+		SMPLLexer lexer;
+
+		public SMPLParser(SMPLLexer l) {
+		    // As of CUP v0.11, need to pass Lexer to superclass
+		    super(l);
+		    lexer = l;
+		}
+
+        public SMPLParser(String file) throws FileNotFoundException {
+            this(new SMPLLexer(new FileReader(file)));
+        }
+
+        public SMPLParser(Reader is) {
+            this(new SMPLLexer(is));
+        }
+
+		public void report_error(String message, Object info) {
+		    System.err.println(message);
+		}
+
+		public void syntax_error(Symbol cur_token) {
+		    System.err.print("Line " + lexer.getLine() +
+				     " near char " + lexer.getChar() + ": ");
+		    report_error("Syntax error", cur_token);
+		    System.err.println ("Last token read is " +
+					 lexer.getText());
+		}
+	    :};
+
+init with {: :};
+
+scan with {:
+		try {
+		    return lexer.next_token();
+		} catch (java.io.IOException ioe) {
+		    System.out.println ("Unrecognised token");
+		    System.out.println(ioe.getMessage());
+		    throw ioe;
+		}
+	  :};
+
+/* Terminals (tokens returned by the scanner). */
+
+// special symbols
+terminal DEF,PROC,LAZY,IFPAIR,PAIR,CALL,BE,ASSIGN;
+terminal LBRACKET,RBRACKET,LPAREN, RPAREN,COMMA, LBRACE, RBRACE, SEMI,COLON;
+
+// arithmetic operators
+terminal PLUS, MINUS, DIV, MOD,TIMES;
+
+//Builtin Functions
+terminal SIZE,IFEQUIVALENT,IFEQUAL,LIST,SUBSTRING,CAR,CDR;
+
+//Builtin Statements
+terminal PRINT,PRINTLN,READ,READINT,CASE;
+
+//unary operators and Logic Extensions
+terminal String CMP,IF,THEN,ELSE,LET;
+
+// terminals with values
+terminal Integer INTEGER,BIN,HEX;
+terminal Double FRACTION;
+terminal char CHAR;
+terminal Boolean TRUE;
+terminal Boolean FALSE;
+terminal String VAR;
+terminal String STRING_LITERAL;
+
+/* Non terminals */
+non terminal SMPLProgram program;
+non terminal SMPLStmtSequence stmtList;
+non terminal SMPLStatement stmt;
+non terminal SMPLStmtDefinition binding;
+non terminal ArrayList<SMPLStmtDefinition> bindList;
+non terminal SMPLCarStmt car;
+non terminal SMPLCdrStmt cdr;
+non terminal SMPLisPairStmt isPair;
+non terminal SMPLPrintStmt print;
+non terminal SMPLRetVctStmt retVec;
+non terminal SMPLSizeStmt size;
+non terminal SMPLIsEqualStmt isEqual;
+non terminal SMPLIsEqvStmt isEqv;
+non terminal SMPLSubStrStmt substr;
+non terminal SMPLLazyStmt lazy;
+non terminal SMPLIfStmt if;
+non terminal SMPLLetStmt let;
+non terminal SMPLCaseStmt casestmt;
+non terminal ArrayList<SMPLCaseStmt> caseList;
+non terminal SMPLCaseFunction caseFunc;
+non terminal SMPLReadStmt read;
+non terminal SMPLFunCall funCall;
+non terminal SMPLFunDef funcDef;
+non terminal SMPLVector existingVector;
+non terminal SMPLPair existingPair;
+
+non terminal ASTExp<SMPLExp> smplExp;
+non terminal ArrayList<ASTExp<SMPLExp>> smplExpList;
+non terminal ArrayList<ASTExp<SMPLExp>> smplExpListE;
+non terminal ASTExp<CIRExp> predExp;
+non terminal SMPLPairExp exPair;
+non terminal SMPLVectorExp vector;
+non terminal SMPLFunCall proc;
+non terminal ArrayList<String> idList;
+non terminal ArrayList<String> idListE;
+
+/*Arithmetic Expressions */
+non terminal ASTExp<SMPLExp> arithExp;
+non terminal ASTExp<SMPLExp> arithTerm;
+non terminal ASTExp<SMPLExp> arithConstFactor;
+non terminal ASTExp<SMPLExp> arithFactor;
+
+
+non terminal empty;
+/* Grammar rules */
+
+start with program;
+
+program ::= stmtList:s {: RESULT = new SMPLProgram(s); :};
+
+stmtList ::= stmtList:seq stmt:s {:
+                seq.addStatement(s);
+                RESULT = seq; :} |
+             empty {:
+              RESULT = new SMPLStmtSequence(); :};
+
+stmt ::= binding:b SEMI{:
+                RESULT = b;
+            :} |
+            print:p SEMI{:
+                RESULT = p;
+            :} |
+            read:r SEMI {:
+                RESULT = r;
+            :} |
+            if:i SEMI {:
+                RESULT = i;
+            :} |
+            let:l SEMI {:
+                RESULT = l;
+            :} |
+             isPair:p SEMI {:
+                  RESULT = p;
+              :} |
+              retVec:r SEMI {:
+                  RESULT = r;
+              :} |
+              size:s SEMI {:
+                  RESULT = s;
+              :} |
+              isEqual:e SEMI {:
+                  RESULT = e;
+              :} |
+              isEqv:e SEMI {:
+                  RESULT = e;
+              :} |
+              substr:s SEMI{:
+                  RESULT = s;
+              :} |
+              car:c SEMI {:
+                  RESULT = c;
+              :} |
+              cdr:c SEMI {:
+                  RESULT = c;
+              :}  |
+            caseFunc:c SEMI {:
+                RESULT = c;
+            :} |
+            funcDef:f {:
+                RESULT = f;
+            :};
+
+binding ::= DEF VAR:v smplExp:e {:
+            		    RESULT = new SMPLStmtDefinition(v,e);
+                    :} |
+                    VAR:v BE smplExp:e  {:
+                        RESULT = new SMPLStmtDefinition(v,e);
+                    :} |
+                    VAR:v ASSIGN smplExp:e {:
+                        RESULT = new SMPLStmtDefinition(v,e);
+                    :}|
+                    smplExp:e {:
+                        RESULT = new SMPLStmtDefinition(null,e);
+                    :};
+
+bindList ::= bindList:l COMMA binding:b {:
+                l.add(b);
+                RESULT = l;
+             :};
+
+predExp ::= VAR:id CMP:cmp smplExp:e {:
+                RESULT = new CIRExp(id,cmp,e);
+            :};
+
+smplExp ::= arithExp:e{:
+                RESULT = e;
+            :} |
+            exPair:p {:
+                RESULT = p;
+            :} |
+            vector:v {:
+                RESULT = v;
+            :}|
+            CHAR:c {:
+                RESULT = new StringExp(c);
+            :} |
+            TRUE:t {:
+                RESULT = new BoolExp(t);
+            :}|
+            STRING_LITERAL:s {:
+                RESULT = new StringExp(s);
+            :} |
+            FALSE:f {:
+                RESULT = new BoolExp(f);
+            :}|
+            funCall:f {:
+                RESULT = f;
+            :};
+
+smplExpList ::= smplExpList:l COMMA smplExp:e {:
+                    l.add(e);
+                    RESULT = l;
+                :}|
+                LIST LPAREN smplExpList:l RPAREN {:
+                    RESULT = l;
+                :} |
+                smplExp:e {:
+                  RESULT = new ArrayList<>();
+                  RESULT.add(e);
+                :} |
+                 PROC LPAREN smplExpListE:args RPAREN {:
+                                    RESULT = args;
+                 :};
+
+smplExpListE ::= smplExpList:lst {:
+                    RESULT = lst;
+                 :} |
+                 empty {:
+                    RESULT = new ArrayList<>();
+                 :};
+
+exPair ::= PAIR LPAREN smplExp:e1 COMMA smplExp:e2 RPAREN {:
+                RESULT = new SMPLPairExp(e1,e2);
+            :};
+
+vector ::= LBRACKET COLON smplExpList:l COLON RBRACKET {:
+                            RESULT = new SMPLVectorExp(l);
+            :};
+
+arithExp ::= arithExp:e PLUS arithTerm:t {: RESULT = new ASTBinaryExp<SMPLExp>("+", e, t); :} |
+	     arithExp:e MINUS arithTerm:t {: RESULT = new ASTBinaryExp<SMPLExp>("-", e, t); :} |
+	     arithTerm:t {: RESULT = t; :};
+
+
+
+arithTerm ::= arithTerm:t TIMES arithFactor:f {: RESULT = new ASTBinaryExp<SMPLExp>("*", t, f); :}|
+	      arithTerm:t DIV arithFactor:f {: RESULT = new ASTBinaryExp<SMPLExp>("/", t, f); :}|
+	      arithTerm:t MOD arithFactor:f {: RESULT = new ASTBinaryExp<SMPLExp>("%", t, f); :}|
+	      arithFactor:f {: RESULT = f; :};
+
+arithConstFactor ::= INTEGER:ilit {: RESULT = new AIRExpInt(ilit); :} |
+		     FRACTION:frac {: RESULT = new AIRExpFrac(frac); :} |
+		     HEX:h {: RESULT = new AIRExpInt(h); :} |
+             BIN:b {: RESULT = new AIRExpInt(b); :} |
+		     LPAREN arithExp:e RPAREN {: RESULT = e; :};
+
+arithFactor ::= arithConstFactor:cf {: RESULT = cf; :} |
+		VAR:var SEMI {: RESULT = new ASTVar(var); :} |
+                MINUS arithFactor:f {:
+		      RESULT = new ASTUnaryExp<SMPLExp>("-", f);
+		:};
+
+
+funcDef ::= DEF VAR:id PROC LPAREN idListE:lst RPAREN LBRACE stmtList:body RBRACE {:
+                                     RESULT = new SMPLFunDef(id,lst,body);
+            :};
+
+car ::= CAR LPAREN existingPair:p RPAREN {: RESULT = new SMPLCarStmt(p); :};
+
+cdr ::= CDR LPAREN existingPair:p RPAREN {: RESULT = new SMPLCdrStmt(p); :};
+
+isPair ::= IFPAIR LPAREN existingPair:p RPAREN {: RESULT = new SMPLisPairStmt(p); :};
+
+retVec ::= existingVector:v LBRACKET INTEGER:i RBRACKET {: RESULT = new SMPLRetVctStmt(v,i); :};
+
+size ::= SIZE LPAREN existingVector:v RPAREN {: RESULT = new SMPLSizeStmt(v); :};
+
+isEqual ::= IFEQUAL LPAREN smplExp:e COMMA smplExp:e2 RPAREN {: RESULT = new SMPLIsEqualStmt(e,e2); :};
+
+isEqv ::= IFEQUIVALENT LPAREN smplExp:e COMMA smplExp:e2 RPAREN {: RESULT = new SMPLIsEqvStmt(e,e2); :};
+
+substr ::= SUBSTRING LPAREN STRING_LITERAL:s COMMA INTEGER:start COMMA INTEGER:end RPAREN {: RESULT = new SMPLSubStrStmt(s,start,end); :};
+
+print ::= PRINT LPAREN smplExp:e RPAREN {:
+            RESULT = new SMPLPrintStmt(e,false);
+          :} |
+          PRINTLN LPAREN smplExp:e RPAREN {:
+            RESULT = new SMPLPrintStmt(e,true);
+          :};
+
+read ::= READ LPAREN RPAREN {:
+                RESULT = new SMPLReadStmt(false);
+         :} |
+         READINT LPAREN RPAREN {:
+                RESULT = new SMPLReadStmt(true);
+         :};
+
+if ::=  IF predExp:p THEN stmtList:cons {:
+            RESULT = new SMPLIfStmt(p,cons);
+        :} |
+        IF predExp:p THEN stmtList:cons ELSE stmtList:alt {:
+            RESULT = new SMPLIfStmt(p,cons,alt);
+        :};
+
+casestmt ::= predExp:p COLON stmt:s {:
+                RESULT = new SMPLCaseStmt(p,s);
+             :};
+
+caseList ::= caseList:l COMMA casestmt:c {:
+                l.add(c);
+                RESULT = l;
+             :};
+
+caseFunc ::= CASE LBRACE caseList:lst COMMA ELSE stmt:s RBRACE {:
+                RESULT = new SMPLCaseFunction(lst,s);
+             :};
+
+let ::= LET LPAREN bindList:ids RPAREN stmtList:body {:
+            RESULT = new SMPLLetStmt(ids,body);
+        :} |
+        LET LPAREN binding:ids RPAREN stmtList:body {:
+            RESULT = new SMPLLetStmt(ids,body);
+        :};
+
+funCall ::= CALL LPAREN VAR:fn COMMA smplExpList:args RPAREN {:
+                    RESULT = new SMPLFunCall(fn, args);
+               :} |
+               VAR:fn LPAREN smplExpList:args RPAREN {:
+                   RESULT = new SMPLFunCall(fn, args);
+               :};
+
+
+lazy ::= LAZY LPAREN smplExp:e RPAREN {: RESULT = new SMPLLazyStmt(e); :};
+
+idList ::= idList:lst COMMA VAR:id {:
+		    lst.add(id);
+		    RESULT = lst;
+		    :} |
+	         VAR:id {:
+				RESULT = new ArrayList<>();
+				RESULT.add(id);
+			:};
+
+idListE ::= idList:lst {: RESULT = lst; :} |
+            empty {: RESULT = new ArrayList<>();:};
+
+
+empty ::= ;
