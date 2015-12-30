@@ -17,6 +17,7 @@ public class SMPLBoolean extends SMPLValue<BoolExp> {
 
     public SMPLBoolean(Boolean equal) {
         super();
+        this.value = equal.booleanValue();
     }
 
 

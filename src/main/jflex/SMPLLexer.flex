@@ -44,26 +44,17 @@ import java.io.IOException;
     }
 %}
 
-
-LineTerminator = \r|\n|\r\n
-
-InputCharacter = [^\r\n]
-
 nl = [\n\r]
 
 cc = [\b\f]|{nl}
 
 WhiteSpace = ({cc}|[\t" "])
 
-TraditionalComment = "/*" [^*] ~"*/" | "/*" "*"+ "/"
+EndOfLineComment = "//".*[\n\r]
 
-EndOfLineComment = "//" {InputCharacter}* {LineTerminator}?
+BlockComment = "/*"(.|\n\r|\n)*"*/"
 
-CommentContent = ( [^*] | \*+ [^/*] )*
-
-DocumentationComment = "/**" {CommentContent} "*"+ "/"
-
-comment = {TraditionalComment} | {EndOfLineComment} | {DocumentationComment}
+comment = {BlockComment}|{EndOfLineComment}
 
 hex = [0-9a-fA-F]
 
@@ -75,7 +66,7 @@ alphanum = {alpha}|{num}
 
 specialchars = ["#""+""-""*"".""!"]
 
-allchars={alphanum}|{specialchars}
+allchars = {alphanum}|{specialchars}
 
 variable = {alphanum}+{allchars}*
 
@@ -90,7 +81,7 @@ hex = [0-9A-Fa-f]
 
 
 <YYINITIAL>	{WhiteSpace}	{/* ignore whitespace */}
-<YYINITIAL>    {LineTerminator} {
+<YYINITIAL> {nl} {
                         //skip newline, but reset char counter
                         yychar = 0;
                       }
@@ -114,9 +105,9 @@ hex = [0-9A-Fa-f]
 <YYINITIAL>	"{"		{ return new Symbol(sym.LBRACE); }
 <YYINITIAL>	"}"		{ return new Symbol(sym.RBRACE); }
 
-<YYINITIAL>	","		{ return new Symbol(sym.COMMA); }
-<YYINITIAL>	":"		{ return new Symbol(sym.COLON); }
-<YYINITIAL>	";"		{ return new Symbol(sym.SEMI); }
+<YYINITIAL>	 ,		{ return new Symbol(sym.COMMA); }
+<YYINITIAL>	 : 		{ return new Symbol(sym.COLON); }
+<YYINITIAL>	 ; 		{ return new Symbol(sym.SEMI); }
 
 <YYINITIAL>	"let" 	{ return new Symbol(sym.LET); }
 <YYINITIAL> "def" 	{ return new Symbol(sym.DEF); }
@@ -152,13 +143,6 @@ hex = [0-9A-Fa-f]
 
 <YYINITIAL> "#t" 	{ return new Symbol(sym.TRUE, yytext()); }
 <YYINITIAL> "#f" 	{ return new Symbol(sym.FALSE, yytext()); }
-
-<YYINITIAL>	"+"	{return new Symbol(sym.PLUS);}
-<YYINITIAL>	"-"	{return new Symbol(sym.MINUS);}
-<YYINITIAL>	"*"	{return new Symbol(sym.TIMES);}
-<YYINITIAL>	"/"	{return new Symbol(sym.DIV);}
-<YYINITIAL>	"%"	{return new Symbol(sym.MOD);}
-<YYINITIAL>	":="	{return new Symbol(sym.ASSIGN);}
 
 <YYINITIAL>    [0-9]+ {
 	       // INTEGER
