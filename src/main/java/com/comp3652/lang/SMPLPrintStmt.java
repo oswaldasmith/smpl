@@ -6,16 +6,16 @@ import com.comp3652.sys.SMPLException;
  * Created by carlos on 12/20/15.
  */
 public class SMPLPrintStmt extends SMPLStatement {
-    private String exp;
+    private ASTExp<SMPLExp> exp;
     private boolean isPrintln;
 
 
     public SMPLPrintStmt(ASTExp<SMPLExp> e, boolean b) {
-        exp = e.toString();
+        exp = e;
         isPrintln = b;
     }
 
-    public SMPLPrintStmt(String s, boolean b) {
+    public SMPLPrintStmt(StringExp s, boolean b) {
         exp = s;
         isPrintln = b;
     }
@@ -27,9 +27,10 @@ public class SMPLPrintStmt extends SMPLStatement {
     }
 
 
-    public String getExp() {
+    public ASTExp<SMPLExp> getExp() {
         return exp;
     }
+
 
     public boolean isPrintln() {
         return isPrintln;

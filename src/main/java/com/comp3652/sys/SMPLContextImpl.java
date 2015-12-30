@@ -138,5 +138,10 @@ public class SMPLContextImpl implements SMPLContext {
 		return this.boolEnv;
 	}
 
+	@Override
+	public SMPLEnvironment<String> getStringEnv() {
+		return this.sEnv;
+	}
+
 
 }
