@@ -6,34 +6,20 @@ import com.comp3652.lang.SMPLParser;
 import com.comp3652.lang.SMPLProgram;
 import com.comp3652.values.SMPLValue;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.Reader;
+import java.io.*;
 
 public class SMPLRepl {
     static SMPLEvaluator interp;
     static SMPLContext globalEnv;
 
-
-<<<<<<< HEAD
-    public static void main(String args[]){
-        // set up global variables
-        setup();
-
-        for(String arg: args){
-            try {
-                reader(new FileReader(new File(arg)), globalEnv);
-=======
     public static void main(String args[]) throws FileNotFoundException {
-        String file = "/Users/carlos/Desktop/smpl-oswald/smpl/smpl-tests.smpl";
-            try {
-                parseEvalShow(new FileReader(new File(file)), globalEnv);
->>>>>>> master
-            } catch (FileNotFoundException fnfe) {
-                System.out.println("Could not find file " + file);
-            }
-<<<<<<< HEAD
+
+        String file = "/home/shane/Documents/School/LP/smpl/smpl-tests.smpl";
+
+        try {
+            parseEvalShow(new FileReader(new File(file)), globalEnv);
+        } catch (FileNotFoundException fnfe) {
+            System.out.println("Could not find file " + file);
         }
     }
 
@@ -47,6 +33,7 @@ public class SMPLRepl {
         BufferedReader bufRead = new BufferedReader(file);
         StringBuffer input = new StringBuffer();
         String myLine = null;
+
         try {
             while (true) {
                 while ((myLine = bufRead.readLine()) != null && !bufRead.readLine().equals("EOF")) {
@@ -60,8 +47,6 @@ public class SMPLRepl {
         catch (IOException ex){
             System.out.println("Bye");
         }
-=======
->>>>>>> master
     }
 
     /**
@@ -78,11 +63,11 @@ public class SMPLRepl {
             parser = new SMPLParser(lexer);
             commands = (SMPLProgram) parser.parse().value;
         }
-        catch (Exception e){
+            catch (Exception e){
             System.out.println("Syntax Error:" + e.getMessage());
         }
 
-        SMPLValue<SMPLExp> result;
+        SMPLValue result;
 
         if (commands != null)
             try {

@@ -5,13 +5,13 @@ import com.comp3652.sys.SMPLContext;
 
 import java.util.*;
 
-public class Function extends SMPLValue<Function> {
+public class Function {
 	String name;
 	ArrayList<String> params;
-	SMPLSequence body;
+	SMPLStmtSequence body;
 	SMPLContext closingEnv;
 
-	public SMPLFunction(String id, ArrayList<String> params,
+	public Function(String id, ArrayList<String> params,
 						SMPLStmtSequence body, SMPLContext env) {
         super();
         this.name = id;
@@ -34,5 +34,21 @@ public class Function extends SMPLValue<Function> {
 
     public SMPLContext getClosingEnv() {
     	return closingEnv;
+    }
+
+    /**
+     * Created by carlos on 12/27/15.
+     */
+    public static class SMPLBoolean extends SMPLValue<Boolean> {
+
+        public SMPLBoolean(Boolean equal) {
+            value = equal;
+        }
+
+        @Override
+        public String toString() {
+            return (value) ? "true" : "false";
+        }
+
     }
 }

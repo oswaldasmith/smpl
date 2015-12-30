@@ -24,6 +24,4 @@ public class SMPLAssignment extends SMPLStatement {
 	public <S, T> T visit(SMPLVisitor<S, T> v, S state) throws SMPLException {
 		return v.visitSMPLAssignment(this, state);
 	}
-
-
 }

@@ -9,4 +9,12 @@ public class Pair<S, T> {
 		this.x = x;
 		this.y = y;
 	}
+
+	public S getFirst() {
+		return x;
+	}
+
+	public T getSecond() {
+		return y;
+	}
 }

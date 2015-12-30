@@ -8,7 +8,7 @@ import com.comp3652.lang.AIRExpFrac;
 public class SMPLFloat extends SMPLValue<Float> {
 
 	public SMPLFloat(float newValue) {
-		value = Float.valueOf(newValue);
+		value = newValue;
 	}
 
 	public SMPLFloat(Float newValue) {

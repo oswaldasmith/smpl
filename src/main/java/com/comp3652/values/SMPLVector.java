@@ -8,10 +8,7 @@ import java.util.*;
 
 public class SMPLVector extends SMPLValue<ArrayList<SMPLValue>> {
 
-    // need to rep empty lists
-    public static final ArrayList<SMPLValue> EMPTY = Collections.emptyList();
-    
-    private ArrayList<SMPLValue<SMPLExp>> values;
+    private ArrayList<SMPLValue> values;
 
     public SMPLVector(ArrayList<SMPLValue> newValues) {
         value = newValues;
@@ -32,16 +29,16 @@ public class SMPLVector extends SMPLValue<ArrayList<SMPLValue>> {
     public String toString() {
         String output = "";
 
-        for (int i = 0; i < values.size() - 1; i++)
-         output += values[i].getValue.toString() + ", ";
+        for (int i = 0; i < value.size() - 1; i++)
+         output += value.get(i).getValue().toString() + ", ";
 
         if (values.size() > 0)
-         output += values[values.size() - 1] + " "
+         output += value.get(value.size() - 1) + " ";
 
         return "[: " + output + "]";
     }
 
     public SMPLValue get(int index) {
-        return vector.get(index);
+        return value.get(index);
     }
 }

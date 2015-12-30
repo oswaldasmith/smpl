@@ -83,7 +83,7 @@ public class SMPLEvaluator implements SMPLVisitor<SMPLContext, SMPLValue> {
 			return v;
 
 		} else{
-			SMPLValue v = new SMPLString(new StringExp((String) str));
+			SMPLValue v = new SMPLString("" + str);
 			return v;
 
 		}
@@ -152,11 +152,13 @@ public class SMPLEvaluator implements SMPLVisitor<SMPLContext, SMPLValue> {
 
 		ArrayList<SMPLValue> arguments = new ArrayList<SMPLValue>();
 
-		SMPLFunction function = context.getFunction(funName);
+		SMPLFunction smplFunction = context.getFunction(funName);
+		Function function = smplFunction.getValue();
 
 		ArrayList<String> formalParameters = function.getParams();
 
 		SMPLContext closingEnvironment = function.getClosingEnv();
+
 		for (ASTExp<SMPLExp> arg : argExps) {
 			arguments.add(arg.visit(this, context));
 		}
@@ -165,14 +167,13 @@ public class SMPLEvaluator implements SMPLVisitor<SMPLContext, SMPLValue> {
 		SMPLContext newEnvironment = closingEnvironment.extendSMPLValue(formalParameters, arguments)
 				.extendFunctionEnvironment(new ArrayList<String>(), new ArrayList<SMPLFunction>());
 
-
 		return new SMPLCompoundValue(this, function.getBody(), newEnvironment);
 	}
 
 
 	@Override
 	public SMPLValue visitSMPLisPairStmt(SMPLisPairStmt smplisPairStmt, SMPLContext arg) throws SMPLException {
-		return new SMPLBoolean(smplisPairStmt.getPair().equals("Vector"));
+		return new Function.SMPLBoolean(smplisPairStmt.getPair().equals("Vector"));
 	}
 
 	@Override
@@ -183,6 +184,7 @@ public class SMPLEvaluator implements SMPLVisitor<SMPLContext, SMPLValue> {
 			ASTExp curr = contents.get(i);
 			container.add((SMPLValue) curr.visit(this, context));
 		}
+
 		return (new SMPLVector(container));
 	}
 
@@ -205,12 +207,12 @@ public class SMPLEvaluator implements SMPLVisitor<SMPLContext, SMPLValue> {
 
 	@Override
 	public SMPLValue visitSMPLIsEqualStmt(SMPLIsEqualStmt stmt, SMPLContext state) throws SMPLException {
-		return new SMPLBoolean(stmt.isEqual());
+		return new Function.SMPLBoolean(stmt.isEqual());
 	}
 
 	@Override
 	public SMPLValue visitSMPLIsEqvStmt(SMPLIsEqvStmt stmt, SMPLContext state) throws SMPLException {
-		return new SMPLBoolean(stmt.isEquivalent());
+		return new Function.SMPLBoolean(stmt.isEquivalent());
 	}
 
 	@Override
@@ -225,9 +227,9 @@ public class SMPLEvaluator implements SMPLVisitor<SMPLContext, SMPLValue> {
 
 	@Override
 	public SMPLValue visitSMPLFunDef(SMPLFunDef smplFunDef, SMPLContext state) throws SMPLException {
-		SMPLFunction function = new SMPLFunction(smplFunDef.getFunctionName(), smplFunDef.getParameters(), smplFunDef.getStatements(), state);
-
-		return null;
+		Function function = new Function(smplFunDef.getFunctionName(), smplFunDef.getParameters(), smplFunDef.getStatements(), state);
+		SMPLFunction smplFunction = new SMPLFunction(function);
+		return smplFunction;
 	}
 
 	@Override

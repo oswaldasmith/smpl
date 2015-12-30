@@ -1,17 +1,18 @@
 package com.comp3652.lang;
 
 import com.comp3652.sys.SMPLException;
+import com.comp3652.values.Pair;
 import com.comp3652.values.SMPLPair;
 
 /**
  * Created by carlos on 12/20/15.
  */
 public class SMPLCarStmt extends SMPLStatement {
-    private SMPLPair pair;
+    private Pair pair;
 
     public SMPLCarStmt(SMPLPair p) {
         super();
-        this.pair = p;
+        this.pair = p.getValue();
     }
 
     public Object ret(){
