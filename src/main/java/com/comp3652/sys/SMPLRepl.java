@@ -18,7 +18,7 @@ public class SMPLRepl {
 
         try {
             parseEvalShow(new FileReader(new File(file)), globalEnv);
-        } catch (FileNotFoundException fnfe) {
+        } catch (FileNotFoundException e) {
             System.out.println("Could not find file " + file);
         }
     }
@@ -43,8 +43,7 @@ public class SMPLRepl {
                 StringReader r = new StringReader(new String(input));
                 parseEvalShow(r, genv);
             }
-        }
-        catch (IOException ex){
+        } catch (IOException ex) {
             System.out.println("Bye");
         }
     }

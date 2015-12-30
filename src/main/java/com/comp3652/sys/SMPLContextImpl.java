@@ -42,7 +42,6 @@ public class SMPLContextImpl implements SMPLContext {
 		return this.nEnv;
 	}
 
-
 	@Override
 	public SMPLValue getSMPLValue(String name) throws SMPLException {
 		return valueEnv.get(name);
@@ -99,7 +98,6 @@ public class SMPLContextImpl implements SMPLContext {
 		return new SMPLContextImpl(this.value,valEnv,this.nEnv,this.fEnv,this.vEnv,this.sEnv,this.pEnv);
 	}
 
-
 	@Override
 	public SMPLEnvironment<Double> getNumEnv() {
 		return this.nEnv;
@@ -108,7 +106,6 @@ public class SMPLContextImpl implements SMPLContext {
 	@Override
 	public void putFunction(String name, SMPLFunction p) {
 		fEnv.put(name,p);
-
 	}
 
 
