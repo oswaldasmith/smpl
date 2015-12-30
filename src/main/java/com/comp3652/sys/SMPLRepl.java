@@ -14,6 +14,8 @@ public class SMPLRepl {
 
     public static void main(String args[]) throws FileNotFoundException {
 
+        setup();
+
         String file = "/home/shane/Documents/School/LP/smpl/smpl-tests.smpl";
 
         try {
