@@ -330,6 +330,7 @@ x := "foo";
 print("x = "); println(x);
 */
 
+/*
 println("*** Graphics tests ***");
 println("** Point Operation Tests **");
 def p pt(2, 4);
@@ -398,6 +399,6 @@ print("r.perimeter() prints "); println(r.perimeter());
 println("It should have printed: 14");
 print("r.area() prints "); println(r.area());
 println("It should have printed: 12");
-
+*/
 
 

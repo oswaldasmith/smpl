@@ -188,8 +188,8 @@ binding ::= DEF VAR:v smplExp:e {:
                     VAR:v ASSIGN smplExp:e {:
                         RESULT = new SMPLStmtDefinition(v,e);
                     :}|
-                    VAR:v {:
-                        RESULT = new SMPLStmtDefinition(v,null);
+                    smplExp:e {:
+                        RESULT = new SMPLStmtDefinition(null,e);
                     :};
 
 bindList ::= bindList:l COMMA binding:b {:
