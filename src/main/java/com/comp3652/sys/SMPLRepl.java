@@ -18,6 +18,9 @@ public class SMPLRepl {
 
     public static void main(String args[]) throws FileNotFoundException {
         String file = "/Users/carlos/Desktop/smpl-oswald/smpl/smpl-tests.smpl";
+
+        interp = new SMPLEvaluator();
+        globalEnv = interp.mkInitialContext();
             try {
                 parseEvalShow(new FileReader(new File(file)), globalEnv);
             } catch (FileNotFoundException fnfe) {

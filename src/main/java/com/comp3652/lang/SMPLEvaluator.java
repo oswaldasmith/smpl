@@ -58,7 +58,7 @@ public class SMPLEvaluator implements SMPLVisitor<SMPLContext, SMPLValue> {
 	@Override
 	public SMPLValue visitSMPLPrintStmt(SMPLPrintStmt printStmt, SMPLContext state) throws SMPLException {
 		String stringExp = printStmt.getExp();
-		SMPLString v = new SMPLString(stringExp.toString());
+		SMPLString v = new SMPLString(stringExp);
 		Object output = v.toString();
 
 		if (printStmt.isPrintln()) {

@@ -10,7 +10,7 @@ public class SMPLPrintStmt extends SMPLStatement {
     private boolean isPrintln;
 
 
-    public SMPLPrintStmt(ASTExp e, boolean b) {
+    public SMPLPrintStmt(ASTExp<SMPLExp> e, boolean b) {
         exp = e.toString();
         isPrintln = b;
     }

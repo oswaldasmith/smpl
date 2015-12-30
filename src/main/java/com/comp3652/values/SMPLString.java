@@ -18,6 +18,6 @@ public class SMPLString extends SMPLValue<StringExp> {
 
 	@Override
 	public String toString() {
-		return "" + value;
+		return " " + value;
 	}
 }
