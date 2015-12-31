@@ -47,7 +47,7 @@ import java.io.IOException;
 nl = [\n\r]
 
 cc = [\b\f]| {nl}
-pro
+
 WhiteSpace = ({cc}|[\t" "])
 
 EndOfLineComment = "//".*{nl}
