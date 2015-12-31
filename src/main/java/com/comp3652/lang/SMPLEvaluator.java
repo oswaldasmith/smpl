@@ -122,6 +122,10 @@ public class SMPLEvaluator implements SMPLVisitor<SMPLContext, SMPLValue> {
 			SMPLValue toRet = exp.visit(this, state);
 			return toRet;
 		}
+		if (exp instanceof SMPLSubStrStmt) {
+			SMPLValue substr = ((SMPLSubStrStmt) exp).visit(this, state);
+			return substr;
+		}
 		return null;
 	}
 
@@ -144,6 +148,7 @@ public class SMPLEvaluator implements SMPLVisitor<SMPLContext, SMPLValue> {
 	@Override
 	public SMPLValue visitSMPLSubStrStmt(SMPLSubStrStmt smplSubStrStmt, SMPLContext state) throws SMPLException {
 		String toRet = smplSubStrStmt.getString();
+
 		return new SMPLString(toRet.substring(smplSubStrStmt.getStart(),smplSubStrStmt.getEnd()));
 	}
 
