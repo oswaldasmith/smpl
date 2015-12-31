@@ -129,7 +129,7 @@ CommentContent       = ( [^*] | \*+ [^/*] )*
 <YYINITIAL>	"%"		{ return new Symbol(sym.MOD); }
 <YYINITIAL> ":=" 	{ return new Symbol(sym.ASSIGN); }
 
-<YYINITIAL> "<"| ">" |"<="|">="|"="|"!="|"and"|"or"|"not" { return new Symbol(sym.CMP, yytext()); }
+<YYINITIAL> "<"| ">" |"<="|">="|"=="|"!="|"and"|"or"|"not" { return new Symbol(sym.CMP, yytext()); }
 
 <YYINITIAL>	"("		{ return new Symbol(sym.LPAREN); }
 <YYINITIAL>	")"		{ return new Symbol(sym.RPAREN); }
