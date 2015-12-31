@@ -197,7 +197,8 @@ smplExp ::= arithExp:e{:
             :} |
             substr:s {:
                 RESULT = s;
-            :} if:i {:
+            :} |
+            if:i {:
                RESULT = i;
            :} |
            let:l  {:
