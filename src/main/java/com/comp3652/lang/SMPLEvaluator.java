@@ -66,11 +66,14 @@ public class SMPLEvaluator implements SMPLVisitor<SMPLContext, SMPLValue> {
 		if (check.isAssignableFrom(StringExp.class)) {
 			exp = new SMPLString(printStmt.getExp().visit(this.stringEval, state.getStringEnv()));
 		}
-		if (check.isAssignableFrom(AIRExp.class)) {
+		if (check.isAssignableFrom(ASTBinaryExp.class)) {
 			exp = new SMPLFloat(printStmt.getExp().visit(this.arithEval, state.getNumEnv()));
 		}
 		if (check.isAssignableFrom(BoolExp.class)) {
 			exp = new SMPLBoolean(printStmt.getExp().visit(this.boolEval, state.getBoolEnv()));
+		}
+		if (check.isAssignableFrom(ASTUnaryExp.class)) {
+			exp = new SMPLFloat(printStmt.getExp().visit(this.arithEval, state.getNumEnv()));
 		}
 		if (printStmt.isPrintln()) {
 			System.out.println(exp);
