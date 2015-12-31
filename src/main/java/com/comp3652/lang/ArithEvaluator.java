@@ -30,18 +30,23 @@ public class ArithEvaluator implements AIRVisitor<SMPLEnvironment<Double>, Doubl
     /* Methods specific to Arithmetic expressions */
     @Override
     public Double visitAIRExpInt(AIRExpInt exp, SMPLEnvironment<Double> env) throws SMPLException {
-	return new Double(exp.getVal());
+        return exp.getVal();
     }
 
     @Override
     public Double visitAIRExpFrac(AIRExpFrac exp,
 				  SMPLEnvironment<Double> arg) throws SMPLException {
-	return new Double(exp.getVal());
+        return exp.getVal();
     }
 
     @Override
     public Double visitAIRFunCall(SMPLFunCall smplFunCall, SMPLEnvironment<Double> arg) throws SMPLException {
         return null;
+    }
+
+    @Override
+    public Double visitAIRExp(AIRExp airExp, SMPLEnvironment<Double> context) throws SMPLException {
+        return airExp.getVal();
     }
 
 

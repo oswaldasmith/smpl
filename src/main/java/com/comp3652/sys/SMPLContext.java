@@ -145,4 +145,5 @@ public interface SMPLContext {
 	SMPLEnvironment<Boolean> getBoolEnv();
 
 
+	SMPLEnvironment<String> getStringEnv();
 }

@@ -15,6 +15,11 @@ public class SMPLFloat extends SMPLValue<Float> {
 		value = newValue;
 	}
 
+    public SMPLFloat(Double exps) {
+        super();
+        this.value = exps;
+    }
+
     @Override
     public String toString(){
         return "" + value;

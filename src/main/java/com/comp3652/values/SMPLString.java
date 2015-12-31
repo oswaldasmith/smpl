@@ -12,6 +12,6 @@ public class SMPLString extends SMPLValue<String> {
 
 	@Override
 	public String toString() {
-		return value;
+		return " " + value;
 	}
 }

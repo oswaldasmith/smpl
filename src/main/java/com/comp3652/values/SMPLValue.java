@@ -14,6 +14,14 @@ public abstract class SMPLValue<T> {
 
     protected T value;
 
+    public SMPLValue(T value) {
+        this.value = value;
+    }
+
+    public SMPLValue() {
+        value = null;
+    }
+
     public T getValue() {
         return value;
     }

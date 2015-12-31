@@ -14,6 +14,8 @@ public class SMPLEvaluator implements SMPLVisitor<SMPLContext, SMPLValue> {
 	private final ArithEvaluator arithEval;
 	private final CIREvaluator condEval;
 	private final StringEvaluator stringEval;
+	private final BooleanEvaluator boolEval;
+
 
 	Map<String, SMPLFunction> baseFuncMap;
 	SMPLValue lastResult; // collects results
@@ -24,6 +26,7 @@ public class SMPLEvaluator implements SMPLVisitor<SMPLContext, SMPLValue> {
 		condEval = new CIREvaluator(arithEval);
 		stringEval = new StringEvaluator();
 		lastResult = SMPLValue.DEFAULT;
+		boolEval = new BooleanEvaluator();
 	}
 
 
@@ -52,7 +55,8 @@ public class SMPLEvaluator implements SMPLVisitor<SMPLContext, SMPLValue> {
 
 	@Override
 	public SMPLValue visitSMPLAssignment(SMPLAssignment smplAssignment, SMPLContext state) throws SMPLException {
-		SMPLValue result = smplAssignment.getExp().visit(this, state);
+		SMPLValue result = null;
+		result = reduce(smplAssignment.getExp(), state);
 		state.putSMPLVal(smplAssignment.getVar(), result);
 		return result;
 	}
@@ -60,17 +64,54 @@ public class SMPLEvaluator implements SMPLVisitor<SMPLContext, SMPLValue> {
 
 	@Override
 	public SMPLValue visitSMPLPrintStmt(SMPLPrintStmt printStmt, SMPLContext state) throws SMPLException {
-		String stringExp = printStmt.getExp();
-		SMPLString v = new SMPLString(stringExp.toString());
-		Object output = v.toString();
+		SMPLValue exp = null;
 
+		exp = reduce(printStmt.getExp(), state);
 		if (printStmt.isPrintln()) {
-			System.out.println(output);
+			System.out.println(exp);
 		} else {
-			System.out.print(output);
+			System.out.print(exp);
 		}
 
-		return v;
+		return exp;
+	}
+
+	public SMPLValue reduce(ASTExp<SMPLExp> exp, SMPLContext state) throws SMPLException {
+		Class check = exp.getClass();
+
+		if (check.isAssignableFrom(StringExp.class)) {
+			String toRet = exp.visit(this.stringEval, state.getStringEnv());
+			return new SMPLString(toRet);
+		}
+		if (check.isAssignableFrom(ASTBinaryExp.class)) {
+			Double toRet = exp.visit(this.arithEval, state.getNumEnv());
+			return new SMPLFloat(toRet);
+		}
+		if (check.isAssignableFrom(BoolExp.class)) {
+			Boolean toRet = exp.visit(this.boolEval, state.getBoolEnv());
+			return new SMPLBoolean(toRet);
+		}
+		if (check.isAssignableFrom(ASTUnaryExp.class)) {
+			Double toRet = exp.visit(this.arithEval, state.getNumEnv());
+			return new SMPLFloat(toRet);
+		}
+		if (check.isAssignableFrom(AIRExpInt.class)) {
+			Double toRet = exp.visit(this.arithEval, state.getNumEnv());
+			return new SMPLInteger(toRet);
+		}
+		if (check.isAssignableFrom(AIRExpFrac.class)) {
+			Double toRet = exp.visit(this.arithEval, state.getNumEnv());
+			return new SMPLFloat(toRet);
+		}
+		if (check.isAssignableFrom(CIRExp.class)) {
+			Boolean toRet = exp.visit(this.condEval, state);
+			return new SMPLBoolean(toRet);
+		}
+		if (check.isAssignableFrom(ASTVar.class)) {
+			Double toRet = exp.visit(this.arithEval, state.getNumEnv());
+			return new SMPLFloat(toRet);
+		}
+		return null;
 	}
 
 	@Override
@@ -113,7 +154,7 @@ public class SMPLEvaluator implements SMPLVisitor<SMPLContext, SMPLValue> {
 
 	@Override
 	public SMPLValue visitSMPLIfStmt(SMPLIfStmt smplIfStmt, SMPLContext state) throws SMPLException {
-		ASTExp<CIRExp> conditionalExpression = smplIfStmt.getCondExp();
+		ASTExp<SMPLExp> conditionalExpression = smplIfStmt.getCondExp();
 		SMPLStmtSequence alternativeBody = smplIfStmt.getAlternative();
 		Boolean conditionalEval = conditionalExpression.visit(condEval,state);
 		boolean shouldExecute = conditionalEval.booleanValue();
@@ -140,8 +181,10 @@ public class SMPLEvaluator implements SMPLVisitor<SMPLContext, SMPLValue> {
 
 	@Override
 	public SMPLValue visitSMPLStmtDefinition(SMPLStmtDefinition smplStmtDefinition, SMPLContext state) throws SMPLException {
-		SMPLValue result = (SMPLValue) smplStmtDefinition.getExp().visit(this, state);
-		state.putSMPLVal(smplStmtDefinition.getVar(), result);
+		SMPLValue result = null;
+		result = reduce(smplStmtDefinition.getExp(), state);
+		if (result.getClass().isAssignableFrom(SMPLFloat.class))
+			state.putNumber(smplStmtDefinition.getVar(), new Double(String.valueOf(result)));
 		return result;
 	}
 

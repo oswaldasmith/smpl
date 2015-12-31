@@ -2,17 +2,15 @@ package com.comp3652.lang;
 
 import com.comp3652.sys.SMPLException;
 
-import java.util.ArrayList;
-
 /**
  * Created by carlos on 12/20/15.
  */
 public class SMPLCaseStmt extends SMPLStatement {
 
-    private ASTExp<CIRExp> predicate;
+    private ASTExp<SMPLExp> predicate;
     private SMPLStatement cons;
 
-    public SMPLCaseStmt(ASTExp<CIRExp> p, SMPLStatement s) {
+    public SMPLCaseStmt(ASTExp<SMPLExp> p, SMPLStatement s) {
         this.predicate = p;
         this.cons = s;
     }
@@ -23,7 +21,7 @@ public class SMPLCaseStmt extends SMPLStatement {
     }
 
 
-    public ASTExp<CIRExp> getPredicate() {
+    public ASTExp<SMPLExp> getPredicate() {
         return predicate;
     }
 

@@ -14,8 +14,8 @@ public class AIRExpFrac extends AIRExp {
         value = v.doubleValue();
     }
 
-    public double getVal() {
-        return value;
+    public Double getVal() {
+        return new Double(value);
     }
 
     public <S, T> T visit(AIRVisitor<S, T> v, S arg) throws SMPLException {

@@ -106,7 +106,7 @@ non terminal SMPLPair existingPair;
 non terminal ASTExp<SMPLExp> smplExp;
 non terminal ArrayList<ASTExp<SMPLExp>> smplExpList;
 non terminal ArrayList<ASTExp<SMPLExp>> smplExpListE;
-non terminal ASTExp<CIRExp> predExp;
+non terminal ASTExp<SMPLExp> predExp;
 non terminal SMPLPairExp exPair;
 non terminal SMPLVectorExp vector;
 non terminal SMPLFunCall proc;
@@ -142,36 +142,6 @@ stmt ::= binding:b SEMI{:
             read:r SEMI {:
                 RESULT = r;
             :} |
-            if:i SEMI {:
-                RESULT = i;
-            :} |
-            let:l SEMI {:
-                RESULT = l;
-            :} |
-             isPair:p SEMI {:
-                  RESULT = p;
-              :} |
-              retVec:r SEMI {:
-                  RESULT = r;
-              :} |
-              size:s SEMI {:
-                  RESULT = s;
-              :} |
-              isEqual:e SEMI {:
-                  RESULT = e;
-              :} |
-              isEqv:e SEMI {:
-                  RESULT = e;
-              :} |
-              substr:s SEMI{:
-                  RESULT = s;
-              :} |
-              car:c SEMI {:
-                  RESULT = c;
-              :} |
-              cdr:c SEMI {:
-                  RESULT = c;
-              :}  |
             caseFunc:c SEMI {:
                 RESULT = c;
             :} |
@@ -197,11 +167,11 @@ bindList ::= bindList:l COMMA binding:b {:
                 RESULT = l;
              :};
 
-predExp ::= VAR:id CMP:cmp smplExp:e {:
-                RESULT = new CIRExp(id,cmp,e);
+predExp ::= arithExp:e1 CMP:cmp arithExp:e {:
+                RESULT = new CIRExp(e1,cmp,e);
             :};
 
-smplExp ::= arithExp:e{:
+smplExp ::= arithExp:e {:
                 RESULT = e;
             :} |
             exPair:p {:
@@ -224,6 +194,39 @@ smplExp ::= arithExp:e{:
             :}|
             funCall:f {:
                 RESULT = f;
+            :} |
+            substr:s {:
+                RESULT = s;
+            :} |
+            if:i {:
+               RESULT = i;
+           :} |
+           let:l  {:
+               RESULT = l;
+           :} |
+            isPair:p  {:
+                 RESULT = p;
+             :} |
+             retVec:r  {:
+                 RESULT = r;
+             :} |
+             size:s  {:
+                 RESULT = s;
+             :} |
+             isEqual:e  {:
+                 RESULT = e;
+             :} |
+             isEqv:e  {:
+                 RESULT = e;
+             :} |
+             car:c {:
+                 RESULT = c;
+             :} |
+             cdr:c {:
+                 RESULT = c;
+             :} |
+             predExp:p {:
+                RESULT = p;
             :};
 
 smplExpList ::= smplExpList:l COMMA smplExp:e {:

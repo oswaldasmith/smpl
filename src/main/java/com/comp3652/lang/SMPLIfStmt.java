@@ -7,24 +7,24 @@ import com.comp3652.sys.SMPLException;
  */
 public class SMPLIfStmt extends SMPLStatement {
 
-    private ASTExp<CIRExp> condExp;
+    private ASTExp<SMPLExp> condExp;
     private SMPLStmtSequence body;
     private SMPLStmtSequence alternative;
 
 
-    public SMPLIfStmt(ASTExp<CIRExp> p, SMPLStmtSequence cons) {
+    public SMPLIfStmt(ASTExp<SMPLExp> p, SMPLStmtSequence cons) {
         this.condExp = p;
         this.body = cons;
     }
 
-    public SMPLIfStmt(ASTExp<CIRExp> p, SMPLStmtSequence cons, SMPLStmtSequence alt) {
+    public SMPLIfStmt(ASTExp<SMPLExp> p, SMPLStmtSequence cons, SMPLStmtSequence alt) {
         this.condExp = p;
         this.body = cons;
         this.alternative = alt;
 
     }
 
-    public ASTExp<CIRExp> getCondExp() {
+    public ASTExp<SMPLExp> getCondExp() {
         return condExp;
     }
 
