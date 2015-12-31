@@ -50,9 +50,9 @@ cc = [\b\f]|{nl}
 
 WhiteSpace = ({cc}|[\t" "])
 
-EndOfLineComment = "//".*[\n\r]
+EndOfLineComment = "//".*{nl}
 
-BlockComment = "/*"(.|\n\r|\n)*"*/"
+BlockComment = "/*"(.|{nl}|\n)*"*/"
 
 comment = {BlockComment}|{EndOfLineComment}
 
