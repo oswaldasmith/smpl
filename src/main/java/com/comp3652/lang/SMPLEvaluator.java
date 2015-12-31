@@ -105,12 +105,14 @@ public class SMPLEvaluator implements SMPLVisitor<SMPLContext, SMPLValue> {
 			return new SMPLBoolean(toRet);
 		}
 		if (check.isAssignableFrom(ASTVar.class)) {
-			Double toRet = exp.visit(this.arithEval, state.getNumEnv());
-			if (toRet == null) {
+			try {
+				Double toRet = exp.visit(this.arithEval, state.getNumEnv());
+				return new SMPLFloat(toRet);
+
+			} catch (SMPLException e) {
 				String ret = exp.visit(this.stringEval, state.getStringEnv());
 				return new SMPLString(ret);
 			}
-			return new SMPLFloat(toRet);
 		}
 		return null;
 	}
