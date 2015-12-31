@@ -129,8 +129,9 @@ start with program;
 program ::= stmtList:s {: RESULT = new SMPLProgram(s); :};
 
 stmtList ::= stmtList:seq stmt:s {:
-                seq.addStatement(s);
-                RESULT = seq; :} |
+                  seq.addStatement(s);
+                  RESULT = seq;
+                :} |
               empty {:
                 RESULT = new SMPLStmtSequence();
               :};

@@ -2,9 +2,8 @@ package com.comp3652.values;
 
 import com.comp3652.lang.ASTExp;
 import com.comp3652.lang.SMPLExp;
-import com.comp3652.lang.SMPLVectorExp;
 
-import java.util.*;
+import java.util.ArrayList;
 
 public class SMPLVector extends SMPLValue<SMPLExp> {
     private ArrayList<SMPLValue> vector;
@@ -27,13 +26,14 @@ public class SMPLVector extends SMPLValue<SMPLExp> {
     @Override
     public String toString() {
 
-        String strOutput = "";
+        String strOutput = "[: ";
         for (SMPLValue c : vector)
             strOutput += c.toString() + ",";
 
         if (strOutput.length() > 0)
             strOutput = strOutput.substring(0, strOutput.length() - 1);
 
+        strOutput += ":]";
         return strOutput;
 
     }

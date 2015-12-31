@@ -114,6 +114,10 @@ public class SMPLEvaluator implements SMPLVisitor<SMPLContext, SMPLValue> {
 				return new SMPLString(ret);
 			}
 		}
+		if (check.isAssignableFrom(SMPLVectorExp.class)) {
+			SMPLVector toRet = (SMPLVector) exp.visit(this, state);
+			return toRet;
+		}
 		return null;
 	}
 
@@ -228,8 +232,9 @@ public class SMPLEvaluator implements SMPLVisitor<SMPLContext, SMPLValue> {
 		ArrayList<ASTExp<SMPLExp>> contents = smplVectorExp.getExplist();
 		ArrayList<SMPLValue> container = new ArrayList<>();
 		for (int i = 0; i < contents.size(); i++) {
-			ASTExp curr = contents.get(i);
-			container.add((SMPLValue) curr.visit(this, context));
+			ASTExp<SMPLExp> curr = contents.get(i);
+			SMPLValue result = reduce(curr, context);
+			container.add(result);
 		}
 		return (new SMPLVector(container));
 	}
