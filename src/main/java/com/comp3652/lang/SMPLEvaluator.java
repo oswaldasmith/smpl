@@ -206,7 +206,7 @@ public class SMPLEvaluator implements SMPLVisitor<SMPLContext, SMPLValue> {
 		String funName = smplFunCall.getFunName();
 		ArrayList<ASTExp<SMPLExp>> argExps = smplFunCall.getArgExps();
 
-		ArrayList<SMPLValue> arguments = new ArrayList<SMPLValue>();
+		ArrayList<SMPLValue> arguments = new ArrayList<>();
 
 		SMPLFunction function = context.getFunction(funName);
 
@@ -289,7 +289,10 @@ public class SMPLEvaluator implements SMPLVisitor<SMPLContext, SMPLValue> {
 
 	@Override
 	public SMPLValue visitSMPLProcedure(SMPLProcedure smplProcedure, SMPLContext context) throws SMPLException {
-		return null;
+		ASTExp<SMPLExp> argExps = smplProcedure.getBody();
+		SMPLValue proc = reduce(argExps, context);
+
+		return proc;
 	}
 
 	@Override

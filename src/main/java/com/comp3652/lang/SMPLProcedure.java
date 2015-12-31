@@ -14,6 +14,13 @@ public class SMPLProcedure extends SMPLExp {
         this.body = body;
     }
 
+    public SMPLStmtDefinition getVar() {
+        return list;
+    }
+
+    public ASTExp<SMPLExp> getBody() {
+        return body;
+    }
 
     @Override
     public <S, T> T visit(SMPLVisitor<S, T> v, S context) throws SMPLException {
