@@ -52,7 +52,8 @@ public class SMPLEvaluator implements SMPLVisitor<SMPLContext, SMPLValue> {
 
 	@Override
 	public SMPLValue visitSMPLAssignment(SMPLAssignment smplAssignment, SMPLContext state) throws SMPLException {
-		SMPLValue result = smplAssignment.getExp().visit(this, state);
+		SMPLValue result = null;
+		result = reduce(smplAssignment.getExp(), state);
 		state.putSMPLVal(smplAssignment.getVar(), result);
 		return result;
 	}
@@ -169,7 +170,8 @@ public class SMPLEvaluator implements SMPLVisitor<SMPLContext, SMPLValue> {
 
 	@Override
 	public SMPLValue visitSMPLStmtDefinition(SMPLStmtDefinition smplStmtDefinition, SMPLContext state) throws SMPLException {
-		SMPLValue result = (SMPLValue) smplStmtDefinition.getExp().visit(this, state);
+		SMPLValue result = null;
+		result = reduce(smplStmtDefinition.getExp(), state);
 		state.putSMPLVal(smplStmtDefinition.getVar(), result);
 		return result;
 	}

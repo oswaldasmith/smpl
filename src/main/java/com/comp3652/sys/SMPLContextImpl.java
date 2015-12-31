@@ -35,7 +35,7 @@ public class SMPLContextImpl implements SMPLContext {
 	}
 
 	public SMPLContextImpl(){
-		this(new PrimitiveSMPLValue(),new SMPLEnvironment<Double>(),new SMPLEnvironment<SMPLFunction>(),new SMPLEnvironment<SMPLVector>(),new SMPLEnvironment<String>(),new SMPLEnvironment<SMPLPair>());
+		this(new PrimitiveSMPLValue(), new SMPLEnvironment<SMPLValue>(), new SMPLEnvironment<Double>(), new SMPLEnvironment<SMPLFunction>(), new SMPLEnvironment<SMPLVector>(), new SMPLEnvironment<String>(), new SMPLEnvironment<SMPLPair>());
 	}
 
 	public SMPLEnvironment<Double> getnEnv(){

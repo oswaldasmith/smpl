@@ -31,4 +31,9 @@ public class SMPLStmtDefinition extends SMPLStatement {
     public String getVar() {
         return var;
     }
+
+    @Override
+    public String toString() {
+        return var.toString();
+    }
 }
