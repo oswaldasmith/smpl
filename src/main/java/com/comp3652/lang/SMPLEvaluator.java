@@ -143,7 +143,7 @@ public class SMPLEvaluator implements SMPLVisitor<SMPLContext, SMPLValue> {
 
 	@Override
 	public SMPLValue visitSMPLIfStmt(SMPLIfStmt smplIfStmt, SMPLContext state) throws SMPLException {
-		ASTExp<CIRExp> conditionalExpression = smplIfStmt.getCondExp();
+		ASTExp<SMPLExp> conditionalExpression = smplIfStmt.getCondExp();
 		SMPLStmtSequence alternativeBody = smplIfStmt.getAlternative();
 		Boolean conditionalEval = conditionalExpression.visit(condEval,state);
 		boolean shouldExecute = conditionalEval.booleanValue();

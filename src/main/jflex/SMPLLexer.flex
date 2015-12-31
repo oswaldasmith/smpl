@@ -64,7 +64,7 @@ num = [0-9]
 
 alphanum = {alpha}|{num}
 
-specialchars = ["#""+""-""*"".""!"]
+specialchars = ["$""?""~""+""/""^""*"".""%""<"">""=""-"]
 
 allchars = {alphanum}|{specialchars}
 
@@ -94,7 +94,7 @@ hex = [0-9A-Fa-f]
 <YYINITIAL>	"%"		{ return new Symbol(sym.MOD); }
 <YYINITIAL> ":=" 	{ return new Symbol(sym.ASSIGN); }
 
-<YYINITIAL> "<"|">"|"<="|">="|"="|"!="|"and"|"or"|"not" { return new Symbol(sym.CMP, yytext()); }
+<YYINITIAL> "<"| ">" |"<="|">="|"="|"!="|"and"|"or"|"not" { return new Symbol(sym.CMP, yytext()); }
 
 <YYINITIAL>	"("		{ return new Symbol(sym.LPAREN); }
 <YYINITIAL>	")"		{ return new Symbol(sym.RPAREN); }
@@ -105,9 +105,9 @@ hex = [0-9A-Fa-f]
 <YYINITIAL>	"{"		{ return new Symbol(sym.LBRACE); }
 <YYINITIAL>	"}"		{ return new Symbol(sym.RBRACE); }
 
-<YYINITIAL>	 ,		{ return new Symbol(sym.COMMA); }
-<YYINITIAL>	 : 		{ return new Symbol(sym.COLON); }
-<YYINITIAL>	 ; 		{ return new Symbol(sym.SEMI); }
+<YYINITIAL>	 ","	{ return new Symbol(sym.COMMA); }
+<YYINITIAL>	 ":" 	{ return new Symbol(sym.COLON); }
+<YYINITIAL>	 ";" 	{ return new Symbol(sym.SEMI); }
 
 <YYINITIAL>	"let" 	{ return new Symbol(sym.LET); }
 <YYINITIAL> "def" 	{ return new Symbol(sym.DEF); }
