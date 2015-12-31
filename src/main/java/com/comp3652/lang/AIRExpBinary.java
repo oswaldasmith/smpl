@@ -5,7 +5,11 @@ package com.comp3652.lang;
  */
 public class AIRExpBinary extends AIRExpInt {
     public AIRExpBinary(int v) {
-
         super(Integer.parseInt("" + v, 2));
+    }
+
+    @Override
+    public String toString(){
+        return super.toString();
     }
 }
