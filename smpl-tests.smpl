@@ -1,6 +1,5 @@
-print("x = "); print(x); println(" Should be 7");
-
-println("def s <quote foo>") ;
-def s "foo" ;
-print("s = "); print(s); print("\n");
-println("*** End of def tests ***");
+print("*** Integers Tests ***\n");
+print("10: "); println(10);
+print("#b101"); println(#b101);
+print("#x10ff"); println(#x10ff);
+print("*** End of Integers ***\n");
