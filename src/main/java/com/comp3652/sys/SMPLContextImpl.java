@@ -143,5 +143,10 @@ public class SMPLContextImpl implements SMPLContext {
 		return this.sEnv;
 	}
 
+	@Override
+	public void putString(String var, String name) {
+		this.sEnv.put(var, name);
+	}
+
 
 }

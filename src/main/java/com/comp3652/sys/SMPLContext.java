@@ -146,4 +146,6 @@ public interface SMPLContext {
 
 
 	SMPLEnvironment<String> getStringEnv();
+
+	void putString(String var, String name);
 }
