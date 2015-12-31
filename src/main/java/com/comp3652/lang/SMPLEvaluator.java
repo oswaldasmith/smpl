@@ -61,20 +61,8 @@ public class SMPLEvaluator implements SMPLVisitor<SMPLContext, SMPLValue> {
 	@Override
 	public SMPLValue visitSMPLPrintStmt(SMPLPrintStmt printStmt, SMPLContext state) throws SMPLException {
 		SMPLValue exp = null;
-		Class check = printStmt.getExp().getClass();
 
-		if (check.isAssignableFrom(StringExp.class)) {
-			exp = new SMPLString(printStmt.getExp().visit(this.stringEval, state.getStringEnv()));
-		}
-		if (check.isAssignableFrom(ASTBinaryExp.class)) {
-			exp = new SMPLFloat(printStmt.getExp().visit(this.arithEval, state.getNumEnv()));
-		}
-		if (check.isAssignableFrom(BoolExp.class)) {
-			exp = new SMPLBoolean(printStmt.getExp().visit(this.boolEval, state.getBoolEnv()));
-		}
-		if (check.isAssignableFrom(ASTUnaryExp.class)) {
-			exp = new SMPLFloat(printStmt.getExp().visit(this.arithEval, state.getNumEnv()));
-		}
+		exp = reduce(printStmt.getExp(), state);
 		if (printStmt.isPrintln()) {
 			System.out.println(exp);
 		} else {
@@ -82,6 +70,36 @@ public class SMPLEvaluator implements SMPLVisitor<SMPLContext, SMPLValue> {
 		}
 
 		return exp;
+	}
+
+	public SMPLValue reduce(ASTExp<SMPLExp> exp, SMPLContext state) throws SMPLException {
+		Class check = exp.getClass();
+
+		if (check.isAssignableFrom(StringExp.class)) {
+			String toRet = exp.visit(this.stringEval, state.getStringEnv());
+			return new SMPLString(toRet);
+		}
+		if (check.isAssignableFrom(ASTBinaryExp.class)) {
+			Double toRet = exp.visit(this.arithEval, state.getNumEnv());
+			return new SMPLFloat(toRet);
+		}
+		if (check.isAssignableFrom(BoolExp.class)) {
+			Boolean toRet = exp.visit(this.boolEval, state.getBoolEnv());
+			return new SMPLBoolean(toRet);
+		}
+		if (check.isAssignableFrom(ASTUnaryExp.class)) {
+			Double toRet = exp.visit(this.arithEval, state.getNumEnv());
+			return new SMPLFloat(toRet);
+		}
+		if (check.isAssignableFrom(AIRExpInt.class)) {
+			Double toRet = exp.visit(this.arithEval, state.getNumEnv());
+			return new SMPLInteger(toRet);
+		}
+		if (check.isAssignableFrom(AIRExpFrac.class)) {
+			Double toRet = exp.visit(this.arithEval, state.getNumEnv());
+			return new SMPLFloat(toRet);
+		}
+		return null;
 	}
 
 	@Override
