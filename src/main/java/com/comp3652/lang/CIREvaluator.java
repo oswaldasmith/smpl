@@ -21,23 +21,23 @@ public class CIREvaluator implements CIRVisitor<SMPLContext, Boolean> {
 
 		switch (comp) {
 			case "<":
-				return numEnv.get(String.valueOf(exp.getId())) < exp.getArithExp().visit(arithEval, numEnv);
+				return exp.getId().visit(arithEval, numEnv) < exp.getArithExp().visit(arithEval, numEnv);
 			case ">":
-				return numEnv.get(String.valueOf(exp.getId())) > exp.getArithExp().visit(arithEval, numEnv);
+				return exp.getId().visit(arithEval, numEnv) > exp.getArithExp().visit(arithEval, numEnv);
 			case "<=":
-				return numEnv.get(String.valueOf(exp.getId())) <= exp.getArithExp().visit(arithEval, numEnv);
+				return exp.getId().visit(arithEval, numEnv) <= exp.getArithExp().visit(arithEval, numEnv);
 			case ">=":
-				return numEnv.get(String.valueOf(exp.getId())) >= exp.getArithExp().visit(arithEval, numEnv);
+				return exp.getId().visit(arithEval, numEnv) >= exp.getArithExp().visit(arithEval, numEnv);
 			case "==":
-				return numEnv.get(String.valueOf(exp.getId())) == exp.getArithExp().visit(arithEval, numEnv);
+				return exp.getId().visit(arithEval, numEnv) == exp.getArithExp().visit(arithEval, numEnv);
 			case "!=":
-				return numEnv.get(String.valueOf(exp.getId())) != exp.getArithExp().visit(arithEval, numEnv);
+				return exp.getId().visit(arithEval, numEnv) != exp.getArithExp().visit(arithEval, numEnv);
 			case "and":
-				return boolEnv.get(String.valueOf(exp.getId())) && exp.getBoolExp().visit(boolEval, boolEnv);
+				return exp.getId().visit(boolEval, boolEnv) && exp.getBoolExp().visit(boolEval, boolEnv);
 			case "not":
-				return !(boolEnv.get(String.valueOf(exp.getId())));
+				return !(exp.getId().visit(boolEval, boolEnv));
 			case "or" :
-				return boolEnv.get(String.valueOf(exp.getId())) || exp.getBoolExp().visit(boolEval, boolEnv);
+				return exp.getId().visit(boolEval, boolEnv) || exp.getBoolExp().visit(boolEval, boolEnv);
 			default:
 				throw new SMPLException("Invalid comparator.");
 		}

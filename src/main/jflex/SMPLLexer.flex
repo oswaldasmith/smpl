@@ -49,11 +49,15 @@ import java.io.IOException;
 
 nl = [\n\r]
 
-cc = [\b\f]|{nl}
+cc = [\b\f]| {nl}
 
 // WhiteSpace = ({cc}|[\t" "])
 
+<<<<<<< HEAD
 // EndOfLineComment = "//".*[\n\r]
+=======
+EndOfLineComment = "//".*{nl}
+>>>>>>> chadsmpl
 
 // BlockComment = "/*"(.|\n\r|\n)*"*/"
 
@@ -114,6 +118,7 @@ CommentContent       = ( [^*] | \*+ [^/*] )*
 
 
 <YYINITIAL>	{WhiteSpace}	{/* ignore whitespace */}
+
 <YYINITIAL> {nl} {
                         //skip newline, but reset char counter
                         yychar = 0;

@@ -102,6 +102,7 @@ non terminal SMPLFunCall funCall;
 non terminal SMPLFunDef funcDef;
 non terminal SMPLVector existingVector;
 non terminal SMPLPair existingPair;
+non terminal BoolExp boolExp;
 
 non terminal ASTExp<SMPLExp> smplExp;
 non terminal ArrayList<ASTExp<SMPLExp>> smplExpList;
@@ -129,10 +130,13 @@ start with program;
 program ::= stmtList:s {: RESULT = new SMPLProgram(s); :};
 
 stmtList ::= stmtList:seq stmt:s {:
-                seq.addStatement(s);
-                RESULT = seq; :} |
-             empty {:
-              RESULT = new SMPLStmtSequence(); :};
+                  seq.addStatement(s);
+                  RESULT = seq;
+                :} |
+              empty {:
+                RESULT = new SMPLStmtSequence();
+              :};
+
 
 stmt ::= binding:b SEMI{:
                 RESULT = b;
@@ -146,7 +150,7 @@ stmt ::= binding:b SEMI{:
             caseFunc:c SEMI {:
                 RESULT = c;
             :} |
-            funcDef:f {:
+            funcDef:f SEMI{:
                 RESULT = f;
             :};
 
@@ -173,6 +177,12 @@ predExp ::= arithExp:e1 CMP:cmp arithExp:e {:
                 RESULT = new CIRExp(e1,cmp,e);
             :};
 
+boolExp ::= TRUE:t {:
+                RESULT = new BoolExp(t);
+             :} |
+             FALSE:f {:
+                RESULT = new BoolExp(f);
+             :};
 smplExp ::= arithExp:e {:
                 RESULT = e;
             :} |
@@ -185,15 +195,9 @@ smplExp ::= arithExp:e {:
             CHAR:c {:
                 RESULT = new StringExp(c);
             :} |
-            TRUE:t {:
-                RESULT = new BoolExp(t);
-            :}|
             STRING_LITERAL:s {:
                 RESULT = new StringExp(s);
             :} |
-            FALSE:f {:
-                RESULT = new BoolExp(f);
-            :}|
             funCall:f {:
                 RESULT = f;
             :} |
@@ -323,6 +327,9 @@ if ::=  IF predExp:p THEN stmtList:cons {:
             RESULT = new SMPLIfStmt(p,cons);
         :} |
         IF predExp:p THEN stmtList:cons ELSE stmtList:alt {:
+            RESULT = new SMPLIfStmt(p,cons,alt);
+        :} |
+        IF boolExp:p THEN stmtList:cons ELSE stmtList:alt {:
             RESULT = new SMPLIfStmt(p,cons,alt);
         :};
 

@@ -108,12 +108,18 @@ public class SMPLEvaluator implements SMPLVisitor<SMPLContext, SMPLValue> {
 			return new SMPLBoolean(toRet);
 		}
 		if (check.isAssignableFrom(ASTVar.class)) {
-			Double toRet = exp.visit(this.arithEval, state.getNumEnv());
-			if (toRet == null) {
+			try {
+				Double toRet = exp.visit(this.arithEval, state.getNumEnv());
+				return new SMPLFloat(toRet);
+
+			} catch (SMPLException e) {
 				String ret = exp.visit(this.stringEval, state.getStringEnv());
 				return new SMPLString(ret);
 			}
-			return new SMPLFloat(toRet);
+		}
+		if (check.isAssignableFrom(SMPLVectorExp.class)) {
+			SMPLVector toRet = (SMPLVector) exp.visit(this, state);
+			return toRet;
 		}
 		return null;
 	}
@@ -230,8 +236,9 @@ public class SMPLEvaluator implements SMPLVisitor<SMPLContext, SMPLValue> {
 		ArrayList<ASTExp<SMPLExp>> contents = smplVectorExp.getExplist();
 		ArrayList<SMPLValue> container = new ArrayList<>();
 		for (int i = 0; i < contents.size(); i++) {
-			ASTExp curr = contents.get(i);
-			container.add((SMPLValue) curr.visit(this, context));
+			ASTExp<SMPLExp> curr = contents.get(i);
+			SMPLValue result = reduce(curr, context);
+			container.add(result);
 		}
 
 		return (new SMPLVector(container));
@@ -276,9 +283,15 @@ public class SMPLEvaluator implements SMPLVisitor<SMPLContext, SMPLValue> {
 
 	@Override
 	public SMPLValue visitSMPLFunDef(SMPLFunDef smplFunDef, SMPLContext state) throws SMPLException {
+<<<<<<< HEAD
 		Function function = new Function(smplFunDef.getFunctionName(), smplFunDef.getParameters(), smplFunDef.getStatements(), state);
 		SMPLFunction smplFunction = new SMPLFunction(function);
 		return smplFunction;
+=======
+		SMPLFunction function = new SMPLFunction(smplFunDef.getFunctionName(), smplFunDef.getParameters(), smplFunDef.getStatements(), state);
+		state.putFunction(smplFunDef.getFunctionName(), function);
+		return SMPLValue.DEFAULT;
+>>>>>>> chadsmpl
 	}
 
 	@Override
