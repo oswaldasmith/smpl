@@ -28,15 +28,8 @@ public class SMPLVector extends SMPLValue<ArrayList<SMPLValue>> {
     public String toString() {
         String output = "";
 
-<<<<<<< HEAD
-        for (int i = 0; i < value.size() - 1; i++)
-         output += value.get(i).getValue().toString() + ", ";
-
-        if (values.size() > 0)
-         output += value.get(value.size() - 1) + " ";
-=======
         String strOutput = "[: ";
-        for (SMPLValue c : vector)
+        for (SMPLValue c : values)
             strOutput += c.toString() + ",";
 
         if (strOutput.length() > 0)
@@ -44,9 +37,6 @@ public class SMPLVector extends SMPLValue<ArrayList<SMPLValue>> {
 
         strOutput += ":]";
         return strOutput;
->>>>>>> chadsmpl
-
-        return "[: " + output + "]";
     }
 
     public SMPLValue get(int index) {

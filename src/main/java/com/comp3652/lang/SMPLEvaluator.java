@@ -283,15 +283,10 @@ public class SMPLEvaluator implements SMPLVisitor<SMPLContext, SMPLValue> {
 
 	@Override
 	public SMPLValue visitSMPLFunDef(SMPLFunDef smplFunDef, SMPLContext state) throws SMPLException {
-<<<<<<< HEAD
 		Function function = new Function(smplFunDef.getFunctionName(), smplFunDef.getParameters(), smplFunDef.getStatements(), state);
 		SMPLFunction smplFunction = new SMPLFunction(function);
 		return smplFunction;
-=======
-		SMPLFunction function = new SMPLFunction(smplFunDef.getFunctionName(), smplFunDef.getParameters(), smplFunDef.getStatements(), state);
-		state.putFunction(smplFunDef.getFunctionName(), function);
-		return SMPLValue.DEFAULT;
->>>>>>> chadsmpl
+
 	}
 
 	@Override
