@@ -15,6 +15,31 @@ public class StringExp extends ASTExp<SMPLExp> {
     }
 
     public StringExp(String s){
+
+        for (int index = 0; index < s.length(); index++) {
+            if (s.charAt(index) == '\\' && (index + 1) < s.length()) {
+                char controlChar = 0;
+
+                switch (s.charAt(index + 1)) {
+                    case '\\':
+                        controlChar = '\\';
+                        break;
+
+                    case 'n':
+                        controlChar = '\n';
+                        break;
+
+                    case 't':
+                        controlChar = '\t';
+                        break;
+
+                    case 'f':
+                        controlChar = '\f';
+                        break;
+                }
+                s = s.substring(0, index) + controlChar + s.substring(index + 2);
+            }
+        }
         this.string = s;
     }
 

@@ -274,8 +274,8 @@ arithTerm ::= arithTerm:t TIMES arithFactor:f {: RESULT = new ASTBinaryExp<SMPLE
 
 arithConstFactor ::= INTEGER:ilit {: RESULT = new AIRExpInt(ilit); :} |
 		     FRACTION:frac {: RESULT = new AIRExpFrac(frac); :} |
-		     HEX:h {: RESULT = new AIRExpInt(h); :} |
-             BIN:b {: RESULT = new AIRExpInt(b); :} |
+		     HEX:h {: RESULT = new AIRExpHex(h); :} |
+             BIN:b {: RESULT = new AIRExpBinary(b); :} |
 		     LPAREN arithExp:e RPAREN {: RESULT = e; :};
 
 arithFactor ::= arithConstFactor:cf {: RESULT = cf; :} |

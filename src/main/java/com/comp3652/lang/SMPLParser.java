@@ -1418,7 +1418,7 @@ class CUP$SMPLParser$actions {
 		int hleft = ((java_cup.runtime.Symbol)CUP$SMPLParser$stack.peek()).left;
 		int hright = ((java_cup.runtime.Symbol)CUP$SMPLParser$stack.peek()).right;
 		Integer h = (Integer)((java_cup.runtime.Symbol) CUP$SMPLParser$stack.peek()).value;
-		 RESULT = new AIRExpInt(h); 
+		 RESULT = new AIRExpHex(h); 
               CUP$SMPLParser$result = parser.getSymbolFactory().newSymbol("arithConstFactor",36, ((java_cup.runtime.Symbol)CUP$SMPLParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$SMPLParser$stack.peek()), RESULT);
             }
           return CUP$SMPLParser$result;
@@ -1430,7 +1430,7 @@ class CUP$SMPLParser$actions {
 		int bleft = ((java_cup.runtime.Symbol)CUP$SMPLParser$stack.peek()).left;
 		int bright = ((java_cup.runtime.Symbol)CUP$SMPLParser$stack.peek()).right;
 		Integer b = (Integer)((java_cup.runtime.Symbol) CUP$SMPLParser$stack.peek()).value;
-		 RESULT = new AIRExpInt(b); 
+		 RESULT = new AIRExpBinary(b); 
               CUP$SMPLParser$result = parser.getSymbolFactory().newSymbol("arithConstFactor",36, ((java_cup.runtime.Symbol)CUP$SMPLParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$SMPLParser$stack.peek()), RESULT);
             }
           return CUP$SMPLParser$result;
