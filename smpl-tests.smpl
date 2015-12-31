@@ -1,4 +1,5 @@
-// vectors
-print("*** Vector tests ***"); print("\n");
-print("Should print [:1, 2, 3:] - ");
-print([: 1 , 2 , 3 :]) ; print("\n");
+print("*** proc tests ***\n");
+proc(x) x + 1 ;
+proc(x) proc(n) x + n ;
+print(proc(x) x(x)) ; print("\n");
+print("*** End of proc tests ***\n");

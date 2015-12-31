@@ -46,13 +46,13 @@ import java.io.IOException;
 
 nl = [\n\r]
 
-cc = [\b\f]|{nl}
-
+cc = [\b\f]| {nl}
+pro
 WhiteSpace = ({cc}|[\t" "])
 
 EndOfLineComment = "//".*{nl}
 
-BlockComment = "/*"(.|{nl}|\n)*"*/"
+BlockComment = "/*"(.|\n\r|\n)*"*/"
 
 comment = {BlockComment}|{EndOfLineComment}
 
@@ -82,6 +82,7 @@ hex = [0-9A-Fa-f]
 
 
 <YYINITIAL>	{WhiteSpace}	{/* ignore whitespace */}
+
 <YYINITIAL> {nl} {
                         //skip newline, but reset char counter
                         yychar = 0;
