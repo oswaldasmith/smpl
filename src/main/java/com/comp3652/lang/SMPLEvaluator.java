@@ -104,6 +104,10 @@ public class SMPLEvaluator implements SMPLVisitor<SMPLContext, SMPLValue> {
 			Boolean toRet = exp.visit(this.condEval, state);
 			return new SMPLBoolean(toRet);
 		}
+		if (check.isAssignableFrom(ASTVar.class)) {
+			Double toRet = exp.visit(this.arithEval, state.getNumEnv());
+			return new SMPLFloat(toRet);
+		}
 		return null;
 	}
 
@@ -176,7 +180,8 @@ public class SMPLEvaluator implements SMPLVisitor<SMPLContext, SMPLValue> {
 	public SMPLValue visitSMPLStmtDefinition(SMPLStmtDefinition smplStmtDefinition, SMPLContext state) throws SMPLException {
 		SMPLValue result = null;
 		result = reduce(smplStmtDefinition.getExp(), state);
-		state.putSMPLVal(smplStmtDefinition.getVar(), result);
+		if (result.getClass().isAssignableFrom(SMPLFloat.class))
+			state.putNumber(smplStmtDefinition.getVar(), new Double(String.valueOf(result)));
 		return result;
 	}
 
