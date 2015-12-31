@@ -41,4 +41,9 @@ public class CIRExp extends ASTExp<SMPLExp> {
 	public <S, T> T visit(ASTVisitor<SMPLExp, S, T> v, S state) throws SMPLException {
 		return visit((CIRVisitor<S, T>) v, state);
 	}
+
+	@Override
+	public String toString() {
+		return smplExp.toString();
+	}
 }

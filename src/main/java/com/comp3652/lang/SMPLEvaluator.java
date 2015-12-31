@@ -100,6 +100,10 @@ public class SMPLEvaluator implements SMPLVisitor<SMPLContext, SMPLValue> {
 			Double toRet = exp.visit(this.arithEval, state.getNumEnv());
 			return new SMPLFloat(toRet);
 		}
+		if (check.isAssignableFrom(CIRExp.class)) {
+			Boolean toRet = exp.visit(this.condEval, state);
+			return new SMPLBoolean(toRet);
+		}
 		return null;
 	}
 
