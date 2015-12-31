@@ -118,6 +118,10 @@ public class SMPLEvaluator implements SMPLVisitor<SMPLContext, SMPLValue> {
 			SMPLVector toRet = (SMPLVector) exp.visit(this, state);
 			return toRet;
 		}
+		if (check.isAssignableFrom(SMPLProcedure.class)) {
+			SMPLValue toRet = exp.visit(this, state);
+			return toRet;
+		}
 		return null;
 	}
 
@@ -281,6 +285,11 @@ public class SMPLEvaluator implements SMPLVisitor<SMPLContext, SMPLValue> {
 		SMPLFunction function = new SMPLFunction(smplFunDef.getFunctionName(), smplFunDef.getParameters(), smplFunDef.getStatements(), state);
 		state.putFunction(smplFunDef.getFunctionName(), function);
 		return SMPLValue.DEFAULT;
+	}
+
+	@Override
+	public SMPLValue visitSMPLProcedure(SMPLProcedure smplProcedure, SMPLContext context) throws SMPLException {
+		return null;
 	}
 
 	@Override

@@ -45,4 +45,6 @@ public interface SMPLVisitor<S, T> extends ASTVisitor<SMPLExp,S,T> {
 	T visitSMPLCdrStmt(SMPLCdrStmt smplCdrStmt, S context) throws SMPLException;
 
 	T visitSMPLFunDef(SMPLFunDef smplFunDef, S state) throws SMPLException;
+
+	T visitSMPLProcedure(SMPLProcedure smplProcedure, S context) throws SMPLException;
 }

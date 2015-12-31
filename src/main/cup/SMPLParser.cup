@@ -110,7 +110,7 @@ non terminal ArrayList<ASTExp<SMPLExp>> smplExpListE;
 non terminal ASTExp<SMPLExp> predExp;
 non terminal SMPLPairExp exPair;
 non terminal SMPLVectorExp vector;
-non terminal SMPLFunCall proc;
+non terminal SMPLProcedure proc;
 non terminal ArrayList<String> idList;
 non terminal ArrayList<String> idListE;
 
@@ -231,6 +231,13 @@ smplExp ::= arithExp:e {:
              :} |
              predExp:p {:
                 RESULT = p;
+            :}|
+            proc:p {:
+                RESULT = p;
+            :};
+
+proc ::= PROC LPAREN binding:ids RPAREN smplExp:body {:
+               RESULT = new SMPLProcedure(ids,body);
             :};
 
 smplExpList ::= smplExpList:l COMMA smplExp:e {:
@@ -243,10 +250,7 @@ smplExpList ::= smplExpList:l COMMA smplExp:e {:
                 smplExp:e {:
                   RESULT = new ArrayList<>();
                   RESULT.add(e);
-                :} |
-                 PROC LPAREN smplExpListE:args RPAREN {:
-                                    RESULT = args;
-                 :};
+                :};
 
 smplExpListE ::= smplExpList:lst {:
                     RESULT = lst;
@@ -287,7 +291,7 @@ arithFactor ::= arithConstFactor:cf {: RESULT = cf; :} |
 		:};
 
 
-funcDef ::= DEF VAR:id PROC LPAREN idListE:lst RPAREN LBRACE stmtList:body RBRACE {:
+funcDef ::= DEF VAR:id PROC LPAREN bindList:lst RPAREN LBRACE stmtList:body RBRACE {:
                                      RESULT = new SMPLFunDef(id,lst,body);
             :};
 
@@ -361,17 +365,6 @@ funCall ::= CALL LPAREN VAR:fn COMMA smplExpList:args RPAREN {:
 
 lazy ::= LAZY LPAREN smplExp:e RPAREN {: RESULT = new SMPLLazyStmt(e); :};
 
-idList ::= idList:lst COMMA VAR:id {:
-		    lst.add(id);
-		    RESULT = lst;
-		    :} |
-	         VAR:id {:
-				RESULT = new ArrayList<>();
-				RESULT.add(id);
-			:};
-
-idListE ::= idList:lst {: RESULT = lst; :} |
-            empty {: RESULT = new ArrayList<>();:};
 
 
 empty ::= ;
