@@ -58,21 +58,22 @@ comment = {BlockComment}|{EndOfLineComment}
 
 hex = [0-9a-fA-F]
 
-alpha = [a-zA-Z]
+alpha = [a-zA-Z_]
 
 num = [0-9]
 
 alphanum = {alpha}|{num}
 
-specialchars = ["$""?""~""+""/""^""*"".""%""<"">""=""-"]
+specialchars = ["$""?""~""+""/""^""*"".""%""-"]
 
 allchars = {alphanum}|{specialchars}
 
 variable = {alphanum}+{allchars}*
 
-string = \"(.+|"\t"|"\n"|"\f"|\\\\)\"
+string = \"([^\\\"]|\\.)*\"
 
-char = \'(.|"\t"|"\n"|\\\\|"\f"|"\'")\'
+char = \'([^\\\"]|\\.)*\'
+
 
 hex = [0-9A-Fa-f]
 
